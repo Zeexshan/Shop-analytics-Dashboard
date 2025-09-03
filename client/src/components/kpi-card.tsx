@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { LucideIcon } from 'lucide-react';
 
 interface KPICardProps {
@@ -29,36 +30,66 @@ export function KPICard({
     neutral: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/20'
   }[changeType];
 
-  return (
-    <Card className="hover:shadow-md transition-shadow overflow-hidden" data-testid={`kpi-card-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-      <CardContent className="p-4 lg:p-6">
-        <div className="flex items-start space-x-3">
-          <div className={`w-8 h-8 lg:w-10 lg:h-10 ${iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
-            <Icon className={`h-4 w-4 lg:h-5 lg:w-5 ${iconColor}`} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate" title={title}>{title}</p>
-            <div className="mt-1 space-y-1">
-              <p className="text-lg lg:text-2xl font-bold text-foreground truncate" data-testid={`kpi-value-${title.toLowerCase().replace(/\s+/g, '-')}`} title={String(value)}>
-                {value}
-              </p>
-              {change && (
-                <span className={`inline-block text-xs font-medium px-2 py-1 rounded ${changeColorClass} truncate`} title={change}>
-                  {change}
-                </span>
-              )}
-            </div>
-            {progress !== undefined && (
-              <div className="mt-2 w-full bg-muted rounded-full h-1.5 lg:h-2">
-                <div 
-                  className="bg-amber-600 dark:bg-amber-400 h-1.5 lg:h-2 rounded-full transition-all duration-500" 
-                  style={{ width: `${Math.min(progress, 100)}%` }}
-                />
-              </div>
-            )}
-          </div>
+  const tooltipContent = (
+    <div className="space-y-2">
+      <div>
+        <p className="font-semibold">{title}</p>
+        <p className="text-lg">{value}</p>
+      </div>
+      {change && (
+        <div>
+          <p className="text-sm text-muted-foreground">Change</p>
+          <p className="text-sm">{change}</p>
         </div>
-      </CardContent>
-    </Card>
+      )}
+      {progress !== undefined && (
+        <div>
+          <p className="text-sm text-muted-foreground">Progress</p>
+          <p className="text-sm">{progress.toFixed(1)}%</p>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Card className="hover:shadow-md transition-shadow overflow-hidden cursor-pointer" data-testid={`kpi-card-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+            <CardContent className="p-4 lg:p-6">
+              <div className="flex items-start space-x-3">
+                <div className={`w-8 h-8 lg:w-10 lg:h-10 ${iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={`h-4 w-4 lg:h-5 lg:w-5 ${iconColor}`} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate">{title}</p>
+                  <div className="mt-1 space-y-1">
+                    <p className="text-lg lg:text-2xl font-bold text-foreground truncate" data-testid={`kpi-value-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+                      {value}
+                    </p>
+                    {change && (
+                      <span className={`inline-block text-xs font-medium px-2 py-1 rounded ${changeColorClass} truncate`}>
+                        {change}
+                      </span>
+                    )}
+                  </div>
+                  {progress !== undefined && (
+                    <div className="mt-2 w-full bg-muted rounded-full h-1.5 lg:h-2">
+                      <div 
+                        className="bg-amber-600 dark:bg-amber-400 h-1.5 lg:h-2 rounded-full transition-all duration-500" 
+                        style={{ width: `${Math.min(progress, 100)}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs">
+          {tooltipContent}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
