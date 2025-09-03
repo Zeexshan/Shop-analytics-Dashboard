@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'shop-analytics-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'shop-analytics-secret-key-fixed-2024';
 
 export interface AuthRequest extends Request {
   user?: { id: string; username: string };

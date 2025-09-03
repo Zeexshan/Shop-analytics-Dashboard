@@ -6,7 +6,7 @@ import { insertProductSchema, insertSaleSchema, insertExpenseSchema, insertGoalS
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'shop-analytics-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'shop-analytics-secret-key-fixed-2024';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
