@@ -49,9 +49,6 @@ export function KPICard({
                   </span>
                 )}
               </div>
-              {subtitle && (
-                <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
-              )}
               {progress !== undefined && (
                 <div className="mt-3 w-full bg-muted rounded-full h-2">
                   <div 
