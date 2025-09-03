@@ -30,34 +30,32 @@ export function KPICard({
   }[changeType];
 
   return (
-    <Card className="hover:shadow-md transition-shadow" data-testid={`kpi-card-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className={`w-10 h-10 ${iconBg} rounded-lg flex items-center justify-center`}>
-              <Icon className={`h-5 w-5 ${iconColor}`} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">{title}</p>
-              <div className="flex items-center space-x-2">
-                <p className="text-2xl font-bold text-foreground animate-counter" data-testid={`kpi-value-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {value}
-                </p>
-                {change && (
-                  <span className={`text-sm font-medium px-2 py-1 rounded ${changeColorClass}`}>
-                    {change}
-                  </span>
-                )}
-              </div>
-              {progress !== undefined && (
-                <div className="mt-3 w-full bg-muted rounded-full h-2">
-                  <div 
-                    className="bg-amber-600 dark:bg-amber-400 h-2 rounded-full transition-all duration-500" 
-                    style={{ width: `${Math.min(progress, 100)}%` }}
-                  />
-                </div>
+    <Card className="hover:shadow-md transition-shadow overflow-hidden" data-testid={`kpi-card-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+      <CardContent className="p-4 lg:p-6">
+        <div className="flex items-start space-x-3">
+          <div className={`w-8 h-8 lg:w-10 lg:h-10 ${iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+            <Icon className={`h-4 w-4 lg:h-5 lg:w-5 ${iconColor}`} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate" title={title}>{title}</p>
+            <div className="mt-1 space-y-1">
+              <p className="text-lg lg:text-2xl font-bold text-foreground truncate" data-testid={`kpi-value-${title.toLowerCase().replace(/\s+/g, '-')}`} title={String(value)}>
+                {value}
+              </p>
+              {change && (
+                <span className={`inline-block text-xs font-medium px-2 py-1 rounded ${changeColorClass} truncate`} title={change}>
+                  {change}
+                </span>
               )}
             </div>
+            {progress !== undefined && (
+              <div className="mt-2 w-full bg-muted rounded-full h-1.5 lg:h-2">
+                <div 
+                  className="bg-amber-600 dark:bg-amber-400 h-1.5 lg:h-2 rounded-full transition-all duration-500" 
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
