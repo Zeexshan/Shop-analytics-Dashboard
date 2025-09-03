@@ -14,7 +14,7 @@ import { api } from '@/lib/api';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { insertSaleSchema, type InsertSale, type Sale, type Product } from '@shared/schema';
-import { Plus, Search, ShoppingCart, Calendar } from 'lucide-react';
+import { Plus, Search, ShoppingCart, Calendar, Printer } from 'lucide-react';
 
 const paymentMethods = ['Cash', 'Card', 'UPI', 'Bank Transfer'];
 
@@ -36,7 +36,7 @@ export default function SalesPage() {
 
   const createSaleMutation = useMutation({
     mutationFn: (data: InsertSale) => api.post('/api/sales', data),
-    onSuccess: () => {
+    onSuccess: (newSale) => {
       queryClient.invalidateQueries({ queryKey: ['/api/sales'] });
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/kpis'] });
@@ -46,6 +46,17 @@ export default function SalesPage() {
       toast({
         title: "Success",
         description: "Sale recorded successfully",
+        action: (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => printReceipt(newSale)}
+            className="ml-2"
+          >
+            <Printer className="h-3 w-3 mr-1" />
+            Print Receipt
+          </Button>
+        ),
       });
     },
     onError: (error: any) => {
@@ -107,6 +118,133 @@ export default function SalesPage() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const printReceipt = (sale: Sale) => {
+    const receiptWindow = window.open('', '_blank', 'width=400,height=600');
+    if (!receiptWindow) return;
+
+    const receiptHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Receipt</title>
+        <style>
+          body {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 0;
+            padding: 20px;
+            width: 350px;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+          }
+          .shop-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .receipt-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+          }
+          .receipt-info {
+            margin: 15px 0;
+          }
+          .receipt-info div {
+            margin: 3px 0;
+          }
+          .item-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+          }
+          .total-section {
+            border-top: 2px solid #000;
+            margin-top: 15px;
+            padding-top: 10px;
+          }
+          .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-weight: bold;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+          }
+          @media print {
+            body { margin: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="shop-name">SHOP ANALYTICS</div>
+          <div>Your Trusted Store</div>
+          <div class="receipt-title">SALES RECEIPT</div>
+        </div>
+        
+        <div class="receipt-info">
+          <div><strong>Receipt #:</strong> ${sale.id.substring(0, 8).toUpperCase()}</div>
+          <div><strong>Date:</strong> ${formatDate(sale.sale_date)}</div>
+          <div><strong>Cashier:</strong> ${sale.cashier || 'Admin'}</div>
+          <div><strong>Customer:</strong> ${sale.customer_name || 'Walk-in Customer'}</div>
+        </div>
+
+        <div class="item-line">
+          <div>
+            <div><strong>${sale.product_name}</strong></div>
+            <div>${sale.quantity} x ${formatCurrency(sale.unit_price)}</div>
+          </div>
+          <div><strong>${formatCurrency(sale.total_amount)}</strong></div>
+        </div>
+
+        <div class="total-section">
+          <div class="total-line">
+            <div>TOTAL AMOUNT:</div>
+            <div>${formatCurrency(sale.total_amount)}</div>
+          </div>
+          <div class="total-line">
+            <div>PAYMENT METHOD:</div>
+            <div>${sale.payment_method}</div>
+          </div>
+        </div>
+
+        ${sale.notes ? `
+        <div style="margin-top: 15px;">
+          <div><strong>Notes:</strong></div>
+          <div>${sale.notes}</div>
+        </div>
+        ` : ''}
+
+        <div class="footer">
+          <div>Thank you for your business!</div>
+          <div>Visit us again soon</div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(() => window.close(), 1000);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+
+    receiptWindow.document.write(receiptHTML);
+    receiptWindow.document.close();
   };
 
   if (salesLoading) {
@@ -357,6 +495,9 @@ export default function SalesPage() {
                     <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Date
                     </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -389,11 +530,23 @@ export default function SalesPage() {
                           {formatDate(sale.sale_date)}
                         </div>
                       </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => printReceipt(sale)}
+                          className="flex items-center gap-1"
+                          data-testid={`button-print-receipt-${sale.id}`}
+                        >
+                          <Printer className="h-3 w-3" />
+                          Print
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                   {filteredSales.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                      <td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">
                         {searchTerm ? 'No sales found matching your search.' : 'No sales recorded yet. Record your first sale to get started.'}
                       </td>
                     </tr>
