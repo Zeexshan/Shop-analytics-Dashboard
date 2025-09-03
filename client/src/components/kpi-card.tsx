@@ -17,11 +17,10 @@ export function KPICard({
   title,
   value,
   change,
-  changeType = 'neutral',
+  changeType = 'positive',
   icon: Icon,
-  iconColor,
-  iconBg,
-  subtitle,
+  iconColor = 'text-blue-600',
+  iconBg = 'bg-blue-100',
   progress
 }: KPICardProps) {
   const changeColorClass = {

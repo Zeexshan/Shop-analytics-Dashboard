@@ -89,13 +89,13 @@ export default function DashboardPage() {
 
       <div className="p-6 space-y-6">
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
           <KPICard
             title="Revenue"
             value={formatCurrency(kpis?.revenue || 0)}
             change={formatPercentage(kpis?.revenueGrowth || 0)}
             changeType={kpis?.revenueGrowth && kpis.revenueGrowth >= 0 ? 'positive' : 'negative'}
-            icon={TrendingUp}
+            icon={DollarSign}
             iconColor="text-green-600 dark:text-green-400"
             iconBg="bg-green-100 dark:bg-green-900/20"
           />
@@ -103,12 +103,11 @@ export default function DashboardPage() {
           <KPICard
             title="Profit"
             value={formatCurrency(kpis?.profit || 0)}
-            change={`${(kpis?.profitMargin || 0).toFixed(1)}%`}
-            changeType="positive"
-            icon={DollarSign}
+            change={formatPercentage(kpis?.profitGrowth || 0)}
+            changeType={kpis?.profitGrowth && kpis.profitGrowth >= 0 ? 'positive' : 'negative'}
+            icon={TrendingUp}
             iconColor="text-blue-600 dark:text-blue-400"
             iconBg="bg-blue-100 dark:bg-blue-900/20"
-            subtitle="Profit Margin"
           />
 
           <KPICard
