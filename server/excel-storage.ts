@@ -22,20 +22,20 @@ export class ExcelStorage {
   private initializeExcelFile() {
     if (!fs.existsSync(EXCEL_FILE)) {
       const workbook = XLSX.utils.book_new();
-      
+
       // Initialize empty sheets
       const productsSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'name', 'description', 'price', 'cost_price', 'category', 'stock', 'min_stock', 'supplier', 'sku', 'created_date', 'last_updated']
       ]);
-      
+
       const salesSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'product_id', 'product_name', 'quantity', 'unit_price', 'total_amount', 'profit', 'customer_name', 'payment_method', 'sale_date', 'cashier', 'notes']
       ]);
-      
+
       const expensesSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'category', 'description', 'amount', 'payment_method', 'vendor', 'expense_date', 'receipt_number', 'notes']
       ]);
-      
+
       const goalsSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'period_type', 'target_period', 'revenue_goal', 'profit_goal', 'sales_goal', 'created_date', 'status']
       ]);
@@ -44,7 +44,7 @@ export class ExcelStorage {
       XLSX.utils.book_append_sheet(workbook, salesSheet, 'Sales');
       XLSX.utils.book_append_sheet(workbook, expensesSheet, 'Expenses');
       XLSX.utils.book_append_sheet(workbook, goalsSheet, 'Goals');
-      
+
       XLSX.writeFile(workbook, EXCEL_FILE);
     }
   }
@@ -61,7 +61,7 @@ export class ExcelStorage {
     const workbook = this.readWorkbook();
     const sheet = workbook.Sheets[sheetName];
     if (!sheet) return [];
-    
+
     const data = XLSX.utils.sheet_to_json(sheet);
     return data as T[];
   }
@@ -93,7 +93,7 @@ export class ExcelStorage {
       created_date: new Date().toISOString(),
       last_updated: new Date().toISOString(),
     } as Product;
-    
+
     products.push(product);
     this.updateSheet('Products', products);
     return product;
@@ -102,15 +102,15 @@ export class ExcelStorage {
   async updateProduct(id: string, updates: Partial<InsertProduct>): Promise<Product | undefined> {
     const products = await this.getAllProducts();
     const index = products.findIndex(p => p.id === id);
-    
+
     if (index === -1) return undefined;
-    
+
     products[index] = {
       ...products[index],
       ...updates,
       last_updated: new Date().toISOString(),
     };
-    
+
     this.updateSheet('Products', products);
     return products[index];
   }
@@ -118,9 +118,9 @@ export class ExcelStorage {
   async deleteProduct(id: string): Promise<boolean> {
     const products = await this.getAllProducts();
     const filteredProducts = products.filter(p => p.id !== id);
-    
+
     if (filteredProducts.length === products.length) return false;
-    
+
     this.updateSheet('Products', filteredProducts);
     return true;
   }
@@ -144,17 +144,17 @@ export class ExcelStorage {
     // Get product to calculate total and profit
     const product = await this.getProductById(saleData.product_id);
     if (!product) throw new Error('Product not found');
-    
+
     // Check stock availability
     if (product.stock < saleData.quantity) {
       throw new Error('Insufficient stock');
     }
-    
+
     const sales = await this.getAllSales();
     const totalAmount = saleData.quantity * saleData.unit_price;
     const costPrice = parseFloat(product.cost_price.toString());
     const profit = totalAmount - (costPrice * saleData.quantity);
-    
+
     const sale: Sale = {
       ...saleData,
       id: randomUUID(),
@@ -164,15 +164,15 @@ export class ExcelStorage {
       unit_price: saleData.unit_price.toString(),
       sale_date: new Date().toISOString(),
     } as Sale;
-    
+
     sales.push(sale);
     this.updateSheet('Sales', sales);
-    
+
     // Update product stock
     await this.updateProduct(saleData.product_id, {
       stock: product.stock - saleData.quantity
     });
-    
+
     return sale;
   }
 
@@ -197,7 +197,7 @@ export class ExcelStorage {
       amount: expenseData.amount.toString(),
       expense_date: new Date().toISOString(),
     } as Expense;
-    
+
     expenses.push(expense);
     this.updateSheet('Expenses', expenses);
     return expense;
@@ -225,7 +225,7 @@ export class ExcelStorage {
       profit_goal: goalData.profit_goal.toString(),
       created_date: new Date().toISOString(),
     } as Goal;
-    
+
     goals.push(goal);
     this.updateSheet('Goals', goals);
     return goal;
@@ -241,7 +241,7 @@ export class ExcelStorage {
     const sales = await this.getSalesByDateRange(startDate, endDate);
     const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
     const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
-    
+
     return {
       revenue: totalRevenue,
       profit: totalProfit,
@@ -255,21 +255,25 @@ export class ExcelStorage {
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-    
+
     const thisMonthAnalytics = await this.getRevenueAnalytics(thisMonth, now);
     const lastMonthAnalytics = await this.getRevenueAnalytics(lastMonth, lastMonthEnd);
     const lowStockProducts = await this.getLowStockProducts();
     const activeGoals = await this.getActiveGoals();
-    
+
     // Calculate growth rates
-    const revenueGrowth = lastMonthAnalytics.revenue > 0 
-      ? ((thisMonthAnalytics.revenue - lastMonthAnalytics.revenue) / lastMonthAnalytics.revenue) * 100 
+    const revenueGrowth = lastMonthAnalytics.revenue > 0
+      ? ((thisMonthAnalytics.revenue - lastMonthAnalytics.revenue) / lastMonthAnalytics.revenue) * 100
       : 0;
-    
-    const salesGrowth = lastMonthAnalytics.salesCount > 0 
-      ? ((thisMonthAnalytics.salesCount - lastMonthAnalytics.salesCount) / lastMonthAnalytics.salesCount) * 100 
+
+    const profitGrowth = lastMonthAnalytics.profit > 0
+      ? ((thisMonthAnalytics.profit - lastMonthAnalytics.profit) / lastMonthAnalytics.profit) * 100
       : 0;
-    
+
+    const salesGrowth = lastMonthAnalytics.salesCount > 0
+      ? ((thisMonthAnalytics.salesCount - lastMonthAnalytics.salesCount) / lastMonthAnalytics.salesCount) * 100
+      : 0;
+
     // Calculate goal progress (assuming monthly goals)
     let goalProgress = 0;
     if (activeGoals.length > 0) {
@@ -279,15 +283,16 @@ export class ExcelStorage {
         goalProgress = targetRevenue > 0 ? (thisMonthAnalytics.revenue / targetRevenue) * 100 : 0;
       }
     }
-    
+
     return {
       revenue: thisMonthAnalytics.revenue,
       profit: thisMonthAnalytics.profit,
       salesCount: thisMonthAnalytics.salesCount,
       lowStockCount: lowStockProducts.length,
-      goalProgress: Math.min(goalProgress, 100),
+      goalProgress,
       revenueGrowth,
-      profitMargin: thisMonthAnalytics.profitMargin,
+      profitGrowth,
+      profitMargin: thisMonthAnalytics.revenue > 0 ? Number(((thisMonthAnalytics.profit / thisMonthAnalytics.revenue) * 100).toFixed(1)) : 0,
       salesGrowth,
     };
   }
@@ -295,19 +300,19 @@ export class ExcelStorage {
   async getTopProducts(limit: number = 5) {
     const sales = await this.getAllSales();
     const productStats = new Map();
-    
+
     sales.forEach(sale => {
       const existing = productStats.get(sale.product_id) || {
         name: sale.product_name,
         sales: 0,
         revenue: 0,
       };
-      
+
       existing.sales += sale.quantity;
       existing.revenue += parseFloat(sale.total_amount.toString());
       productStats.set(sale.product_id, existing);
     });
-    
+
     return Array.from(productStats.values())
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, limit);
@@ -316,9 +321,9 @@ export class ExcelStorage {
   async getCategoryPerformance() {
     const products = await this.getAllProducts();
     const sales = await this.getAllSales();
-    
+
     const categoryStats = new Map();
-    
+
     sales.forEach(sale => {
       const product = products.find(p => p.id === sale.product_id);
       if (product) {
@@ -326,9 +331,9 @@ export class ExcelStorage {
         categoryStats.set(product.category, existing + parseFloat(sale.total_amount.toString()));
       }
     });
-    
+
     const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-    
+
     return Array.from(categoryStats.entries()).map(([name, value], index) => ({
       name,
       value,
@@ -340,23 +345,23 @@ export class ExcelStorage {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
-    
+
     const sales = await this.getSalesByDateRange(startDate, endDate);
     const dailyRevenue = new Map();
-    
+
     // Initialize all days with 0
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
       dailyRevenue.set(dateStr, 0);
     }
-    
+
     // Add sales data
     sales.forEach(sale => {
       const dateStr = new Date(sale.sale_date).toISOString().split('T')[0];
       const existing = dailyRevenue.get(dateStr) || 0;
       dailyRevenue.set(dateStr, existing + parseFloat(sale.total_amount.toString()));
     });
-    
+
     return Array.from(dailyRevenue.entries()).map(([date, revenue]) => ({
       date,
       revenue,

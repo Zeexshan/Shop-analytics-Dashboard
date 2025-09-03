@@ -137,6 +137,7 @@ export interface KPIData {
   lowStockCount: number;
   goalProgress: number;
   revenueGrowth: number;
+  profitGrowth: number;
   profitMargin: number;
   salesGrowth: number;
 }
