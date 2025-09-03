@@ -1,4 +1,4 @@
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx';
 import { randomUUID } from 'crypto';
 import path from 'path';
 import fs from 'fs';

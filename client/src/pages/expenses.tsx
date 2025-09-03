@@ -59,7 +59,6 @@ export default function ExpensesPage() {
       amount: 0,
       payment_method: 'Cash',
       vendor: '',
-      receipt_number: '',
       notes: '',
     },
   });
@@ -161,7 +160,7 @@ export default function ExpensesPage() {
                 Add Expense
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Record New Expense</DialogTitle>
               </DialogHeader>
@@ -251,52 +250,42 @@ export default function ExpensesPage() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="vendor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Vendor</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Vendor name" {...field} data-testid="input-vendor" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {/* Optional fields - collapsed by default */}
+                  <details className="group">
+                    <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
+                      <span className="group-open:rotate-90 transition-transform">▶</span>
+                      Additional Details (Optional)
+                    </summary>
+                    <div className="mt-4 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="vendor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vendor</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Vendor name" {...field} data-testid="input-vendor" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="receipt_number"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Receipt Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Receipt reference" {...field} data-testid="input-receipt-number" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Notes</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="Additional notes" 
-                            className="resize-none" 
-                            {...field} 
-                            data-testid="input-notes"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Notes</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Additional notes" {...field} data-testid="input-notes" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </details>
 
                   <div className="flex justify-end space-x-2">
                     <Button 
