@@ -90,8 +90,8 @@ export class ExcelStorage {
       id: randomUUID(),
       price: productData.price.toString(),
       cost_price: productData.cost_price.toString(),
-      created_date: new Date(),
-      last_updated: new Date(),
+      created_date: new Date().toISOString(),
+      last_updated: new Date().toISOString(),
     } as Product;
     
     products.push(product);
@@ -108,7 +108,7 @@ export class ExcelStorage {
     products[index] = {
       ...products[index],
       ...updates,
-      last_updated: new Date(),
+      last_updated: new Date().toISOString(),
     };
     
     this.updateSheet('Products', products);
@@ -162,7 +162,7 @@ export class ExcelStorage {
       total_amount: totalAmount.toString(),
       profit: profit.toString(),
       unit_price: saleData.unit_price.toString(),
-      sale_date: new Date(),
+      sale_date: new Date().toISOString(),
     } as Sale;
     
     sales.push(sale);
@@ -195,7 +195,7 @@ export class ExcelStorage {
       ...expenseData,
       id: randomUUID(),
       amount: expenseData.amount.toString(),
-      expense_date: new Date(),
+      expense_date: new Date().toISOString(),
     } as Expense;
     
     expenses.push(expense);
@@ -223,7 +223,7 @@ export class ExcelStorage {
       id: randomUUID(),
       revenue_goal: goalData.revenue_goal.toString(),
       profit_goal: goalData.profit_goal.toString(),
-      created_date: new Date(),
+      created_date: new Date().toISOString(),
     } as Goal;
     
     goals.push(goal);

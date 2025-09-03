@@ -3,42 +3,51 @@ import { useQuery } from '@tanstack/react-query';
 import { Header } from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { api } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import type { Product, Sale, Expense, Goal, KPIData } from '@shared/schema';
-import { 
-  FileText, 
-  Download, 
-  TrendingUp, 
-  Package, 
-  ShoppingCart, 
+import {
+  FileText,
+  Download,
+  TrendingUp,
+  Package,
+  ShoppingCart,
   CreditCard,
   Target,
   Calendar,
   BarChart3,
   PieChart
 } from 'lucide-react';
+import type { Product, Sale, Expense, Goal, KPIData } from '@shared/schema';
 
 export default function ReportsPage() {
   const [reportType, setReportType] = useState('overview');
-  const [dateRange, setDateRange] = useState('thisMonth');
+  const [startDate, setStartDate] = useState(() => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    return date.toISOString().split('T')[0];
+  });
+  const [endDate, setEndDate] = useState(() => {
+    return new Date().toISOString().split('T')[0];
+  });
   const { toast } = useToast();
 
   const { data: products = [] } = useQuery<Product[]>({
-    queryKey: ['/api/products'],
-    queryFn: () => api.get('/api/products'),
+    queryKey: ['/api/products', startDate, endDate],
+    queryFn: () => api.get('/api/products', { params: { startDate, endDate } }),
   });
 
   const { data: sales = [] } = useQuery<Sale[]>({
-    queryKey: ['/api/sales'],
-    queryFn: () => api.get('/api/sales'),
+    queryKey: ['/api/sales', startDate, endDate],
+    queryFn: () => api.get('/api/sales', { params: { startDate, endDate } }),
   });
 
   const { data: expenses = [] } = useQuery<Expense[]>({
-    queryKey: ['/api/expenses'],
-    queryFn: () => api.get('/api/expenses'),
+    queryKey: ['/api/expenses', startDate, endDate],
+    queryFn: () => api.get('/api/expenses', { params: { startDate, endDate } }),
   });
 
   const { data: goals = [] } = useQuery<Goal[]>({
@@ -47,13 +56,13 @@ export default function ReportsPage() {
   });
 
   const { data: kpis } = useQuery<KPIData>({
-    queryKey: ['/api/dashboard/kpis'],
-    queryFn: () => api.get('/api/dashboard/kpis'),
+    queryKey: ['/api/dashboard/kpis', startDate, endDate],
+    queryFn: () => api.get('/api/dashboard/kpis', { params: { startDate, endDate } }),
   });
 
   const { data: chartData } = useQuery({
-    queryKey: ['/api/dashboard/charts'],
-    queryFn: () => api.get('/api/dashboard/charts'),
+    queryKey: ['/api/dashboard/charts', startDate, endDate],
+    queryFn: () => api.get('/api/dashboard/charts', { params: { startDate, endDate } }),
   });
 
   const formatCurrency = (amount: number | string) => {
@@ -66,19 +75,17 @@ export default function ReportsPage() {
       title: "Export Started",
       description: `Preparing ${type} report for download...`,
     });
-    
+
     try {
       let content = '';
       let filename = '';
       let mimeType = '';
 
       if (type.includes('PDF') || type.includes('Overview')) {
-        // Generate HTML content for PDF-style report
         content = generatePDFReport();
         filename = `business-overview-${new Date().toISOString().split('T')[0]}.html`;
         mimeType = 'text/html';
       } else if (type.includes('Excel') || type.includes('Data')) {
-        // Generate CSV content for Excel-style report
         content = generateCSVReport();
         filename = `business-data-${new Date().toISOString().split('T')[0]}.csv`;
         mimeType = 'text/csv';
@@ -104,7 +111,6 @@ export default function ReportsPage() {
         mimeType = 'text/html';
       }
 
-      // Create and trigger download
       const blob = new Blob([content], { type: mimeType });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -120,6 +126,7 @@ export default function ReportsPage() {
         description: `${type} report has been downloaded as ${filename}`,
       });
     } catch (error) {
+      console.error("Export failed:", error);
       toast({
         title: "Export Failed",
         description: "Failed to generate report. Please try again.",
@@ -128,17 +135,25 @@ export default function ReportsPage() {
     }
   };
 
+  const filteredSales = sales.filter(sale => {
+    const saleDate = new Date(sale.sale_date);
+    return saleDate >= new Date(startDate) && saleDate <= new Date(endDate);
+  });
+
+  const filteredExpenses = expenses.filter(expense => {
+    const expenseDate = new Date(expense.expense_date);
+    return expenseDate >= new Date(startDate) && expenseDate <= new Date(endDate);
+  });
+
   const generatePDFReport = () => {
-    // Calculate required variables for the report
     const lowStockProducts = products.filter(p => p.stock <= p.min_stock);
-    const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
-    const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
-    const totalExpenses = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+    const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+    const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
     const netProfit = totalProfit - totalExpenses;
 
-    // Category breakdown
     const categoryStats = new Map();
-    sales.forEach(sale => {
+    filteredSales.forEach(sale => {
       const product = products.find(p => p.id === sale.product_id);
       if (product) {
         const existing = categoryStats.get(product.category) || { sales: 0, revenue: 0 };
@@ -175,8 +190,9 @@ export default function ReportsPage() {
     <div class="header">
         <h1>Business Overview Report</h1>
         <p>Generated on ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p>Date Range: ${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}</p>
     </div>
-    
+
     <div class="section">
         <h2>Key Performance Metrics</h2>
         <div class="metric-card">
@@ -189,7 +205,7 @@ export default function ReportsPage() {
         </div>
         <div class="metric-card">
             <div>Total Sales</div>
-            <div class="metric-value">${sales.length}</div>
+            <div class="metric-value">${filteredSales.length}</div>
         </div>
         <div class="metric-card">
             <div>Products</div>
@@ -204,7 +220,7 @@ export default function ReportsPage() {
                 <tr><th>Category</th><th>Units Sold</th><th>Revenue</th></tr>
             </thead>
             <tbody>
-                ${topCategories.map(([category, stats]) => 
+                ${topCategories.map(([category, stats]) =>
                     `<tr><td>${category}</td><td>${stats.sales}</td><td>${formatCurrency(stats.revenue)}</td></tr>`
                 ).join('')}
             </tbody>
@@ -218,7 +234,7 @@ export default function ReportsPage() {
                 <tr><th>Product</th><th>Customer</th><th>Amount</th><th>Date</th></tr>
             </thead>
             <tbody>
-                ${sales.slice(0, 10).map(sale => 
+                ${filteredSales.slice(0, 10).map(sale =>
                     `<tr>
                         <td>${sale.product_name}</td>
                         <td>${sale.customer_name || 'Walk-in Customer'}</td>
@@ -238,7 +254,7 @@ export default function ReportsPage() {
                 <tr><th>Product</th><th>Category</th><th>Current Stock</th><th>Minimum Stock</th></tr>
             </thead>
             <tbody>
-                ${lowStockProducts.map(product => 
+                ${lowStockProducts.map(product =>
                     `<tr>
                         <td>${product.name}</td>
                         <td>${product.category}</td>
@@ -255,20 +271,27 @@ export default function ReportsPage() {
   };
 
   const generateCSVReport = () => {
+    const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+    const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+    const netProfit = totalProfit - totalExpenses;
+
     const csvData = [
-      ['Business Data Export', ''],
+      ['Business Data Export'],
       ['Generated Date', new Date().toLocaleDateString()],
+      ['Date Range', `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`],
       [''],
       ['Summary Metrics', ''],
-      ['Total Revenue', totalRevenue],
-      ['Net Profit', netProfit],
-      ['Total Sales Count', sales.length],
+      ['Total Revenue', formatCurrency(totalRevenue)],
+      ['Net Profit', formatCurrency(netProfit)],
+      ['Total Sales Count', filteredSales.length],
       ['Total Products', products.length],
-      ['Total Expenses', totalExpenses],
+      ['Total Expenses', formatCurrency(totalExpenses)],
       [''],
-      ['Sales Data', ''],
-      ['Product Name', 'Customer', 'Quantity', 'Unit Price', 'Total Amount', 'Profit', 'Payment Method', 'Date'],
-      ...sales.map(sale => [
+      ['Sales Data'],
+      ['Sale ID', 'Product Name', 'Customer', 'Quantity', 'Unit Price', 'Total Amount', 'Profit', 'Payment Method', 'Date'],
+      ...filteredSales.map(sale => [
+        sale.id,
         sale.product_name,
         sale.customer_name || 'Walk-in Customer',
         sale.quantity,
@@ -277,124 +300,150 @@ export default function ReportsPage() {
         sale.profit,
         sale.payment_method,
         new Date(sale.sale_date).toLocaleDateString()
+      ]),
+      [''],
+      ['Expenses Data'],
+      ['Expense ID', 'Category', 'Description', 'Amount', 'Payment Method', 'Vendor', 'Date', 'Receipt Number'],
+      ...filteredExpenses.map(expense => [
+        expense.id,
+        expense.category,
+        expense.description,
+        expense.amount,
+        expense.payment_method,
+        expense.vendor || '',
+        new Date(expense.expense_date).toLocaleDateString(),
+        expense.receipt_number || ''
       ])
     ];
-    
-    return csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    return csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
   };
 
   const generateSalesReport = () => {
     const csvData = [
-      ['Sales Analysis Report'],
+      ['Sales Report'],
       ['Generated Date', new Date().toLocaleDateString()],
+      ['Date Range', `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`],
       [''],
-      ['Sales Summary'],
-      ['Total Sales', sales.length],
-      ['Total Revenue', totalRevenue],
-      ['Total Profit', totalProfit],
-      ['Average Sale Value', sales.length > 0 ? (totalRevenue / sales.length).toFixed(2) : 0],
-      [''],
-      ['Top Categories'],
-      ['Category', 'Units Sold', 'Revenue'],
-      ...topCategories.map(([category, stats]) => [category, stats.sales, stats.revenue]),
-      [''],
-      ['Payment Methods'],
-      ['Method', 'Transactions', 'Revenue'],
-      ...Array.from(new Set(sales.map(s => s.payment_method))).map(method => {
-        const methodSales = sales.filter(s => s.payment_method === method);
-        const methodRevenue = methodSales.reduce((sum, s) => sum + parseFloat(s.total_amount.toString()), 0);
-        return [method, methodSales.length, methodRevenue];
-      })
+      ['Sale ID', 'Product', 'Customer', 'Quantity', 'Unit Price', 'Total Amount', 'Profit', 'Payment Method', 'Date'],
+      ...filteredSales.map(sale => [
+        sale.id,
+        sale.product_name,
+        sale.customer_name || 'Walk-in',
+        sale.quantity,
+        sale.unit_price,
+        sale.total_amount,
+        sale.profit,
+        sale.payment_method,
+        new Date(sale.sale_date).toLocaleDateString()
+      ])
     ];
-    
-    return csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    return csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
   };
 
   const generateInventoryReport = () => {
+    const totalStockValue = products.reduce((sum, p) => sum + (p.stock * parseFloat(p.cost_price.toString())), 0);
+    const lowStockProducts = products.filter(p => p.stock <= p.min_stock);
+
     const csvData = [
       ['Inventory Report'],
       ['Generated Date', new Date().toLocaleDateString()],
+      ['Date Range', `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`],
       [''],
       ['Inventory Summary'],
       ['Total Products', products.length],
       ['Low Stock Items', lowStockProducts.length],
-      ['Total Stock Value', products.reduce((sum, p) => sum + (p.stock * parseFloat(p.cost_price.toString())), 0)],
+      ['Total Stock Value', formatCurrency(totalStockValue)],
       [''],
       ['Product Details'],
-      ['Name', 'Category', 'Current Stock', 'Minimum Stock', 'Cost Price', 'Selling Price', 'Stock Value'],
+      ['Product ID', 'Name', 'Category', 'Current Stock', 'Minimum Stock', 'Cost Price', 'Selling Price', 'Stock Value'],
       ...products.map(product => [
+        product.id,
         product.name,
         product.category,
         product.stock,
         product.min_stock,
         product.cost_price,
         product.price,
-        product.stock * parseFloat(product.cost_price.toString())
+        formatCurrency(product.stock * parseFloat(product.cost_price.toString()))
       ])
     ];
-    
-    return csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    return csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
   };
 
   const generateFinancialReport = () => {
+    const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+    const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+    const netProfit = totalProfit - totalExpenses;
+
     const csvData = [
       ['Financial Summary Report'],
       ['Generated Date', new Date().toLocaleDateString()],
+      ['Date Range', `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`],
       [''],
       ['Income Statement'],
-      ['Total Sales Revenue', totalRevenue],
-      ['Gross Profit', totalProfit],
-      ['Total Expenses', totalExpenses],
-      ['Net Profit', netProfit],
+      ['Total Sales Revenue', formatCurrency(totalRevenue)],
+      ['Gross Profit', formatCurrency(totalProfit)],
+      ['Total Expenses', formatCurrency(totalExpenses)],
+      ['Net Profit', formatCurrency(netProfit)],
       ['Profit Margin %', totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(2) : 0],
       [''],
       ['Expense Breakdown'],
-      ['Category', 'Description', 'Amount', 'Date'],
-      ...expenses.map(expense => [
+      ['Expense ID', 'Category', 'Description', 'Amount', 'Payment Method', 'Vendor', 'Date', 'Receipt Number'],
+      ...filteredExpenses.map(expense => [
+        expense.id,
         expense.category,
         expense.description,
         expense.amount,
-        new Date(expense.expense_date).toLocaleDateString()
+        expense.payment_method,
+        expense.vendor || '',
+        new Date(expense.expense_date).toLocaleDateString(),
+        expense.receipt_number || ''
       ])
     ];
-    
-    return csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    return csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
   };
 
   const generatePerformanceReport = () => {
+    const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+
     const csvData = [
       ['Performance Metrics Report'],
       ['Generated Date', new Date().toLocaleDateString()],
+      ['Date Range', `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`],
       [''],
       ['Key Performance Indicators'],
-      ['Average Sale Value', sales.length > 0 ? (totalRevenue / sales.length).toFixed(2) : 0],
-      ['Products per Sale', sales.length > 0 ? (sales.reduce((sum, s) => sum + s.quantity, 0) / sales.length).toFixed(1) : 0],
+      ['Average Sale Value', formatCurrency(filteredSales.length > 0 ? totalRevenue / filteredSales.length : 0)],
+      ['Products per Sale', filteredSales.length > 0 ? (filteredSales.reduce((sum, s) => sum + s.quantity, 0) / filteredSales.length).toFixed(1) : 0],
       ['Revenue Growth %', kpis?.revenueGrowth ? kpis.revenueGrowth.toFixed(1) : 0],
       [''],
       ['Active Goals'],
       ['Period', 'Revenue Goal', 'Current Revenue', 'Profit Goal', 'Current Profit', 'Status'],
       ...goals.filter(g => g.status === 'Active').map(goal => [
         goal.period_type,
-        goal.revenue_goal,
-        kpis?.revenue || 0,
-        goal.profit_goal,
-        kpis?.profit || 0,
+        formatCurrency(goal.revenue_goal),
+        formatCurrency(kpis?.revenue || 0),
+        formatCurrency(goal.profit_goal),
+        formatCurrency(kpis?.profit || 0),
         goal.status
       ])
     ];
-    
-    return csvData.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+    return csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
   };
 
   const generateCompleteReport = () => {
-    // Calculate required variables for the complete report
     const lowStockProducts = products.filter(p => p.stock <= p.min_stock);
-    const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
-    const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
-    const totalExpenses = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+    const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+    const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
     const netProfit = totalProfit - totalExpenses;
 
-    // Generate basic PDF content first
     const pdfContent = generatePDFReport();
     const bodyContent = pdfContent.split('<body>')[1]?.split('</body>')[0] || '';
 
@@ -421,6 +470,7 @@ export default function ReportsPage() {
     <div class="header">
         <h1>Complete Business Analytics Report</h1>
         <p>Generated on ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p>Date Range: ${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}</p>
     </div>
 
     ${bodyContent}
@@ -454,7 +504,7 @@ export default function ReportsPage() {
                 <tr><th>Period</th><th>Revenue Goal</th><th>Current</th><th>Profit Goal</th><th>Current</th><th>Status</th></tr>
             </thead>
             <tbody>
-                ${goals.filter(g => g.status === 'Active').map(goal => 
+                ${goals.filter(g => g.status === 'Active').map(goal =>
                     `<tr>
                         <td>${goal.period_type}</td>
                         <td>${formatCurrency(goal.revenue_goal)}</td>
@@ -472,14 +522,13 @@ export default function ReportsPage() {
   };
 
   const lowStockProducts = products.filter(p => p.stock <= p.min_stock);
-  const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
-  const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
-  const totalExpenses = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+  const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+  const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+  const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
   const netProfit = totalProfit - totalExpenses;
 
-  // Category breakdown
   const categoryStats = new Map();
-  sales.forEach(sale => {
+  filteredSales.forEach(sale => {
     const product = products.find(p => p.id === sale.product_id);
     if (product) {
       const existing = categoryStats.get(product.category) || { sales: 0, revenue: 0 };
@@ -495,16 +544,52 @@ export default function ReportsPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <Header 
-        title="Reports" 
+      <Header
+        title="Reports"
         description="Generate comprehensive business reports and analytics"
-        showDatePicker
+        showDatePicker={false}
         showExportButton
-        onDateRangeChange={setDateRange}
         onExport={() => handleExportReport('Complete Business Report')}
       />
-      
+
       <div className="p-6 space-y-6">
+        {/* Date Range Selector */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              Date Range Selection
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="start-date">Start Date</Label>
+                <Input
+                  id="start-date"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="end-date">End Date</Label>
+                <Input
+                  id="end-date"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Reports will include data from {new Date(startDate).toLocaleDateString()} to {new Date(endDate).toLocaleDateString()}
+            </p>
+          </CardContent>
+        </Card>
+
         {/* Report Type Selection */}
         <Card>
           <CardHeader>
@@ -560,7 +645,7 @@ export default function ReportsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Total Sales</p>
-                      <p className="text-2xl font-bold text-foreground">{sales.length}</p>
+                      <p className="text-2xl font-bold text-foreground">{filteredSales.length}</p>
                     </div>
                     <ShoppingCart className="h-8 w-8 text-purple-600" />
                   </div>
@@ -582,7 +667,7 @@ export default function ReportsPage() {
 
             {/* Export Buttons */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
+              <Button
                 onClick={() => handleExportReport('Business Overview PDF')}
                 className="justify-start h-auto p-4"
                 variant="outline"
@@ -595,7 +680,7 @@ export default function ReportsPage() {
                 </div>
               </Button>
 
-              <Button 
+              <Button
                 onClick={() => handleExportReport('Business Data Excel')}
                 className="justify-start h-auto p-4"
                 variant="outline"
@@ -608,7 +693,7 @@ export default function ReportsPage() {
                 </div>
               </Button>
 
-              <Button 
+              <Button
                 onClick={() => handleExportReport('Charts and Graphs')}
                 className="justify-start h-auto p-4"
                 variant="outline"
@@ -658,8 +743,8 @@ export default function ReportsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {Array.from(new Set(sales.map(s => s.payment_method))).map(method => {
-                      const methodSales = sales.filter(s => s.payment_method === method);
+                    {Array.from(new Set(filteredSales.map(s => s.payment_method))).map(method => {
+                      const methodSales = filteredSales.filter(s => s.payment_method === method);
                       const methodRevenue = methodSales.reduce((sum, s) => sum + parseFloat(s.total_amount.toString()), 0);
                       return (
                         <div key={method} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
@@ -676,7 +761,7 @@ export default function ReportsPage() {
               </Card>
             </div>
 
-            <Button 
+            <Button
               onClick={() => handleExportReport('Sales Analysis Report')}
               data-testid="button-export-sales"
             >
@@ -751,7 +836,7 @@ export default function ReportsPage() {
               </Card>
             </div>
 
-            <Button 
+            <Button
               onClick={() => handleExportReport('Inventory Report')}
               data-testid="button-export-inventory"
             >
@@ -801,7 +886,7 @@ export default function ReportsPage() {
                     </div>
                     <div className="flex justify-between">
                       <span>Expense Count</span>
-                      <span className="font-bold">{expenses.length}</span>
+                      <span className="font-bold">{filteredExpenses.length}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -833,7 +918,7 @@ export default function ReportsPage() {
               </Card>
             </div>
 
-            <Button 
+            <Button
               onClick={() => handleExportReport('Financial Summary')}
               data-testid="button-export-financial"
             >
@@ -898,13 +983,13 @@ export default function ReportsPage() {
                     <div className="p-4 bg-muted/50 rounded-lg">
                       <p className="text-sm text-muted-foreground">Average Sale Value</p>
                       <p className="text-xl font-bold">
-                        {formatCurrency(sales.length > 0 ? totalRevenue / sales.length : 0)}
+                        {formatCurrency(filteredSales.length > 0 ? totalRevenue / filteredSales.length : 0)}
                       </p>
                     </div>
                     <div className="p-4 bg-muted/50 rounded-lg">
                       <p className="text-sm text-muted-foreground">Products per Sale</p>
                       <p className="text-xl font-bold">
-                        {sales.length > 0 ? (sales.reduce((sum, s) => sum + s.quantity, 0) / sales.length).toFixed(1) : 0}
+                        {filteredSales.length > 0 ? (filteredSales.reduce((sum, s) => sum + s.quantity, 0) / filteredSales.length).toFixed(1) : 0}
                       </p>
                     </div>
                     <div className="p-4 bg-muted/50 rounded-lg">
@@ -918,7 +1003,7 @@ export default function ReportsPage() {
               </Card>
             </div>
 
-            <Button 
+            <Button
               onClick={() => handleExportReport('Performance Report')}
               data-testid="button-export-performance"
             >
