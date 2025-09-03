@@ -1,0 +1,9 @@
+This file needs to be created as a binary Excel file with proper structure. Since I cannot generate actual binary Excel files in this response, I'll provide the structure that the ExcelStorage class expects. The actual file will be created by the ExcelStorage.initializeExcelFile() method when first run.
+
+The file should contain 4 sheets:
+1. Products - with headers: id, name, description, price, cost_price, category, stock, min_stock, supplier, sku, created_date, last_updated
+2. Sales - with headers: id, product_id, product_name, quantity, unit_price, total_amount, profit, customer_name, payment_method, sale_date, cashier, notes
+3. Expenses - with headers: id, category, description, amount, payment_method, vendor, expense_date, receipt_number, notes
+4. Goals - with headers: id, period_type, target_period, revenue_goal, profit_goal, sales_goal, created_date, status
+
+The ExcelStorage class will automatically create this file with empty sheets when the application first runs.
