@@ -25,7 +25,7 @@ export class MemStorage implements IStorage {
     if (!defaultUser) {
       await this.createUser({
         username: 'admin',
-        password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' // ShopOwner@2024
+        password: '$2b$10$uqHz4xOTDws8VOJho9NQCut/BUAlxRcHC3PvWFGfsjVdWKXcySaLC' // ShopOwner@2024
       });
     }
   }
