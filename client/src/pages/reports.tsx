@@ -129,6 +129,29 @@ export default function ReportsPage() {
   };
 
   const generatePDFReport = () => {
+    // Calculate required variables for the report
+    const lowStockProducts = products.filter(p => p.stock <= p.min_stock);
+    const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+    const totalExpenses = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+    const netProfit = totalProfit - totalExpenses;
+
+    // Category breakdown
+    const categoryStats = new Map();
+    sales.forEach(sale => {
+      const product = products.find(p => p.id === sale.product_id);
+      if (product) {
+        const existing = categoryStats.get(product.category) || { sales: 0, revenue: 0 };
+        existing.sales += sale.quantity;
+        existing.revenue += parseFloat(sale.total_amount.toString());
+        categoryStats.set(product.category, existing);
+      }
+    });
+
+    const topCategories = Array.from(categoryStats.entries())
+      .sort(([, a], [, b]) => b.revenue - a.revenue)
+      .slice(0, 5);
+
     return `
 <!DOCTYPE html>
 <html>
@@ -364,6 +387,17 @@ export default function ReportsPage() {
   };
 
   const generateCompleteReport = () => {
+    // Calculate required variables for the complete report
+    const lowStockProducts = products.filter(p => p.stock <= p.min_stock);
+    const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+    const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
+    const totalExpenses = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
+    const netProfit = totalProfit - totalExpenses;
+
+    // Generate basic PDF content first
+    const pdfContent = generatePDFReport();
+    const bodyContent = pdfContent.split('<body>')[1]?.split('</body>')[0] || '';
+
     return `
 <!DOCTYPE html>
 <html>
@@ -389,7 +423,7 @@ export default function ReportsPage() {
         <p>Generated on ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
     </div>
 
-    ${generatePDFReport().split('<body>')[1].split('</body>')[0]}
+    ${bodyContent}
 
     <div class="section">
         <h2>Financial Summary</h2>
