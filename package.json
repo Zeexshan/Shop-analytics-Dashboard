@@ -157,7 +157,6 @@
     },
     "npmRebuild": false,
     "nodeGypRebuild": false,
-    "buildDependenciesFromSource": false,
-    "electronRebuild": false
+    "buildDependenciesFromSource": false
   }
 }
