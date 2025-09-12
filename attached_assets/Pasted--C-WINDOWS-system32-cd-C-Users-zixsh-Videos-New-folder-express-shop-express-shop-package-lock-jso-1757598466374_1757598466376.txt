@@ -1,0 +1,97 @@
+
+C:\WINDOWS\system32>cd C:\Users\zixsh\Videos\New folder\express-shop\express-shop\package-lock.json
+The directory name is invalid.
+
+C:\WINDOWS\system32>C:\Users\zixsh\Videos\New folder\express-shop\express-shop
+'C:\Users\zixsh\Videos\New' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\WINDOWS\system32>cd C:\Users\zixsh\Videos\New folder\express-shop\express-shop\package-lock.json
+The directory name is invalid.
+
+C:\WINDOWS\system32>cd C:\Users\zixsh\Videos\New folder\express-shop\express-shop
+
+C:\Users\zixsh\Videos\New folder\express-shop\express-shop>build-desktop-windows.bat
+Building Shop Analytics Dashboard Desktop App...
+By zeeexshan - Commercial License Protected
+Installing dependencies (no native scripts)...
+npm warn skipping integrity check for git dependency ssh://git@github.com/electron/node-gyp.git
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated @npmcli/move-file@2.0.1: This functionality has been moved to @npmcli/fs
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated rimraf@2.6.3: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated boolean@3.2.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 980 packages in 6m
+
+C:\Users\zixsh\Videos\New folder\express-shop\express-shop>npm run build:desktop
+
+> rest-express@1.0.0 build:desktop
+> npm run build && npm run obfuscate && electron-builder
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+✓ 3027 modules transformed.
+../dist/public/index.html                        1.16 kB │ gzip:   0.62 kB
+../dist/public/assets/index-CE-ZlZiQ.css        69.10 kB │ gzip:  11.98 kB
+../dist/public/assets/purify.es-BFmuJLeH.js     21.93 kB │ gzip:   8.62 kB
+../dist/public/assets/index.es-DtY81uX6.js     150.53 kB │ gzip:  51.48 kB
+../dist/public/assets/index-Dt78nabp.js      1,635.51 kB │ gzip: 468.34 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 49.99s
+
+  dist\index.js  54.6kb
+
+Done in 181ms
+
+> rest-express@1.0.0 obfuscate
+> javascript-obfuscator dist --output dist --config ./obfuscation.config.cjs
+
+
+[javascript-obfuscator-cli] Obfuscating file: dist\index.js...
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\index-Dt78nabp.js...
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\index.es-DtY81uX6.js...
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\purify.es-BFmuJLeH.js...
+  • electron-builder  version=26.0.12 os=10.0.19045
+  • loaded configuration  file=package.json ("build" field)
+  ⨯ Invalid configuration object. electron-builder 26.0.12 has been initialized using a configuration object that does not match the API schema.
+ - configuration has an unknown property 'electronRebuild'. These properties are valid:
+   object { afterAllArtifactBuild?, afterExtract?, afterPack?, afterSign?, apk?, appId?, appImage?, appx?, appxManifestCreated?, artifactBuildCompleted?, artifactBuildStarted?, artifactName?, asar?, asarUnpack?, beforeBuild?, beforePack?, buildDependenciesFromSource?, buildNumber?, buildVersion?, compression?, copyright?, cscKeyPassword?, cscLink?, deb?, defaultArch?, detectUpdateChannel?, directories?, disableDefaultIgnoredFiles?, disableSanityCheckAsar?, dmg?, downloadAlternateFFmpeg?, electronBranding?, electronCompile?, electronDist?, electronDownload?, electronFuses?, electronLanguages?, electronUpdaterCompatibility?, electronVersion?, executableName?, extends?, extraFiles?, extraMetadata?, extraResources?, fileAssociations?, files?, flatpak?, forceCodeSigning?, framework?, freebsd?, generateUpdatesFilesForAllChannels?, icon?, includePdb?, launchUiVersion?, linux?, mac?, mas?, masDev?, msi?, msiProjectCreated?, msiWrapped?, nativeRebuilder?, nodeGypRebuild?, nodeVersion?, npmArgs?, npmRebuild?, nsis?, nsisWeb?, onNodeModuleFile?, p5p?, pacman?, pkg?, portable?, productName?, protocols?, publish?, releaseInfo?, removePackageKeywords?, removePackageScripts?, rpm?, snap?, squirrelWindows?, target?, win?, $schema? }
+     How to fix:
+     1. Open https://www.electron.build/configuration
+     2. Search the option name on the page (or type in into Search to find across the docs).
+       * Not found? The option was deprecated or not exists (check spelling).
+       * Found? Check that the option in the appropriate place. e.g. "title" only in the "dmg", not in the root.
+  failedTask=build stackTrace=ValidationError: Invalid configuration object. electron-builder 26.0.12 has been initialized using a configuration object that does not match the API schema.
+ - configuration has an unknown property 'electronRebuild'. These properties are valid:
+   object { afterAllArtifactBuild?, afterExtract?, afterPack?, afterSign?, apk?, appId?, appImage?, appx?, appxManifestCreated?, artifactBuildCompleted?, artifactBuildStarted?, artifactName?, asar?, asarUnpack?, beforeBuild?, beforePack?, buildDependenciesFromSource?, buildNumber?, buildVersion?, compression?, copyright?, cscKeyPassword?, cscLink?, deb?, defaultArch?, detectUpdateChannel?, directories?, disableDefaultIgnoredFiles?, disableSanityCheckAsar?, dmg?, downloadAlternateFFmpeg?, electronBranding?, electronCompile?, electronDist?, electronDownload?, electronFuses?, electronLanguages?, electronUpdaterCompatibility?, electronVersion?, executableName?, extends?, extraFiles?, extraMetadata?, extraResources?, fileAssociations?, files?, flatpak?, forceCodeSigning?, framework?, freebsd?, generateUpdatesFilesForAllChannels?, icon?, includePdb?, launchUiVersion?, linux?, mac?, mas?, masDev?, msi?, msiProjectCreated?, msiWrapped?, nativeRebuilder?, nodeGypRebuild?, nodeVersion?, npmArgs?, npmRebuild?, nsis?, nsisWeb?, onNodeModuleFile?, p5p?, pacman?, pkg?, portable?, productName?, protocols?, publish?, releaseInfo?, removePackageKeywords?, removePackageScripts?, rpm?, snap?, squirrelWindows?, target?, win?, $schema? }
+     How to fix:
+     1. Open https://www.electron.build/configuration
+     2. Search the option name on the page (or type in into Search to find across the docs).
+       * Not found? The option was deprecated or not exists (check spelling).
+       * Found? Check that the option in the appropriate place. e.g. "title" only in the "dmg", not in the root.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         at validate (C:\Users\zixsh\Videos\New folder\express-shop\express-shop\node_modules\@develar\schema-utils\dist\validate.js:86:11)
+    at validateConfiguration (C:\Users\zixsh\Videos\New folder\express-shop\express-shop\node_modules\app-builder-lib\src\util\config\config.ts:239:3)
+    at Packager.validateConfig (C:\Users\zixsh\Videos\New folder\express-shop\express-shop\node_modules\app-builder-lib\src\packager.ts:384:5)
+    at Packager.build (C:\Users\zixsh\Videos\New folder\express-shop\express-shop\node_modules\app-builder-lib\src\packager.ts:392:5)
+    at executeFinally (C:\Users\zixsh\Videos\New folder\express-shop\express-shop\node_modules\builder-util\src\promise.ts:12:14)
+
+C:\Users\zixsh\Videos\New folder\express-shop\express-shop>

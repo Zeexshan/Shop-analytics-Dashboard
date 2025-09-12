@@ -1,0 +1,126 @@
+Microsoft Windows [Version 10.0.19045.6216]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32>cd C:\Users\zixsh\Downloads\express-shop\express-shop
+
+C:\Users\zixsh\Downloads\express-shop\express-shop>npm run build:desktop
+
+> rest-express@1.0.0 build:desktop
+> npm run build && electron-builder
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+'vite' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\zixsh\Downloads\express-shop\express-shop>npm i
+npm warn skipping integrity check for git dependency ssh://git@github.com/electron/node-gyp.git
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated @npmcli/move-file@2.0.1: This functionality has been moved to @npmcli/fs
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated rimraf@2.6.3: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated boolean@3.2.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+added 850 packages, and audited 851 packages in 3m
+
+108 packages are looking for funding
+  run `npm fund` for details
+
+12 vulnerabilities (3 low, 8 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+
+C:\Users\zixsh\Downloads\express-shop\express-shop>npm run dev
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+'NODE_ENV' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\zixsh\Downloads\express-shop\express-shop>npm run build:desktop
+
+> rest-express@1.0.0 build:desktop
+> npm run build && electron-builder
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (4) src\App.tsxBrowserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2638 modules transformed.
+../dist/public/index.html                   1.16 kB │ gzip:   0.62 kB
+../dist/public/assets/index-BgJHYF3z.css   69.31 kB │ gzip:  11.96 kB
+../dist/public/assets/index-DmhTI3hR.js   971.42 kB │ gzip: 273.34 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 28.33s
+
+  dist\index.js  26.7kb
+
+Done in 108ms
+  • electron-builder  version=26.0.12 os=10.0.19045
+  • loaded configuration  file=C:\Users\zixsh\Downloads\express-shop\express-shop\electron-builder.json
+  • writing effective config  file=dist-electron\builder-effective-config.yaml
+  • executing @electron/rebuild  electronVersion=38.0.0 arch=x64 buildFromSource=false appDir=./
+  • installing native dependencies  arch=x64
+  • preparing       moduleName=bufferutil arch=x64
+  • finished        moduleName=bufferutil arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=38.0.0 appOutDir=dist-electron\win-unpacked
+
+C:\Users\zixsh\Downloads\express-shop\express-shop>cd dist-electron
+
+C:\Users\zixsh\Downloads\express-shop\express-shop\dist-electron>cd win-unpacked
+
+C:\Users\zixsh\Downloads\express-shop\express-shop\dist-electron\win-unpacked>"Shop Analytics Dashboard.exe"
+
+C:\Users\zixsh\Downloads\express-shop\express-shop\dist-electron\win-unpacked>
+Failed to start server: Error: spawn C:\Users\zixsh\Downloads\express-shop\express-shop\dist-electron\win-unpacked\Shop Analytics Dashboard.exe ENOENT
+    at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+    at onErrorNT (node:internal/child_process:483:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'spawn C:\\Users\\zixsh\\Downloads\\express-shop\\express-shop\\dist-electron\\win-unpacked\\Shop Analytics Dashboard.exe',
+  path: 'C:\\Users\\zixsh\\Downloads\\express-shop\\express-shop\\dist-electron\\win-unpacked\\Shop Analytics Dashboard.exe',
+  spawnargs: [
+    'C:\\Users\\zixsh\\Downloads\\express-shop\\express-shop\\dist-electron\\win-unpacked\\resources\\app.asar\\dist\\index.js'
+  ]
+}
+Failed to start application: Error: spawn C:\Users\zixsh\Downloads\express-shop\express-shop\dist-electron\win-unpacked\Shop Analytics Dashboard.exe ENOENT
+    at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+    at onErrorNT (node:internal/child_process:483:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'spawn C:\\Users\\zixsh\\Downloads\\express-shop\\express-shop\\dist-electron\\win-unpacked\\Shop Analytics Dashboard.exe',
+  path: 'C:\\Users\\zixsh\\Downloads\\express-shop\\express-shop\\dist-electron\\win-unpacked\\Shop Analytics Dashboard.exe',
+  spawnargs: [
+    'C:\\Users\\zixsh\\Downloads\\express-shop\\express-shop\\dist-electron\\win-unpacked\\resources\\app.asar\\dist\\index.js'
+  ]
+}

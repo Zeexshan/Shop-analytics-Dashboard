@@ -1,0 +1,44 @@
+FINAL MINOR UI FIXES NEEDED
+
+The major functionality is working perfectly! Just need to fix these last few UI issues:
+
+## REMAINING ISSUES:
+
+### 1. CHART DOWNLOAD BUTTONS NOT WORKING
+**Issue**: Download buttons on Revenue and Sales by Category charts only log to console, don't actually download
+**Fix Needed**: Implement actual chart download functionality (PNG/PDF export) instead of console.log
+
+### 2. REVENUE CHART DATE RANGE SELECTOR
+**Issue**: Date range buttons on the revenue chart aren't functional 
+**Fix Needed**: Connect the chart's date range buttons to actually filter the revenue chart data
+
+### 3. DASHBOARD CUSTOM DATE FILTER
+**Issue**: Month filter dropdown works for preset ranges, but custom date picker doesn't update the data
+**Fix Needed**: Ensure custom date range selection triggers data refresh on dashboard
+
+### 4. DESKTOP PRINT FUNCTIONALITY
+**Issue**: Print works in browser (npm run dev) but shows "You'll need an app to open this link" in desktop app
+**Fix Needed**: Implement Electron-specific print handling using ipcRenderer or window.electronAPI for desktop environment
+
+## IMPLEMENTATION NOTES:
+
+**For Chart Downloads:**
+- Use chart library's built-in export features (recharts/canvas export)
+- Generate PNG or PDF files and trigger browser download
+
+**For Desktop Print:**
+- Detect Electron environment: `window.navigator.userAgent.includes('Electron')`
+- Use Electron's print API instead of window.print() for desktop
+- May need to expose print function in preload.js
+
+**For Custom Date Range:**
+- Ensure date picker onChange event calls the same API update as dropdown filter
+- Verify date format compatibility with backend
+
+## SUCCESS CRITERIA:
+- Chart download buttons generate and download actual files
+- Revenue chart date buttons filter the chart data  
+- Custom date picker updates all dashboard data
+- Print works in both browser and desktop app
+
+These are very minor fixes for an otherwise fully functional business application.

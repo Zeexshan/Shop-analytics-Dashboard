@@ -1,0 +1,58 @@
+{
+  "appId": "com.shopanalytics.dashboard",
+  "productName": "Shop Analytics Dashboard",
+  "directories": {
+    "output": "dist-electron"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "assets/**/*",
+    "data/**/*",
+    "server/**/*",
+    "shared/**/*",
+    "package.json",
+    "node_modules/**/*"
+  ],
+  "nodeGypRebuild": false,
+  "buildDependenciesFromSource": false,
+  "npmRebuild": false,
+  "electronRebuild": false,
+  "extraResources": [
+    {
+      "from": "assets/",
+      "to": "assets/"
+    },
+    {
+      "from": "data/",
+      "to": "data/"
+    }
+  ],
+  "win": {
+    "target": "nsis",
+    "icon": "assets/logo.png",
+    "requestedExecutionLevel": "asInvoker",
+    "artifactName": "${productName}-${version}-Windows.${ext}"
+  },
+  "mac": {
+    "icon": "assets/logo.png",
+    "category": "public.app-category.business",
+    "artifactName": "${productName}-${version}-macOS.${ext}"
+  },
+  "linux": {
+    "icon": "assets/logo.png",
+    "category": "Office",
+    "artifactName": "${productName}-${version}-Linux.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Shop Analytics",
+    "displayLanguageSelector": false,
+    "installerIcon": "assets/icon.ico",
+    "uninstallerIcon": "assets/icon.ico",
+    "allowElevation": false
+  }
+}
