@@ -1,0 +1,79 @@
+Hello Replit AI,
+
+This is a focused brief to implement the final commercial logic for my Shop Analytics Desktop Application. The branding, watermarking, and obfuscation tasks are already complete. Your task is to implement a robust licensing and password reset system.
+
+Please follow these instructions carefully.
+
+Part 1: Environment Setup & Secrets Configuration
+Before you begin coding, please configure the necessary environment secrets. You have prompted me for several values. Please use the following instructions to populate them:
+
+For JWT_SECRET:
+
+Purpose: This is for signing and verifying secure user authentication tokens.
+
+Action: Please generate a new, cryptographically secure random string of at least 64 characters and use it as the value for this secret.
+
+For ADMIN_PASSWORD_HASH:
+
+Purpose: This stores the hashed version of the administrator's password.
+
+Action: You can leave this value blank for now. The application's logic will handle creating and updating this from a default password.
+
+For ADMIN_RESET_CODE:
+
+Purpose: This is part of a previous, non-functional reset system. It is now deprecated.
+
+Action: Please set its value to DEPRECATED_NOT_USED.
+
+For GUMROAD_PRODUCT_PERMALINK & GUMROAD_PRODUCT_ID:
+
+Purpose: These identify my product for license key validation with the Gumroad API.
+
+Action: Use the static string value: ihpuq for both of these secrets.
+
+For LICENSE_HASH_SALT & DEVICE_HASH_SALT:
+
+Purpose: These are random salts used to enhance the security of various hashing algorithms.
+
+Action: Please generate a new, cryptographically secure random string of at least 64 characters for each of these values.
+
+Once these secrets are configured, please proceed with the following implementation tasks.
+
+Part 2: Core Feature Implementation
+Task A: Implement One-Time Gumroad License Activation
+
+Goal: The application must be activated once online, then work permanently offline on that machine.
+
+Workflow:
+
+On application startup, the system must check for a locally stored activation flag (using electron-store or a similar persistent storage method).
+
+If the application is not activated, you must prevent the main application window from opening. Instead, you must show a dedicated "Activation Window."
+
+This activation window needs an input field for a Gumroad license key. When the user submits a key, the application must perform a one-time online check by making a POST request to the Gumroad License API (https://api.gumroad.com/v2/licenses/verify). This request should use the GUMROAD_PRODUCT_PERMALINK secret.
+
+On Successful Validation (when the API confirms the key is valid):
+
+The application must securely store two pieces of data locally and persistently: an activation flag (e.g., isActivated: true) and the validated licenseKey itself.
+
+After saving, show a success message, close the activation window, and launch the main application window.
+
+On Failed Validation: Display a clear error message to the user within the activation window.
+
+Task B: Fix and Re-implement the Password Reset Functionality
+
+Goal: The current, non-functional reset button needs to be replaced with a new system that uses the customer's license key for verification.
+
+Workflow:
+
+Locate the existing "Reset Password" or "Forgot Password" functionality on the login screen.
+
+Modify its behavior so that when a user clicks it, a new window or dialog appears.
+
+This new dialog must prompt the user to enter their original license key.
+
+The application must then compare the key the user entered against the licenseKey that was stored locally during the successful activation (from Task A).
+
+If the keys match, the application must reset the admin password to the default value: ShopOwner@2024. This reset process requires securely hashing this default password (using bcryptjs) and overwriting the currently stored password hash file.
+
+If the keys do not match, display an "Invalid license key" error message. This new system completely replaces any old reset logic.
