@@ -5,7 +5,7 @@ const routesAuthor = reversed.split('').reverse().join('');
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { authenticateToken, errorHandler, type AuthRequest } from "./middleware";
+import { authenticateToken, authenticateAdminToken, authenticateDeviceToken, errorHandler, type AuthRequest } from "./middleware";
 import { insertProductSchema, insertSaleSchema, insertExpenseSchema, insertGoalSchema, loginSchema } from "@shared/schema";
 import { licenseStorage } from "./license-storage-simple";
 import { DeviceManager } from "./device-utils";
@@ -17,9 +17,14 @@ import path from 'path';
 // Method 4: Hex encoding
 const creator = String.fromCharCode(0x7a, 0x65, 0x65, 0x78, 0x73, 0x68, 0x61, 0x6e);
 
-const JWT_SECRET = process.env.JWT_SECRET || '8e5f79925d1ee68a96667620ff2f9930260562b36687725db980a7adde696d2b';
-// Type assertion since we've verified it exists
-const JWT_SECRET_VERIFIED = JWT_SECRET as string;
+// Helper function to get JWT secret at runtime (after environment validation)
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET not configured - environment validation failed');
+  }
+  return secret;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // --- THIS IS THE ONLY SECTION THAT HAS BEEN CHANGED ---
@@ -30,12 +35,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ADMIN_USERNAME = 'admin';
       const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
       
-      if (!ADMIN_PASSWORD_HASH) {
-        console.error('CRITICAL: ADMIN_PASSWORD_HASH environment variable is required');
-        return res.status(500).json({ message: 'Authentication system not configured' });
-      }
+      let HASHED_PASSWORD: string;
       
-      let HASHED_PASSWORD = ADMIN_PASSWORD_HASH;
+      // If no password hash is set, create one from the default password (development only)
+      if (!ADMIN_PASSWORD_HASH || ADMIN_PASSWORD_HASH === '') {
+        if (process.env.NODE_ENV !== 'development') {
+          console.error('CRITICAL: ADMIN_PASSWORD_HASH required in production');
+          return res.status(500).json({ message: 'Authentication system not configured' });
+        }
+        console.log('No admin password hash found, creating from default password (development)');
+        HASHED_PASSWORD = await bcrypt.hash('ShopOwner@2024', 10);
+      } else {
+        HASHED_PASSWORD = ADMIN_PASSWORD_HASH;
+      }
       
       // Try to load custom password if exists (from reset operations)
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
@@ -66,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = { id: 'admin-user-id', username: ADMIN_USERNAME };
       const token = jwt.sign(
         { id: user.id, username: user.username },
-        JWT_SECRET_VERIFIED,
+        getJwtSecret(),
         { expiresIn: '24h' }
       );
       
@@ -79,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // --- END OF THE CHANGED SECTION ---
 
 
-  app.get('/api/auth/verify', authenticateToken, (req: AuthRequest, res) => {
+  app.get('/api/auth/verify', authenticateAdminToken, (req: AuthRequest, res) => {
     res.json({ user: req.user });
   });
 
@@ -226,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           device_id: device_id,
           activation_id: activationResult.activation?.id
         },
-        JWT_SECRET_VERIFIED,
+        getJwtSecret(),
         { expiresIn: '7d' } // Shorter expiry for better security
       );
 
@@ -277,7 +289,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           device_id: device_id,
           activation_id: verification.activation?.id
         },
-        JWT_SECRET_VERIFIED,
+        getJwtSecret(),
         { expiresIn: '7d' }
       );
 
@@ -399,8 +411,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Enhanced watermark security - Password change endpoint for licensed users
-  app.post('/api/auth/change-password', authenticateToken, async (req, res, next) => {
+  // Enhanced watermark security - Password change endpoint for admin users only
+  app.post('/api/auth/change-password', authenticateAdminToken, async (req, res, next) => {
     try {
       const { currentPassword, newPassword } = req.body;
       
@@ -412,17 +424,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'New password must be at least 8 characters' });
       }
       
-      // Get current stored password hash
+      // Get current stored password hash - NO HARDCODED FALLBACKS in production
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
-      let currentHashedPassword = '$2b$10$cM2I7lu2zO9W4RFDmchb/e5gr5gYZPH5H/FEWTdH5EKqpRL3zH57a'; // Default
+      let currentHashedPassword: string;
       
+      // First try to load from password file (from previous password changes)
       try {
         if (fs.existsSync(passwordFile)) {
           const passwordData = JSON.parse(fs.readFileSync(passwordFile, 'utf8'));
           currentHashedPassword = passwordData.hashedPassword;
+        } else {
+          // Use environment ADMIN_PASSWORD_HASH - REQUIRED in production
+          const envPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+          if (!envPasswordHash) {
+            if (process.env.NODE_ENV === 'development') {
+              // Only in development, create from default password
+              currentHashedPassword = await bcrypt.hash('ShopOwner@2024', 10);
+            } else {
+              return res.status(500).json({ 
+                message: 'Admin password not configured. ADMIN_PASSWORD_HASH environment variable required.' 
+              });
+            }
+          } else {
+            currentHashedPassword = envPasswordHash;
+          }
         }
       } catch (error) {
-        console.log('Using default password for verification');
+        return res.status(500).json({ 
+          message: 'Error accessing password configuration' 
+        });
       }
       
       // Verify current password
@@ -458,7 +488,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard analytics
-  app.get('/api/dashboard/kpis', authenticateToken, async (req, res, next) => {
+  app.get('/api/dashboard/kpis', authenticateAdminToken, async (req, res, next) => {
     try {
       let startDate: Date | undefined;
       let endDate: Date | undefined;
@@ -475,7 +505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/dashboard/charts', authenticateToken, async (req, res, next) => {
+  app.get('/api/dashboard/charts', authenticateAdminToken, async (req, res, next) => {
     try {
       let startDate: Date | undefined;
       let endDate: Date | undefined;
@@ -509,7 +539,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Product routes
-  app.get('/api/products', authenticateToken, async (req, res, next) => {
+  app.get('/api/products', authenticateAdminToken, async (req, res, next) => {
     try {
       const products = await storage.excel.getAllProducts();
       res.json(products);
@@ -518,7 +548,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/products/:id', authenticateToken, async (req, res, next) => {
+  app.get('/api/products/:id', authenticateAdminToken, async (req, res, next) => {
     try {
       const product = await storage.excel.getProductById(req.params.id);
       if (!product) {
@@ -530,7 +560,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/products', authenticateToken, async (req, res, next) => {
+  app.post('/api/products', authenticateAdminToken, async (req, res, next) => {
     try {
       const productData = insertProductSchema.parse(req.body);
       const product = await storage.excel.addProduct(productData);
@@ -540,7 +570,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/products/:id', authenticateToken, async (req, res, next) => {
+  app.put('/api/products/:id', authenticateAdminToken, async (req, res, next) => {
     try {
       const updates = insertProductSchema.partial().parse(req.body);
       const product = await storage.excel.updateProduct(req.params.id, updates);
@@ -553,7 +583,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/products/:id', authenticateToken, async (req, res, next) => {
+  app.delete('/api/products/:id', authenticateAdminToken, async (req, res, next) => {
     try {
       const deleted = await storage.excel.deleteProduct(req.params.id);
       if (!deleted) {
@@ -565,7 +595,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/products/low-stock', authenticateToken, async (req, res, next) => {
+  app.get('/api/products/low-stock', authenticateAdminToken, async (req, res, next) => {
     try {
       const products = await storage.excel.getLowStockProducts();
       res.json(products);
@@ -575,7 +605,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sales routes
-  app.get('/api/sales', authenticateToken, async (req, res, next) => {
+  app.get('/api/sales', authenticateAdminToken, async (req, res, next) => {
     try {
       const sales = await storage.excel.getAllSales();
       res.json(sales);
@@ -584,7 +614,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/sales', authenticateToken, async (req, res, next) => {
+  app.post('/api/sales', authenticateAdminToken, async (req, res, next) => {
     try {
       const saleData = insertSaleSchema.parse(req.body);
       const sale = await storage.excel.addSale(saleData);
@@ -594,7 +624,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/sales/recent', authenticateToken, async (req, res, next) => {
+  app.get('/api/sales/recent', authenticateAdminToken, async (req, res, next) => {
     try {
       const sales = await storage.excel.getAllSales();
       const recentSales = sales
@@ -606,7 +636,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/sales/:id', authenticateToken, async (req, res, next) => {
+  app.put('/api/sales/:id', authenticateAdminToken, async (req, res, next) => {
     try {
       const updateData = req.body; // Should validate with partial schema
       const sale = await storage.excel.updateSale(req.params.id, updateData);
@@ -620,7 +650,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Expense routes
-  app.get('/api/expenses', authenticateToken, async (req, res, next) => {
+  app.get('/api/expenses', authenticateAdminToken, async (req, res, next) => {
     try {
       const expenses = await storage.excel.getAllExpenses();
       res.json(expenses);
@@ -629,7 +659,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/expenses', authenticateToken, async (req, res, next) => {
+  app.post('/api/expenses', authenticateAdminToken, async (req, res, next) => {
     try {
       const expenseData = insertExpenseSchema.parse(req.body);
       const expense = await storage.excel.addExpense(expenseData);
@@ -640,7 +670,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Goal routes
-  app.get('/api/goals', authenticateToken, async (req, res, next) => {
+  app.get('/api/goals', authenticateAdminToken, async (req, res, next) => {
     try {
       const goals = await storage.excel.getAllGoals();
       res.json(goals);
@@ -649,7 +679,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/goals', authenticateToken, async (req, res, next) => {
+  app.post('/api/goals', authenticateAdminToken, async (req, res, next) => {
     try {
       const goalData = insertGoalSchema.parse(req.body);
       const goal = await storage.excel.addGoal(goalData);
@@ -659,7 +689,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/goals/active', authenticateToken, async (req, res, next) => {
+  app.get('/api/goals/active', authenticateAdminToken, async (req, res, next) => {
     try {
       const goals = await storage.excel.getActiveGoals();
       res.json(goals);
@@ -669,7 +699,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Data management routes - Enhanced for production readiness
-  app.post('/api/data/reset', authenticateToken, async (req, res, next) => {
+  app.post('/api/data/reset', authenticateAdminToken, async (req, res, next) => {
     try {
       const { password } = req.body;
       
@@ -715,7 +745,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Storage optimization endpoint
-  app.get('/api/data/stats', authenticateToken, async (req, res, next) => {
+  app.get('/api/data/stats', authenticateAdminToken, async (req, res, next) => {
     try {
       const result = await storage.excel.optimizeStorage();
       res.json(result);
