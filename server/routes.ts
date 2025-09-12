@@ -34,9 +34,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Secure login with required environment configuration
       const ADMIN_USERNAME = 'admin';
       const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
-      
+
       let HASHED_PASSWORD: string;
-      
+
       // If no password hash is set, create one from the default password (development only)
       if (!ADMIN_PASSWORD_HASH || ADMIN_PASSWORD_HASH === '') {
         if (process.env.NODE_ENV !== 'development') {
@@ -48,7 +48,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         HASHED_PASSWORD = ADMIN_PASSWORD_HASH;
       }
-      
+
       // Try to load custom password if exists (from reset operations)
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
       try {
@@ -67,13 +67,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (username !== ADMIN_USERNAME) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
-      
+
       // Check if the password is correct using bcrypt
       const isValid = await bcrypt.compare(password, HASHED_PASSWORD);
       if (!isValid) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
-      
+
       // If everything is correct, create the token
       const user = { id: 'admin-user-id', username: ADMIN_USERNAME };
       const token = jwt.sign(
@@ -81,7 +81,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         getJwtSecret(),
         { expiresIn: '24h' }
       );
-      
+
       res.json({ token, user });
 
     } catch (error) {
@@ -99,42 +99,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/auth/forgot-password', async (req, res, next) => {
     try {
       console.log('Password reset request received');
-      
+
       const { licenseKey, adminResetCode } = req.body;
-      
+
       if (!licenseKey) {
         console.log('No license key provided');
         return res.status(400).json({ message: 'License key and admin reset code are required' });
       }
-      
+
       if (!adminResetCode) {
         console.log('No admin reset code provided');
         return res.status(400).json({ message: 'Admin reset code is required' });
       }
-      
+
       // Verify admin reset code
       const ADMIN_RESET_CODE = process.env.ADMIN_RESET_CODE;
       if (!ADMIN_RESET_CODE) {
         console.error('CRITICAL: ADMIN_RESET_CODE not configured');
         return res.status(500).json({ message: 'Password reset not available' });
       }
-      
+
       if (adminResetCode !== ADMIN_RESET_CODE) {
         console.log('Invalid admin reset code');
         return res.status(401).json({ message: 'Invalid reset code' });
       }
-      
+
       console.log('License key validation initiated');
-      
+
       // Verify license key using Gumroad API - NO FALLBACKS for security
       const GUMROAD_PRODUCT_PERMALINK = process.env.GUMROAD_PRODUCT_PERMALINK;
       const GUMROAD_PRODUCT_ID = process.env.GUMROAD_PRODUCT_ID;
-      
+
       if (!GUMROAD_PRODUCT_PERMALINK || !GUMROAD_PRODUCT_ID) {
         console.error('CRITICAL: Gumroad credentials not configured');
         return res.status(500).json({ message: 'Service temporarily unavailable' });
       }
-      
+
       const gumroadResponse = await fetch('https://api.gumroad.com/v2/licenses/verify', {
         method: 'POST',
         headers: {
@@ -155,21 +155,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log('Invalid license key for password reset');
         return res.status(401).json({ message: 'Invalid license key' });
       }
-      
+
       console.log('Admin credentials verified, password reset will revert to environment default');
-      
+
       // Remove any temporary password file to revert to ADMIN_PASSWORD_HASH
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
       if (fs.existsSync(passwordFile)) {
         fs.unlinkSync(passwordFile);
         console.log('Temporary password file removed, reverted to environment default');
       }
-      
+
       res.json({ 
         message: 'Password has been reset to the configured admin password. Use your original admin credentials to login.',
         resetAt: new Date().toISOString()
       });
-      
+
     } catch (error) {
       console.error('Error in forgot password:', error);
       next(error);
@@ -180,7 +180,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/license/activate', async (req, res, next) => {
     try {
       const { license_key, device_id, device_name } = req.body;
-      
+
       if (!license_key || !device_id) {
         return res.status(400).json({ 
           success: false, 
@@ -189,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log('Activating license for device:', device_name || 'Unknown Device');
-      
+
       // First verify with Gumroad
       const gumroadResponse = await fetch('https://api.gumroad.com/v2/licenses/verify', {
         method: 'POST',
@@ -216,7 +216,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Store license in our database  
       await licenseStorage.storeLicense(license_key, device_id, `gumroad:${gumroadData.purchase?.id || 'unknown'}`);
-      
+
       // Activate device
       const activationResult = await licenseStorage.activateDevice(
         license_key, 
@@ -264,7 +264,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/license/heartbeat', async (req, res, next) => {
     try {
       const { license_key, device_id } = req.body;
-      
+
       if (!license_key || !device_id) {
         return res.status(400).json({ 
           success: false, 
@@ -274,7 +274,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Verify device activation
       const verification = await licenseStorage.verifyDeviceActivation(license_key, device_id);
-      
+
       if (!verification.isValid) {
         return res.status(401).json({
           success: false,
@@ -310,7 +310,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/license/deactivate', async (req, res, next) => {
     try {
       const { license_key, device_id } = req.body;
-      
+
       if (!license_key || !device_id) {
         return res.status(400).json({ 
           success: false, 
@@ -319,7 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const result = await licenseStorage.deactivateDevice(license_key, device_id);
-      
+
       res.json(result);
 
     } catch (error) {
@@ -332,7 +332,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/license/devices', async (req, res, next) => {
     try {
       const { license_key } = req.body;
-      
+
       if (!license_key) {
         return res.status(400).json({ 
           success: false, 
@@ -341,7 +341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const devices = await licenseStorage.getActiveDevices(license_key);
-      
+
       res.json({
         success: true,
         devices: devices.map(device => ({
@@ -361,7 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/license/verify', async (req, res, next) => {
     try {
       const { product_permalink, license_key } = req.body;
-      
+
       if (!product_permalink || !license_key) {
         return res.status(400).json({ 
           success: false, 
@@ -415,19 +415,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/auth/change-password', authenticateAdminToken, async (req, res, next) => {
     try {
       const { currentPassword, newPassword } = req.body;
-      
+
       if (!currentPassword || !newPassword) {
         return res.status(400).json({ message: 'Current and new passwords are required' });
       }
-      
+
       if (newPassword.length < 8) {
         return res.status(400).json({ message: 'New password must be at least 8 characters' });
       }
-      
+
       // Get current stored password hash - NO HARDCODED FALLBACKS in production
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
       let currentHashedPassword: string;
-      
+
       // First try to load from password file (from previous password changes)
       try {
         if (fs.existsSync(passwordFile)) {
@@ -454,34 +454,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: 'Error accessing password configuration' 
         });
       }
-      
+
       // Verify current password
       const isCurrentValid = await bcrypt.compare(currentPassword, currentHashedPassword);
       if (!isCurrentValid) {
         return res.status(401).json({ message: 'Current password is incorrect' });
       }
-      
+
       // Hash new password
       const saltRounds = 12;
       const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
-      
+
       // Save new password hash
       const dataDir = path.join(process.cwd(), 'data');
       if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
       }
-      
+
       const passwordData = {
         hashedPassword: newHashedPassword,
         updatedAt: new Date().toISOString(),
         // zeeexshan: Password change signature
         signature: 'zeeexshan_password_update'
       };
-      
+
       fs.writeFileSync(passwordFile, JSON.stringify(passwordData, null, 2));
-      
+
       res.json({ message: 'Password changed successfully' });
-      
+
     } catch (error) {
       next(error);
     }
@@ -527,7 +527,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         storage.excel.getCategoryPerformanceByRange(startDate, endDate),
         storage.excel.getTopProductsByRange(5, startDate, endDate)
       ]);
-      
+
       res.json({
         revenueData,
         categoryData,
@@ -702,16 +702,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/data/reset', authenticateAdminToken, async (req, res, next) => {
     try {
       const { password } = req.body;
-      
+
       if (!password) {
         return res.status(400).json({ message: 'Password is required to reset data' });
       }
-      
+
       // Verify admin password using the same logic as login
       const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
-      
+
       let currentHashedPassword: string;
-      
+
       // If no password hash is set, create one from the default password (development only)
       if (!ADMIN_PASSWORD_HASH || ADMIN_PASSWORD_HASH === '') {
         if (process.env.NODE_ENV !== 'development') {
@@ -723,7 +723,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         currentHashedPassword = ADMIN_PASSWORD_HASH;
       }
-      
+
       // Try to load custom password if exists (from reset operations)
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
       try {
@@ -735,15 +735,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (error) {
         console.log('Error reading password file, using env hash:', (error as any)?.message || 'Unknown error');
       }
-      
+
       const isValid = await bcrypt.compare(password, currentHashedPassword);
       if (!isValid) {
         return res.status(401).json({ message: 'Invalid password' });
       }
-      
+
       // Perform data reset
       const success = await storage.excel.resetAllData();
-      
+
       if (success) {
         res.json({ 
           message: 'All data has been reset successfully. A backup has been created.',
@@ -766,6 +766,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.excel.optimizeStorage();
       res.json(result);
     } catch (error) {
+      next(error);
+    }
+  });
+
+  // Get current license info endpoint
+  app.get('/api/license/current', authenticateAdminToken, async (req, res, next) => {
+    try {
+      const licenses = await licenseStorage.getActiveLicenses();
+
+      if (licenses.length > 0) {
+        // Get the most recent active license
+        const currentLicense = licenses[0];
+
+        res.json({
+          success: true,
+          license: {
+            deviceId: currentLicense.deviceId,
+            activatedAt: currentLicense.activatedAt,
+            lastHeartbeat: currentLicense.lastHeartbeat,
+            isActive: currentLicense.isActive,
+            // Don't expose the actual license key for security
+            licenseKeyMasked: '****-****-****-' + currentLicense.licenseKey.slice(-4)
+          }
+        });
+      } else {
+        res.json({
+          success: false,
+          message: 'No active license found'
+        });
+      }
+    } catch (error) {
+      console.error('Error getting current license:', error);
       next(error);
     }
   });

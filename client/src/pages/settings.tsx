@@ -121,12 +121,12 @@ function DataResetDialog() {
     setIsResetting(true);
     try {
       await api.post('/api/data/reset', { password: enteredPassword });
-      
+
       toast({
         title: "Data Reset Successful",
         description: "All data has been reset successfully. A backup has been created.",
       });
-      
+
       setConfirmOpen(false);
       setEnteredPassword(''); // Clear stored password
       // Refresh the page to show fresh state
@@ -227,6 +227,9 @@ export default function SettingsPage() {
   const [isActivated, setIsActivated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activationData, setActivationData] = useState<any>(null);
+  const [licenseInfo, setLicenseInfo] = useState<any>(null);
+  const [isLoadingLicense, setIsLoadingLicense] = useState(false);
+
 
   const form = useForm<PasswordChangeData>({
     resolver: zodResolver(passwordChangeSchema),
@@ -258,6 +261,33 @@ export default function SettingsPage() {
       setIsActivated(false);
     }
   };
+
+  const fetchLicenseInfo = async () => {
+    setIsLoadingLicense(true);
+    try {
+      const response = await fetch('/api/license/current', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLicenseInfo(data.license);
+      } else {
+        console.error('Failed to fetch license info');
+      }
+    } catch (error) {
+      console.error('Error fetching license info:', error);
+    } finally {
+      setIsLoadingLicense(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLicenseInfo();
+  }, []);
+
 
   const onSubmit = async (data: PasswordChangeData) => {
     if (!isActivated) {
@@ -299,42 +329,49 @@ export default function SettingsPage() {
         title="Settings" 
         description="Manage your account and application settings" 
       />
-      
+
       <div className="p-6 space-y-6">
         {/* License Status Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              License Status
+              License Information
             </CardTitle>
             <CardDescription>
-              Current licensing and activation information
+              Current license status and details.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">Activation Status:</span>
-              <Badge variant={isActivated ? "default" : "destructive"}>
-                {isActivated ? "Licensed" : "Unlicensed"}
-              </Badge>
-            </div>
-            
-            {isActivated && activationData?.activationDate && (
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Activated On:</span>
-                <span className="text-sm text-muted-foreground">
-                  {new Date(activationData.activationDate).toLocaleDateString()}
-                </span>
+          <CardContent>
+            {isLoadingLicense ? (
+              <div>Loading license information...</div>
+            ) : licenseInfo ? (
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <Label className="font-medium">License Key</Label>
+                    <p className="text-muted-foreground">{licenseInfo.licenseKeyMasked}</p>
+                  </div>
+                  <div>
+                    <Label className="font-medium">Status</Label>
+                    <p className="text-green-600 font-medium">Active</p>
+                  </div>
+                  <div>
+                    <Label className="font-medium">Device ID</Label>
+                    <p className="text-muted-foreground font-mono text-xs">{licenseInfo.deviceId.substring(0, 16)}...</p>
+                  </div>
+                  <div>
+                    <Label className="font-medium">Activated</Label>
+                    <p className="text-muted-foreground">{new Date(licenseInfo.activatedAt).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <Label className="font-medium">Last Heartbeat</Label>
+                    <p className="text-muted-foreground">{new Date(licenseInfo.lastHeartbeat).toLocaleString()}</p>
+                  </div>
+                </div>
               </div>
-            )}
-
-            {!isActivated && (
-              <div className="p-4 bg-muted rounded-lg">
-                <p className="text-sm text-muted-foreground">
-                  Some features require a valid license. Please activate your copy to unlock all functionality.
-                </p>
-              </div>
+            ) : (
+              <div className="text-muted-foreground">No active license found</div>
             )}
           </CardContent>
         </Card>
@@ -382,7 +419,7 @@ export default function SettingsPage() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="newPassword"
@@ -400,7 +437,7 @@ export default function SettingsPage() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="confirmPassword"
@@ -418,7 +455,7 @@ export default function SettingsPage() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <Button 
                     type="submit" 
                     disabled={isLoading || !isActivated}
