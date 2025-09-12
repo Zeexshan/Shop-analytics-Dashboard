@@ -707,17 +707,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Password is required to reset data' });
       }
       
-      // Verify admin password
-      const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
-      let currentHashedPassword = '$2b$12$QMFzDzTzRPkmOkNpc6OzeugStFxx4PPV0cJorOJcxuW0TfoK8uahq'; // Default
+      // Verify admin password using the same logic as login
+      const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
       
+      let currentHashedPassword: string;
+      
+      // If no password hash is set, create one from the default password (development only)
+      if (!ADMIN_PASSWORD_HASH || ADMIN_PASSWORD_HASH === '') {
+        if (process.env.NODE_ENV !== 'development') {
+          console.error('CRITICAL: ADMIN_PASSWORD_HASH required in production');
+          return res.status(500).json({ message: 'Authentication system not configured' });
+        }
+        console.log('No admin password hash found, creating from default password (development)');
+        currentHashedPassword = await bcrypt.hash('ShopOwner@2024', 10);
+      } else {
+        currentHashedPassword = ADMIN_PASSWORD_HASH;
+      }
+      
+      // Try to load custom password if exists (from reset operations)
+      const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
       try {
         if (fs.existsSync(passwordFile)) {
           const passwordData = JSON.parse(fs.readFileSync(passwordFile, 'utf8'));
           currentHashedPassword = passwordData.hashedPassword;
+          console.log('Using temporary password hash from file');
         }
       } catch (error) {
-        console.log('Using default password for verification');
+        console.log('Error reading password file, using env hash:', (error as any)?.message || 'Unknown error');
       }
       
       const isValid = await bcrypt.compare(password, currentHashedPassword);
