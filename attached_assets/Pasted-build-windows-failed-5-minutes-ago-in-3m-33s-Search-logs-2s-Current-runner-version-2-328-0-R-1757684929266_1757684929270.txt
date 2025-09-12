@@ -1,0 +1,197 @@
+build-windows
+failed 5 minutes ago in 3m 33s
+Search logs
+2s
+Current runner version: '2.328.0'
+Runner Image Provisioner
+Operating System
+Runner Image
+GITHUB_TOKEN Permissions
+Secret source: Actions
+Prepare workflow directory
+Prepare all required actions
+Getting action download info
+Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+Download action repository 'actions/setup-python@v4' (SHA:7f4fc3e22c37d6ff65e88745f38bd3157c663f7c)
+Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Complete job name: build-windows
+8s
+Run actions/checkout@v4
+Syncing repository: Zeexshan/express-shop
+Getting Git version info
+Temporarily overriding HOME='D:\a\_temp\9b850f27-09c9-4cbb-bf3a-d97c8420aedf' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\express-shop\express-shop
+Deleting the contents of 'D:\a\express-shop\express-shop'
+Initializing the repository
+Disabling automatic garbage collection
+Setting up auth
+Fetching the repository
+Determining the checkout info
+"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+Checking out the ref
+"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+322f1f402f668b3d6a9f4d840249aac0e63d9f99
+39s
+Run actions/setup-node@v4
+Found in cache @ C:\hostedtoolcache\windows\node\20.19.5\x64
+Environment details
+C:\Windows\system32\cmd.exe /D /S /C "C:\hostedtoolcache\windows\node\20.19.5\x64\npm.cmd config get cache"
+C:\npm\cache
+npm cache is not found
+0s
+Run actions/setup-python@v4
+Installed versions
+1m 0s
+Run npm ci --ignore-scripts --no-audit --no-fund
+npm warn skipping integrity check for git dependency ssh://git@github.com/electron/node-gyp.git
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated @npmcli/move-file@2.0.1: This functionality has been moved to @npmcli/fs
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm warn deprecated rimraf@2.6.3: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated boolean@3.2.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 980 packages in 42s
+1s
+Run if (!(Test-Path "assets")) { New-Item -ItemType Directory -Path "assets" }
+18s
+Run npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming...
+✓ 3027 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                        1.18 kB │ gzip:   0.63 kB
+../dist/public/assets/index-CE-ZlZiQ.css        69.10 kB │ gzip:  11.98 kB
+../dist/public/assets/purify.es-BFmuJLeH.js     21.93 kB │ gzip:   8.62 kB
+../dist/public/assets/index.es-DMnH00jW.js     150.53 kB │ gzip:  51.48 kB
+../dist/public/assets/index-DJPdFSQy.js      1,636.34 kB │ gzip: 468.55 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 12.63s
+
+  dist\index.js  58.3kb
+
+Done in 10ms
+34s
+Run npm run obfuscate
+
+> rest-express@1.0.0 obfuscate
+> javascript-obfuscator dist --output dist --config ./obfuscation.config.cjs
+
+
+[javascript-obfuscator-cli] Obfuscating file: dist\index.js... 
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\index-DJPdFSQy.js... 
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\index.es-DMnH00jW.js... 
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\purify.es-BFmuJLeH.js... 
+46s
+Run npm run build:desktop
+
+> rest-express@1.0.0 build:desktop
+> npm run build && npm run obfuscate && electron-builder
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming...
+✓ 3027 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                        1.18 kB │ gzip:   0.63 kB
+../dist/public/assets/index-CE-ZlZiQ.css        69.10 kB │ gzip:  11.98 kB
+../dist/public/assets/purify.es-BFmuJLeH.js     21.93 kB │ gzip:   8.62 kB
+../dist/public/assets/index.es-DMnH00jW.js     150.53 kB │ gzip:  51.48 kB
+../dist/public/assets/index-DJPdFSQy.js      1,636.34 kB │ gzip: 468.55 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 12.24s
+
+  dist\index.js  58.3kb
+
+Done in 8ms
+
+> rest-express@1.0.0 obfuscate
+> javascript-obfuscator dist --output dist --config ./obfuscation.config.cjs
+
+
+[javascript-obfuscator-cli] Obfuscating file: dist\index.js... 
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\index-DJPdFSQy.js... 
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\index.es-DMnH00jW.js... 
+
+[javascript-obfuscator-cli] Obfuscating file: dist\public\assets\purify.es-BFmuJLeH.js... 
+  • electron-builder  version=26.0.12 os=10.0.26100
+  • artifacts will be published if draft release exists  reason=CI detected
+  • loaded configuration  file=package.json ("build" field)
+  ⨯ Invalid configuration object. electron-builder 26.0.12 has been initialized using a configuration object that does not match the API schema.
+ - configuration has an unknown property 'electronRebuild'. These properties are valid:
+   object { afterAllArtifactBuild?, afterExtract?, afterPack?, afterSign?, apk?, appId?, appImage?, appx?, appxManifestCreated?, artifactBuildCompleted?, artifactBuildStarted?, artifactName?, asar?, asarUnpack?, beforeBuild?, beforePack?, buildDependenciesFromSource?, buildNumber?, buildVersion?, compression?, copyright?, cscKeyPassword?, cscLink?, deb?, defaultArch?, detectUpdateChannel?, directories?, disableDefaultIgnoredFiles?, disableSanityCheckAsar?, dmg?, downloadAlternateFFmpeg?, electronBranding?, electronCompile?, electronDist?, electronDownload?, electronFuses?, electronLanguages?, electronUpdaterCompatibility?, electronVersion?, executableName?, extends?, extraFiles?, extraMetadata?, extraResources?, fileAssociations?, files?, flatpak?, forceCodeSigning?, framework?, freebsd?, generateUpdatesFilesForAllChannels?, icon?, includePdb?, launchUiVersion?, linux?, mac?, mas?, masDev?, msi?, msiProjectCreated?, msiWrapped?, nativeRebuilder?, nodeGypRebuild?, nodeVersion?, npmArgs?, npmRebuild?, nsis?, nsisWeb?, onNodeModuleFile?, p5p?, pacman?, pkg?, portable?, productName?, protocols?, publish?, releaseInfo?, removePackageKeywords?, removePackageScripts?, rpm?, snap?, squirrelWindows?, target?, win?, $schema? }
+     How to fix:
+     1. Open https://www.electron.build/configuration
+     2. Search the option name on the page (or type in into Search to find across the docs).
+       * Not found? The option was deprecated or not exists (check spelling).
+       * Found? Check that the option in the appropriate place. e.g. "title" only in the "dmg", not in the root.
+  failedTask=build stackTrace=ValidationError: Invalid configuration object. electron-builder 26.0.12 has been initialized using a configuration object that does not match the API schema.
+ - configuration has an unknown property 'electronRebuild'. These properties are valid:
+   object { afterAllArtifactBuild?, afterExtract?, afterPack?, afterSign?, apk?, appId?, appImage?, appx?, appxManifestCreated?, artifactBuildCompleted?, artifactBuildStarted?, artifactName?, asar?, asarUnpack?, beforeBuild?, beforePack?, buildDependenciesFromSource?, buildNumber?, buildVersion?, compression?, copyright?, cscKeyPassword?, cscLink?, deb?, defaultArch?, detectUpdateChannel?, directories?, disableDefaultIgnoredFiles?, disableSanityCheckAsar?, dmg?, downloadAlternateFFmpeg?, electronBranding?, electronCompile?, electronDist?, electronDownload?, electronFuses?, electronLanguages?, electronUpdaterCompatibility?, electronVersion?, executableName?, extends?, extraFiles?, extraMetadata?, extraResources?, fileAssociations?, files?, flatpak?, forceCodeSigning?, framework?, freebsd?, generateUpdatesFilesForAllChannels?, icon?, includePdb?, launchUiVersion?, linux?, mac?, mas?, masDev?, msi?, msiProjectCreated?, msiWrapped?, nativeRebuilder?, nodeGypRebuild?, nodeVersion?, npmArgs?, npmRebuild?, nsis?, nsisWeb?, onNodeModuleFile?, p5p?, pacman?, pkg?, portable?, productName?, protocols?, publish?, releaseInfo?, removePackageKeywords?, removePackageScripts?, rpm?, snap?, squirrelWindows?, target?, win?, $schema? }
+     How to fix:
+     1. Open https://www.electron.build/configuration
+     2. Search the option name on the page (or type in into Search to find across the docs).
+       * Not found? The option was deprecated or not exists (check spelling).
+       * Found? Check that the option in the appropriate place. e.g. "title" only in the "dmg", not in the root.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         at validate (D:\a\express-shop\express-shop\node_modules\@develar\schema-utils\dist\validate.js:86:11)
+    at validateConfiguration (D:\a\express-shop\express-shop\node_modules\app-builder-lib\src\util\config\config.ts:239:3)
+    at Packager.validateConfig (D:\a\express-shop\express-shop\node_modules\app-builder-lib\src\packager.ts:384:5)
+    at Packager.build (D:\a\express-shop\express-shop\node_modules\app-builder-lib\src\packager.ts:392:5)
+    at executeFinally (D:\a\express-shop\express-shop\node_modules\builder-util\src\promise.ts:12:14)
+Error: Process completed with exit code 1.
+0s
+0s
+0s
+Run actions/upload-artifact@v4
+Warning: No files were found with the provided path: npm-debug.log*
+dist-electron/builder-debug.yml
+dist-electron/builder-effective-config.yaml. No artifacts will be uploaded.
+0s
+0s
+2s
+Post job cleanup.
+"C:\Program Files\Git\bin\git.exe" version
+git version 2.51.0.windows.1
+Temporarily overriding HOME='D:\a\_temp\fb2136f6-6074-41ca-bc45-9aa50d1c6930' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\express-shop\express-shop
+"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+http.https://github.com/.extraheader
+"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+0s
+Cleaning up orphan processes
