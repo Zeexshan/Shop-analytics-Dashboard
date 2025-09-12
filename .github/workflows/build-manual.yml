@@ -1,0 +1,135 @@
+name: Manual Build Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Build platform'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - windows
+        - linux
+      create_release:
+        description: 'Create GitHub release'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-windows:
+    if: github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all'
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Setup build environment
+      run: |
+        echo "Setting up build environment for manual build..."
+        echo "Platform: ${{ github.event.inputs.platform }}"
+        echo "Create Release: ${{ github.event.inputs.create_release }}"
+
+    - name: Install dependencies
+      env:
+        ELECTRON_BUILDER_SKIP_REBUILD: true
+        npm_config_build_from_source: false
+      run: |
+        npm ci --ignore-scripts --no-audit --no-fund
+
+    - name: Build and package
+      env:
+        ELECTRON_BUILDER_SKIP_REBUILD: true
+        npm_config_build_from_source: false
+      run: |
+        npm run build
+        npm run obfuscate
+        npm run build:desktop
+
+    - name: Upload Windows build
+      uses: actions/upload-artifact@v4
+      with:
+        name: shop-analytics-dashboard-windows-manual
+        path: |
+          dist-electron/*.exe
+          dist-electron/*.msi
+        retention-days: 30
+
+  build-linux:
+    if: github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci --ignore-scripts --no-audit --no-fund
+
+    - name: Build and package
+      run: |
+        npm run build
+        npm run obfuscate
+        npx electron-builder --linux --publish=never
+
+    - name: Upload Linux build
+      uses: actions/upload-artifact@v4
+      with:
+        name: shop-analytics-dashboard-linux-manual
+        path: |
+          dist-electron/*.AppImage
+          dist-electron/*.deb
+        retention-days: 30
+
+  create-manual-release:
+    if: github.event.inputs.create_release == 'true'
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts/
+
+    - name: Get timestamp
+      id: timestamp
+      run: echo "timestamp=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
+
+    - name: Create manual release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: manual-${{ steps.timestamp.outputs.timestamp }}
+        name: Manual Build ${{ steps.timestamp.outputs.timestamp }}
+        draft: false
+        prerelease: true
+        body: |
+          Manual build triggered by ${{ github.actor }}
+          
+          Platform: ${{ github.event.inputs.platform }}
+          Build time: ${{ steps.timestamp.outputs.timestamp }}
+          
+          This is a manual build for testing purposes.
+        files: |
+          ./artifacts/**/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

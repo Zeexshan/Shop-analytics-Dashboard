@@ -1,0 +1,44 @@
+Hello Replit AI,
+
+This is a comprehensive brief for my Shop Analytics Desktop App. Please read this entire document carefully to understand the project's current status. I have done extensive debugging on my own by downloading the project locally on my pc, and a previous AI has already fixed the application's core bugs. Your task is to solve the final, blocking issue related to the production desktop build.
+
+Part 1: Current Project Status
+ Build Configuration (package.json): Debugged but Still Failing
+After numerous failures, I have manually fixed many errors in the package.json file myself. The configuration has been updated multiple times to solve specific errors.
+
+Part 2: Summary of Build Errors I Have Already Solved Myself
+To save your time and quota, here is a list of the complex build errors I have already diagnosed and fixed without your help. This shows that simple configuration changes are not the solution.
+
+Invalid electronRebuild Property:
+
+Error: Invalid configuration object... unknown property 'electronRebuild'.
+
+My Fix: I removed the invalid electronRebuild property from the build configuration in package.json.
+
+Invalid signing Property:
+
+Error: Invalid configuration object... unknown property 'signing'.
+
+My Fix: I replaced the incorrect signing: false with the correct forceCodeSigning: false in the build.win section of package.json.
+
+Missing Production Dependencies:
+
+Error: The built .exe would crash on launch with Error: Cannot find module 'electron-store'.
+
+My Fix: I corrected the build.files array in package.json to properly include the package.json file, which ensures all necessary production dependencies are bundled.
+
+Local Environment Issues (Antivirus/Firewall):
+
+Error: The build process would hang indefinitely or fail with file access errors on my local PC.
+
+My Fix: I tried disabling the firewall, antivirus, adding folder exclusions, and running the build as an administrator, but the build still gets stuck.
+
+Part 3: The Current and Only Blocking Issue
+Despite all the fixes, the npm run build:desktop command still fails in every environment, but for different reasons:
+
+On Replit: The build fails with a Disk quota exceeded error. The Replit environment does not have enough storage space to handle the build process.
+
+On my Local PC: The build freezes/hangs at the "packaging" step due to file-locking issues that I cannot resolve.
+
+Part 4: Your Task  is to find a solution or if you cant do this- Create an Automated Build Workflow
+Since I cannot build the application on Replit or my local PC, your task is to create a reliable, automated build process that completely bypasses these environmental issues. The goal is to set up a GitHub Actions workflow that will automatically build the Windows .exe installer on GitHub's servers whenever I push new code.

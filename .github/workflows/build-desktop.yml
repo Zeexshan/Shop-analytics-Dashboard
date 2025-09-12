@@ -1,0 +1,182 @@
+name: Build Desktop Application
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create a GitHub release'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Setup Python for native modules (if any)
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      env:
+        ELECTRON_BUILDER_SKIP_REBUILD: true
+        npm_config_build_from_source: false
+        ELECTRON_SKIP_BINARY_DOWNLOAD: false
+      run: |
+        npm ci --ignore-scripts --no-audit --no-fund
+
+    - name: Create required directories
+      run: |
+        if (!(Test-Path "assets")) { New-Item -ItemType Directory -Path "assets" }
+        if (!(Test-Path "data")) { New-Item -ItemType Directory -Path "data" }
+
+    - name: Build application
+      run: npm run build
+
+    - name: Obfuscate code
+      run: npm run obfuscate
+
+    - name: Build desktop application
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ELECTRON_BUILDER_SKIP_REBUILD: true
+        npm_config_build_from_source: false
+      run: npm run build:desktop
+
+    - name: List build artifacts
+      run: |
+        Write-Host "Build completed. Checking for artifacts..."
+        if (Test-Path "dist-electron") {
+          Get-ChildItem -Path "dist-electron" -Recurse | Select-Object Name, Length, LastWriteTime | Format-Table
+        } else {
+          Write-Host "dist-electron directory not found!"
+        }
+
+    - name: Upload Windows installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: shop-analytics-dashboard-windows
+        path: |
+          dist-electron/*.exe
+          dist-electron/*.msi
+          dist-electron/*.zip
+        retention-days: 30
+
+    - name: Upload build logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs-windows
+        path: |
+          npm-debug.log*
+          dist-electron/builder-debug.yml
+          dist-electron/builder-effective-config.yaml
+        retention-days: 7
+
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      env:
+        ELECTRON_BUILDER_SKIP_REBUILD: true
+        npm_config_build_from_source: false
+      run: |
+        npm ci --ignore-scripts --no-audit --no-fund
+
+    - name: Create required directories
+      run: |
+        mkdir -p assets data
+
+    - name: Build application
+      run: npm run build
+
+    - name: Obfuscate code
+      run: npm run obfuscate
+
+    - name: Build desktop application for Linux
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ELECTRON_BUILDER_SKIP_REBUILD: true
+        npm_config_build_from_source: false
+      run: npx electron-builder --linux --publish=never
+
+    - name: Upload Linux AppImage
+      uses: actions/upload-artifact@v4
+      with:
+        name: shop-analytics-dashboard-linux
+        path: |
+          dist-electron/*.AppImage
+          dist-electron/*.deb
+          dist-electron/*.rpm
+        retention-days: 30
+
+  create-release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.create_release == 'true'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download Windows artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: shop-analytics-dashboard-windows
+        path: ./artifacts/windows/
+
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: shop-analytics-dashboard-linux
+        path: ./artifacts/linux/
+
+    - name: Get version from package.json
+      id: get_version
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "version=v$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_version.outputs.version }}
+        name: Shop Analytics Dashboard ${{ steps.get_version.outputs.version }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        files: |
+          ./artifacts/windows/*
+          ./artifacts/linux/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
