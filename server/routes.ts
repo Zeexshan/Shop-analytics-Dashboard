@@ -128,10 +128,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Verify license key using Gumroad API - NO FALLBACKS for security
       const GUMROAD_PRODUCT_PERMALINK = process.env.GUMROAD_PRODUCT_PERMALINK;
-      const GUMROAD_PRODUCT_ID = process.env.GUMROAD_PRODUCT_ID;
+      const GUMROAD_PRODUCT_ID = process.env.GUMROAD_PRODUCT_ID || '9jzvbqovj9HtIE1MUCU3sQ==';
 
-      if (!GUMROAD_PRODUCT_PERMALINK || !GUMROAD_PRODUCT_ID) {
-        console.error('CRITICAL: Gumroad credentials not configured');
+      if (!GUMROAD_PRODUCT_PERMALINK) {
+        console.error('CRITICAL: Gumroad product permalink not configured');
         return res.status(500).json({ message: 'Service temporarily unavailable' });
       }
 
@@ -198,7 +198,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         body: new URLSearchParams({
           product_permalink: process.env.GUMROAD_PRODUCT_PERMALINK!,
-          product_id: process.env.GUMROAD_PRODUCT_ID!,
+          product_id: process.env.GUMROAD_PRODUCT_ID || '9jzvbqovj9HtIE1MUCU3sQ==',
           license_key,
           increment_uses_count: 'true' // Track usage for first activation
         }).toString()
