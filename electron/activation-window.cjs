@@ -1,7 +1,7 @@
 // electron/activation-window.cjs
 const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const Store = require('electron-store');
+const Store = require('electron-store').default;
 const fetch = require('node-fetch');
 
 const store = new Store();

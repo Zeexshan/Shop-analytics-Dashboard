@@ -1,0 +1,64 @@
+Hello Replit AI,
+
+This is a comprehensive brief for my Shop Analytics Desktop App. Please read this entire document carefully to understand the project's current status. I have done extensive debugging on my own, and a previous AI has already fixed the application's core bugs. Your task is to solve the final, blocking issue related to the production build.
+
+Part 1: Current Project Status
+A. Application Functionality: COMPLETE
+A previous Replit AI session successfully fixed all major bugs in the application's logic. You do not need to work on these features:
+
+✅ FIXED: The Custom Date Range Filter now works correctly.
+
+✅ FIXED: The Data Reset functionality now works correctly.
+
+✅ FIXED: The Data Management page in the settings now loads properly.
+
+B. Build Configuration (package.json): Heavily Debugged but Still Failing in CI/CD
+I have spent considerable time debugging the electron-builder process on my local Windows PC. The code in this repository reflects many of those fixes.
+
+Part 2: Summary of Build Errors I Have Already Solved Myself
+To save your time and quota, here is a list of the complex build errors I have already diagnosed and fixed without your help. This shows that simple configuration changes have already been tried.
+
+Invalid electronRebuild Property:
+
+Error: Invalid configuration object... unknown property 'electronRebuild'.
+
+My Fix: I removed the invalid electronRebuild property from the build configuration in package.json.
+
+Invalid signing Property:
+
+Error: Invalid configuration object... unknown property 'signing'.
+
+My Fix: I replaced the incorrect signing: false with the correct forceCodeSigning: false in the build.win section of package.json. This is a critical fix.
+
+Missing Production Dependencies:
+
+Error: The built .exe would crash on launch with Error: Cannot find module 'electron-store'.
+
+My Fix: I corrected the build.files array in package.json to properly include "package.json", ensuring electron-builder correctly bundles all necessary production dependencies.
+
+Runtime Crash in Activation Window:
+
+Error: The built .exe would crash with TypeError: Store is not a constructor.
+
+My Fix: I corrected the import statement in electron/activation-window.cjs from require('electron-store') to require('electron-store').default.
+
+Part 3: The Current and Only Blocking Issue
+Despite all the fixes, the automated GitHub Actions workflow is still failing. It successfully builds the application, but the final .exe file it produces crashes with the TypeError: Store is not a constructor error.
+
+This proves that my local fix from Part 2, Point 4 has not been correctly applied or pushed to the GitHub repository. The automated builder is still using old, broken code.
+
+Part 4: Your Task - Apply the Final Code Fix and Verify
+Your only task is to ensure the critical electron-store import fix is correctly applied in this Replit workspace, so we can push it and trigger a successful build.
+
+Your Goal: Fix the TypeError: Store is not a constructor crash in the final build produced by GitHub Actions.
+
+Implementation Steps:
+
+Navigate to the file: electron/activation-window.cjs.
+
+Verify that the import statement for electron-store is correct. It must be:
+const Store = require('electron-store').default;
+
+If the line is incorrect, please fix it.
+
+After you have confirmed the fix is in place, I will push the changes to GitHub. This will trigger the automated build, which should now succeed and produce a working application.
