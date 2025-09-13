@@ -1,8 +1,7 @@
 // electron/activation-window.cjs
-const { BrowserWindow, ipcMain } = require('electron');
+const { BrowserWindow, ipcMain, net } = require('electron');
 const path = require('path');
 const Store = require('electron-store').default;
-const fetch = require('node-fetch');
 
 const store = new Store();
 
@@ -49,40 +48,73 @@ function createActivationWindow() {
   return activationWindow;
 }
 
-// zeeexshan: License verification with Gumroad API
+// zeeexshan: License verification with Gumroad API using Electron's net module
 async function verifyLicense(licenseKey, productPermalink) {
-  try {
-    const response = await fetch(LICENSE_CONFIG_zeeexshan.api_url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
+  return new Promise((resolve) => {
+    try {
+      const postData = new URLSearchParams({
         product_permalink: productPermalink || LICENSE_CONFIG_zeeexshan.product_permalink,
         license_key: licenseKey,
-      }),
-    });
+      }).toString();
 
-    const result = await response.json();
-    
-    if (result.success && result.purchase) {
-      return {
-        success: true,
-        purchase: result.purchase
-      };
-    } else {
-      return {
+      const request = net.request({
+        method: 'POST',
+        url: LICENSE_CONFIG_zeeexshan.api_url,
+      });
+
+      request.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+      request.setHeader('Content-Length', Buffer.byteLength(postData));
+
+      let responseData = '';
+
+      request.on('response', (response) => {
+        response.on('data', (chunk) => {
+          responseData += chunk.toString();
+        });
+
+        response.on('end', () => {
+          try {
+            const result = JSON.parse(responseData);
+            
+            if (result.success && result.purchase) {
+              resolve({
+                success: true,
+                purchase: result.purchase
+              });
+            } else {
+              resolve({
+                success: false,
+                error: 'Invalid license key'
+              });
+            }
+          } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            resolve({
+              success: false,
+              error: 'Invalid response from license server'
+            });
+          }
+        });
+      });
+
+      request.on('error', (error) => {
+        console.error('License verification network error:', error);
+        resolve({
+          success: false,
+          error: 'Cannot verify license. Check internet connection'
+        });
+      });
+
+      request.write(postData);
+      request.end();
+    } catch (error) {
+      console.error('License verification error:', error);
+      resolve({
         success: false,
-        error: 'Invalid license key'
-      };
+        error: 'Cannot verify license. Check internet connection'
+      });
     }
-  } catch (error) {
-    console.error('License verification error:', error);
-    return {
-      success: false,
-      error: 'Cannot verify license. Check internet connection'
-    };
-  }
+  });
 }
 
 // zeeexshan: Persistent activation storage
