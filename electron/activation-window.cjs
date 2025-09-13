@@ -1,7 +1,9 @@
 // electron/activation-window.cjs
-const { BrowserWindow, ipcMain, net, app } = require('electron');
+const { BrowserWindow, ipcMain, app } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
+const { URL } = require('url');
 const Store = require('electron-store').default;
 
 const store = new Store();
@@ -127,7 +129,7 @@ function createActivationWindow() {
   }
 }
 
-// zeeexshan: License verification with Gumroad API using Electron's net module
+// zeeexshan: License verification with Gumroad API using Node.js https module
 async function verifyLicense(licenseKey, productPermalink) {
   logToFile(`Starting license verification for key: ${licenseKey.substring(0, 8)}...`);
   
@@ -145,38 +147,44 @@ async function verifyLicense(licenseKey, productPermalink) {
       }).toString();
       
       logToFile(`POST data length: ${postData.length} characters`);
-      logToFile(`Creating network request to: ${apiUrl}`);
+      logToFile(`POST data content: ${postData}`);
 
-      const request = net.request({
+      // Parse URL for https.request
+      const urlObj = new URL(apiUrl);
+      logToFile(`Parsed URL - host: ${urlObj.hostname}, port: ${urlObj.port}, path: ${urlObj.pathname}`);
+      
+      const requestOptions = {
+        hostname: urlObj.hostname,
+        port: urlObj.port || 443,
+        path: urlObj.pathname,
         method: 'POST',
-        url: apiUrl,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Shop Analytics Dashboard/1.0.0'
+          'Content-Length': Buffer.byteLength(postData),
+          'User-Agent': 'Shop Analytics Dashboard/1.0.0',
+          'Accept': 'application/json'
         }
-      });
+      };
       
-      logToFile('Headers set successfully');
+      logToFile(`HTTPS request options: ${JSON.stringify(requestOptions, null, 2)}`);
 
       let responseData = '';
-      let responseStatusCode = 0;
-
+      
       // Set up timeout
       const timeout = setTimeout(() => {
         logToFile('Request timeout after 30 seconds', true);
-        request.abort();
         resolve({
           success: false,
           error: 'License verification timeout. Check internet connection'
         });
       }, 30000);
 
-      request.on('response', (response) => {
-        responseStatusCode = response.statusCode;
-        logToFile(`Received response with status code: ${responseStatusCode}`);
-        logToFile(`Response headers: ${JSON.stringify(response.headers)}`);
-        
+      const request = https.request(requestOptions, (response) => {
         clearTimeout(timeout);
+        
+        const statusCode = response.statusCode;
+        logToFile(`Received response with status code: ${statusCode}`);
+        logToFile(`Response headers: ${JSON.stringify(response.headers)}`);
 
         response.on('data', (chunk) => {
           const chunkStr = chunk.toString();
@@ -199,7 +207,7 @@ async function verifyLicense(licenseKey, productPermalink) {
                 purchase: result.purchase
               });
             } else {
-              logToFile(`License verification failed. Result: ${JSON.stringify(result)}`, true);
+              logToFile(`License verification failed. API response: ${JSON.stringify(result)}`, true);
               resolve({
                 success: false,
                 error: result.message || 'Invalid license key'
@@ -227,7 +235,7 @@ async function verifyLicense(licenseKey, productPermalink) {
 
       request.on('error', (error) => {
         clearTimeout(timeout);
-        logToFile(`Network request error: ${error.message}`, true);
+        logToFile(`HTTPS request error: ${error.message}`, true);
         logToFile(`Error code: ${error.code}`, true);
         logToFile(`Error stack: ${error.stack}`, true);
         
@@ -238,6 +246,8 @@ async function verifyLicense(licenseKey, productPermalink) {
           userMessage = 'License server refused connection';
         } else if (error.code === 'ETIMEDOUT') {
           userMessage = 'License verification timeout';
+        } else if (error.code === 'ECONNRESET') {
+          userMessage = 'Connection lost during license verification';
         }
         
         resolve({
@@ -246,23 +256,20 @@ async function verifyLicense(licenseKey, productPermalink) {
         });
       });
 
-      request.on('finish', () => {
-        logToFile('Request data sent successfully');
-      });
-
-      request.on('abort', () => {
+      request.on('timeout', () => {
         clearTimeout(timeout);
-        logToFile('Request was aborted', true);
+        logToFile('HTTPS request timeout', true);
+        request.destroy();
         resolve({
           success: false,
-          error: 'License verification was cancelled'
+          error: 'License verification timeout'
         });
       });
 
-      logToFile(`Writing POST data (length: ${postData.length} chars, key: ${licenseKey.substring(0, 6)}...)`);
+      logToFile(`Writing POST data to HTTPS request: ${postData.length} bytes`);
       request.write(postData);
       
-      logToFile('Ending request...');
+      logToFile('Ending HTTPS request...');
       request.end();
       
     } catch (error) {
