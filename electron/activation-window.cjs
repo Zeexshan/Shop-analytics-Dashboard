@@ -71,6 +71,7 @@ function verifyLicense(licenseKey) {
     const postData = new URLSearchParams({
       product_id: GUMROAD_PRODUCT_ID,
       license_key: licenseKey.trim(),
+      increment_uses_count: 'false'
     }).toString();
 
     logToFile(`Attempting to verify license for product "${GUMROAD_PRODUCT_ID}"`);
