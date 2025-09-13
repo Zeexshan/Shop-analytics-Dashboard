@@ -28,6 +28,7 @@ function createActivationWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      webSecurity: false, // Allow external API requests for license verification
       preload: path.join(__dirname, 'activation-preload.cjs')
     },
     icon: path.join(__dirname, '../assets/logo.png'),
