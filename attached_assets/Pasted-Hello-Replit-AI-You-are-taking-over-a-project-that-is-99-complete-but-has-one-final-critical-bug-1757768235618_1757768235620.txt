@@ -1,0 +1,24 @@
+Hello Replit AI,
+
+You are taking over a project that is 99% complete but has one final, critical bug. Please read this entire summary carefully to understand the full history and what has already been solved. Your only task is to apply one last fix to the license activation system.
+
+### **Part 1: What is Already Working (Do Not Change This)**
+
+* **Core Application Logic (✅ FIXED):** A previous AI has already fixed all the main application bugs. The date range filter, data reset functionality, and the data management page are all working correctly. **Do not work on these features.**
+* **Desktop Build Configuration (✅ FIXED):** The `package.json` file has been through extensive debugging. All previous errors (like `electronRebuild`, `forceCodeSigning`, missing modules, and oversized packages) have been solved. **Do not change the build configuration.**
+* **Automated Build System (✅ WORKING):** The project does **not** build on Replit (due to disk space) or on a local PC (due to antivirus issues). Instead, we have successfully implemented a **GitHub Actions workflow**. This system automatically builds the application on GitHub's servers. **Do not try to run the desktop build command (`npm run build:desktop`) in the Replit environment; it will fail.**
+
+### **Part 2: The Final, Unsolved Problem**
+
+The GitHub Actions workflow successfully builds the `.exe` installer. I can download, install, and run the application. However, the final step fails:
+
+* **The Error:** When I enter a valid Gumroad license key into the activation window, it fails with a network error.
+* **The Proof:** We have a debug log from the last failed attempt. The log file shows a response from the Gumroad server:
+    `{"success":false,"message":"The 'product_id' parameter is required to verify the license for this product. Please set 'product_id' to '9jzvbqovj9HtIE1MUCU3sQ==' in the request."}`
+* **The Root Cause:** This log message tells us two things:
+    1.  The code is sending the wrong parameter to the API (it's sending `product_permalink` instead of `product_id`).
+    2.  The code is using the wrong ID value. The correct ID is `9jzvbqovj9HtIE1MUCU3sQ==`.
+
+### **Part 3: Your Task - Apply the Final Code Fix**
+
+Your only task is to fix the license verification logic in the codebase to match what the Gumroad API requires.
