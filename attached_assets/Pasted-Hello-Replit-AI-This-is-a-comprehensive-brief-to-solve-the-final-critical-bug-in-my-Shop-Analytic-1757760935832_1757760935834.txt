@@ -1,0 +1,40 @@
+Hello Replit AI,
+
+This is a comprehensive brief to solve the final, critical bug in my Shop Analytics Desktop App. Please read this entire document carefully. My goal is to produce a working desktop application installer from the existing GitHub Actions workflow.
+
+Part 1: What Is Already Working
+To save your time, please be aware that the following issues have already been solved and do not need any work:
+
+Application Bugs (FIXED): A previous AI session successfully fixed all major bugs in the application's logic. The Custom Date Range Filter, Data Reset, and Data Management pages are all working correctly in the development environment.
+
+package.json Build Errors (FIXED): I have personally fixed multiple errors in the package.json file. The configuration now correctly handles the build process without syntax errors (e.g., electronRebuild and forceCodeSigning issues are solved).
+
+Runtime Crash Errors (FIXED): I have also fixed the TypeError: Store is not a constructor error by correcting the electron-store import statement in the electron/activation-window.cjs file.
+
+Part 2: The Final, Blocking Problem
+The automated build in GitHub Actions is succeeding, and I can download the final .exe installer. However, when I run the installed application, the license activation fails.
+
+The Exact Error: When I enter a valid Gumroad license key into the activation window, it displays the error: "Cannot verify license. Check internet connection."
+
+What I Know:
+
+My internet connection is working perfectly.
+
+The license key I am using is 100% correct.
+
+This proves that the problem is not my key or my internet, but an issue within the packaged Electron application itself that is blocking the network request to the Gumroad API.
+
+Part 3: Your Task - Fix the Network Request in the Packaged App
+Your only task is to fix the underlying issue that prevents the final, built .exe from successfully communicating with https://api.gumroad.com.
+
+The most likely cause is an Electron security feature (like Content Security Policy - CSP) that is blocking outgoing network requests in the production build.
+
+Please investigate and implement a robust solution. Here are the potential causes to investigate:
+
+Content Security Policy (CSP): The most probable issue. The main process (electron/main.cjs) needs to be configured with a proper CSP to allow the connect-src directive for https://api.gumroad.com. The existing configuration is likely insufficient.
+
+Network Code Robustness: The current code in electron/activation-window.cjs uses fetch. While good, it may need to be moved from the renderer process to the main process for better reliability in a packaged app. Consider a pattern where the activation window sends the key to the main process via IPC, and the main process makes the network call.
+
+Firewall/Permissions Issues: Ensure that the way the app is packaged does not create conflicts with standard Windows Defender or firewall rules.
+
+Please implement a definitive fix and add detailed error logging to the activation logic, so if it fails again, the application logs will tell us the exact reason.
