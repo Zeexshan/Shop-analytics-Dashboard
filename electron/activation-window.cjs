@@ -1,5 +1,5 @@
 // electron/activation-window.cjs
-const { BrowserWindow, ipcMain, net } = require('electron');
+const { BrowserWindow, ipcMain, net, app } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store').default;
@@ -19,55 +19,112 @@ function logToFile(message, isError = false) {
   const logMessage = `[${timestamp}] ${isError ? 'ERROR' : 'INFO'}: ${message}\n`;
   
   try {
-    // Log to console for development
+    // Always log to console
     if (isError) {
       console.error(logMessage);
     } else {
       console.log(logMessage);
     }
     
-    // Log to file for production debugging
-    const logPath = path.join(__dirname, '../activation-debug.log');
+    // Log to file in userData directory (always writable in packaged apps)
+    const userDataPath = app.getPath('userData');
+    const logPath = path.join(userDataPath, 'activation-debug.log');
+    
+    // Ensure directory exists
+    fs.mkdirSync(userDataPath, { recursive: true });
+    
+    // Write to log file
     fs.appendFileSync(logPath, logMessage);
+    
+    // Also try to write to desktop as backup
+    try {
+      const desktopPath = app.getPath('desktop');
+      const desktopLogPath = path.join(desktopPath, 'ShopAnalytics-activation-debug.log');
+      fs.appendFileSync(desktopLogPath, logMessage);
+    } catch (desktopErr) {
+      // Ignore desktop write errors
+    }
+    
   } catch (err) {
     console.error('Failed to write to log file:', err);
+    // Try alternative logging to temp directory
+    try {
+      const tempPath = app.getPath('temp');
+      const tempLogPath = path.join(tempPath, 'shop-analytics-debug.log');
+      fs.appendFileSync(tempLogPath, logMessage);
+    } catch (tempErr) {
+      console.error('Failed to write to temp log:', tempErr);
+    }
   }
 }
 
 let activationWindow = null;
 
 function createActivationWindow() {
-  // zeeexshan: Activation window for license verification
-  activationWindow = new BrowserWindow({
-    width: 450,
-    height: 350,
-    resizable: false,
-    alwaysOnTop: true,
-    center: true,
-    modal: true,
-    show: false,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      webSecurity: false, // Allow external API requests for license verification
-      preload: path.join(__dirname, 'activation-preload.cjs')
-    },
-    icon: path.join(__dirname, '../assets/logo.png'),
-    title: 'Shop Analytics Dashboard - License Activation'
-  });
+  logToFile('=== CREATING ACTIVATION WINDOW ===');
+  
+  // Prevent multiple instances
+  if (activationWindow) {
+    logToFile('Activation window already exists, returning existing instance');
+    return activationWindow;
+  }
 
-  // Load activation HTML
-  activationWindow.loadFile(path.join(__dirname, 'activation.html'));
+  try {
+    logToFile('Creating new BrowserWindow for activation...');
+    
+    activationWindow = new BrowserWindow({
+      width: 450,
+      height: 350,
+      resizable: false,
+      alwaysOnTop: true,
+      center: true,
+      modal: true,
+      show: false,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        webSecurity: false, // Allow external API requests for license verification
+        preload: path.join(__dirname, 'activation-preload.cjs')
+      },
+      icon: path.join(__dirname, '../assets/logo.png'),
+      title: 'Shop Analytics Dashboard - License Activation'
+    });
 
-  activationWindow.once('ready-to-show', () => {
-    activationWindow.show();
-  });
+    logToFile('BrowserWindow created successfully');
 
-  activationWindow.on('closed', () => {
-    activationWindow = null;
-  });
+    // Load activation HTML
+    const htmlPath = path.join(__dirname, 'activation.html');
+    logToFile(`Loading activation HTML from: ${htmlPath}`);
+    
+    activationWindow.loadFile(htmlPath).then(() => {
+      logToFile('Activation HTML loaded successfully');
+    }).catch((err) => {
+      logToFile(`Failed to load activation HTML: ${err.message}`, true);
+    });
 
-  return activationWindow;
+    activationWindow.once('ready-to-show', () => {
+      logToFile('Activation window ready to show');
+      activationWindow.show();
+      logToFile('Activation window shown to user');
+    });
+
+    activationWindow.on('closed', () => {
+      logToFile('Activation window closed');
+      activationWindow = null;
+    });
+
+    activationWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+      logToFile(`Activation window failed to load: ${errorCode} - ${errorDescription}`, true);
+    });
+
+    logToFile('Activation window setup complete');
+    return activationWindow;
+    
+  } catch (error) {
+    logToFile(`CRITICAL ERROR creating activation window: ${error.message}`, true);
+    logToFile(`Error stack: ${error.stack}`, true);
+    throw error;
+  }
 }
 
 // zeeexshan: License verification with Gumroad API using Electron's net module
@@ -130,11 +187,11 @@ async function verifyLicense(licenseKey, productPermalink) {
 
         response.on('end', () => {
           logToFile(`Response complete. Total data length: ${responseData.length}`);
-          logToFile(`Full response data: ${responseData}`);
+          logToFile(`Response data preview: ${responseData.substring(0, 200)}...`);
           
           try {
             const result = JSON.parse(responseData);
-            logToFile(`Parsed JSON response: ${JSON.stringify(result, null, 2)}`);
+            logToFile(`Parsed JSON response - success: ${result.success}, has purchase: ${!!result.purchase}`);
             
             if (result.success && result.purchase) {
               logToFile('License verification successful!');
@@ -203,7 +260,7 @@ async function verifyLicense(licenseKey, productPermalink) {
         });
       });
 
-      logToFile(`Writing POST data: ${postData}`);
+      logToFile(`Writing POST data (length: ${postData.length} chars, key: ${licenseKey.substring(0, 6)}...)`);
       request.write(postData);
       
       logToFile('Ending request...');

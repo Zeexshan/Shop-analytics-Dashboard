@@ -80,27 +80,43 @@ function createWindow() {
 app.whenReady().then(async () => {
   try {
     // zeeexshan: Check license activation before starting
+    console.log('=== APP STARTING ===');
+    console.log(`Development mode: ${isDev}`);
+    
     const isActivated = checkActivation();
+    console.log(`License activation status: ${isActivated}`);
     
     if (!isActivated && !isDev) {
       // Show activation window for production builds
       console.log('License not activated - showing activation window');
-      const activationWin = createActivationWindow();
       
-      // Listen for successful activation
-      ipcMain.once('activation-completed', async () => {
-        activationWin.close();
-        await startExpressServer();
-        createWindow();
-      });
-      
-      // Handle activation window close without activation
-      activationWin.on('closed', () => {
-        if (!checkActivation()) {
-          app.quit();
-        }
-      });
+      try {
+        const activationWin = createActivationWindow();
+        console.log('Activation window created successfully');
+        
+        // Listen for successful activation
+        ipcMain.once('activation-completed', async () => {
+          console.log('Activation completed - starting main app');
+          activationWin.close();
+          await startExpressServer();
+          createWindow();
+        });
+        
+        // Handle activation window close without activation
+        activationWin.on('closed', () => {
+          console.log('Activation window closed');
+          if (!checkActivation()) {
+            console.log('No activation found - quitting app');
+            app.quit();
+          }
+        });
+      } catch (activationError) {
+        console.error('CRITICAL: Failed to create activation window:', activationError);
+        console.error('Error stack:', activationError.stack);
+        app.quit();
+      }
     } else {
+      console.log('Starting app normally (development or activated)');
       // Start Express server first (development or activated)
       await startExpressServer();
       
@@ -108,7 +124,8 @@ app.whenReady().then(async () => {
       createWindow();
     }
   } catch (error) {
-    console.error('Failed to start application:', error);
+    console.error('CRITICAL: Failed to start application:', error);
+    console.error('Error stack:', error.stack);
     app.quit();
   }
   
