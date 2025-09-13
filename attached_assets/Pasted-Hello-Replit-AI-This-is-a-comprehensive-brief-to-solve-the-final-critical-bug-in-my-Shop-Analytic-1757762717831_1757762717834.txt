@@ -1,0 +1,47 @@
+Hello Replit AI,
+
+This is a comprehensive brief to solve the final, critical bug in my Shop Analytics Desktop App. Please read this entire document carefully. My goal is to produce a working desktop application installer from the existing GitHub Actions workflow.
+
+Part 1: Current Project Status
+ Build Configuration (package.json): Manually Corrected by Me
+After the application bugs were fixed, I tried to build the app on my local PC. I encountered numerous build errors which I solved myself through extensive debugging. These fixes are already in the package.json file. You do not need to change the build configuration.
+
+The problems I solved myself include:
+
+An Invalid configuration object error for an unknown electronRebuild property, which I removed.
+
+An Invalid configuration object error for an unknown signing property, which I corrected to forceCodeSigning: false.
+
+A runtime crash (Cannot find module 'electron-store') in the built app, which I fixed by adding "package.json" to the "files" array in the build config.
+
+The build process hanging due to a massive (565+ MB) app size, which I fixed by refining the "files" array to explicitly ignore node_modules.
+
+Part 2: The Final, Unsolved Problem
+Despite all of my fixes, the build still failed on both Replit (due to disk quota limits) and my local PC (due to antivirus file locking). To solve this, a previous AI created a GitHub Actions workflow.
+
+Current State:
+
+The GitHub Actions workflow succeeds. It runs without errors and produces a downloadable .exe installer.
+
+The downloaded .exe file installs and runs correctly.
+
+However, when I try to activate the app with a valid Gumroad license key, it fails with the error: "Cannot verify license. Check internet connection."
+
+What I Know for Sure:
+
+My internet connection is working perfectly.
+
+The Gumroad license key is 100% correct.
+
+Therefore, the problem is not my key or my internet. The issue is that the final, packaged Electron application is being blocked from making the network request to the Gumroad API.
+
+The last attempt to fix this involved adding the electron-log library to create a log file for debugging, but after building and running this version, no log file was created, which is very strange.
+
+Part 3: Your Task - Fix the Network and Logging in the Packaged App
+Your only task is to fix the underlying issue that prevents the final, built .exe from successfully communicating with https://api.gumroad.com and to ensure that the logging works correctly.
+
+Please investigate and implement a robust solution. The problem is likely one of the following:
+
+Electron's Content Security Policy (CSP): This is the most probable cause. The main process (electron/main.cjs) needs to be configured with a proper CSP that explicitly allows the connect-src directive for https://api.gumroad.com. The current security settings in the packaged app are likely too restrictive.
+
+Logging Failure: The fact that electron-log did not create a file suggests a fundamental issue. The application might be crashing silently before the logger can initialize, or it lacks the necessary permissions in
