@@ -1,0 +1,158 @@
+const { BrowserWindow, ipcMain, app, net } = require('electron');
+const path = require('path');
+const Store = require('electron-store').default;
+const log = require('electron-log');
+
+// Configure the logger to write to a file in a reliable location.
+// This is the industry-standard way to handle logging in Electron apps.
+log.transports.file.resolvePath = () => path.join(app.getPath('userData'), 'logs', 'activation.log');
+log.info('Activation window process starting...');
+
+const store = new Store();
+
+let activationWindow = null;
+
+function createActivationWindow() {
+  log.info('=== CREATING ACTIVATION WINDOW ===');
+  if (activationWindow && !activationWindow.isDestroyed()) {
+    log.info('Activation window already exists, focusing existing instance.');
+    activationWindow.focus();
+    return activationWindow;
+  }
+  try {
+    log.info('Creating new BrowserWindow for activation...');
+    activationWindow = new BrowserWindow({
+      width: 450,
+      height: 380,
+      resizable: false,
+      center: true,
+      show: false,
+      webPreferences: {
+        preload: path.join(__dirname, 'activation-preload.cjs'),
+        nodeIntegration: false,
+        contextIsolation: true,
+      },
+      icon: path.join(__dirname, '../assets/logo.png'),
+      title: 'Shop Analytics Dashboard - License Activation'
+    });
+    log.info('BrowserWindow created successfully');
+    const htmlPath = path.join(__dirname, '../electron/activation.html');
+    log.info(`Loading activation HTML from: ${htmlPath}`);
+    activationWindow.loadFile(htmlPath);
+
+    activationWindow.once('ready-to-show', () => {
+      log.info('Activation window ready to show.');
+      activationWindow.show();
+    });
+
+    activationWindow.on('closed', () => {
+      log.info('Activation window closed');
+      activationWindow = null;
+    });
+    return activationWindow;
+  } catch (error) {
+    log.error(`CRITICAL ERROR creating activation window: ${error.message}`, error);
+    throw error;
+  }
+}
+
+// --- FINAL, ROBUST LICENSE VERIFICATION USING ELECTRON.NET ---
+function verifyLicense(licenseKey) {
+  return new Promise((resolve) => {
+    // This is the correct, full Product ID provided by the Gumroad error log.
+    const GUMROAD_PRODUCT_ID = '9jzvbqovj9HtIE1MUCU3sQ==';
+    const postData = JSON.stringify({
+      product_id: GUMROAD_PRODUCT_ID, // Correct parameter name
+      license_key: licenseKey.trim(),
+    });
+
+    log.info(`Attempting to verify license for product "${GUMROAD_PRODUCT_ID}"`);
+
+    const request = net.request({
+      method: 'POST',
+      url: 'https://api.gumroad.com/v2/licenses/verify',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData),
+      },
+    });
+
+    request.on('response', (response) => {
+      log.info(`Gumroad API Response Status: ${response.statusCode}`);
+      let responseBody = '';
+      response.on('data', (chunk) => { responseBody += chunk; });
+      response.on('end', () => {
+        log.info('Gumroad API Response Body: ' + responseBody);
+        try {
+          const data = JSON.parse(responseBody);
+          if (data.success === true) {
+            log.info('License verification successful!');
+            resolve({ success: true, purchase: data.purchase });
+          } else {
+            log.warn(`License verification failed: ${data.message}`);
+            resolve({ success: false, error: data.message || 'Invalid license key' });
+          }
+        } catch (e) {
+          log.error(`CRITICAL ERROR parsing Gumroad JSON response: ${e.message}`, e);
+          resolve({ success: false, error: 'Error reading response from server.' });
+        }
+      });
+    });
+
+    request.on('error', (error) => {
+      log.error('CRITICAL NETWORK ERROR:', error);
+      resolve({ success: false, error: 'A critical network error occurred. Check logs.' });
+    });
+
+    request.write(postData);
+    request.end();
+  });
+}
+
+function saveActivation(licenseKey, purchaseData) {
+  const activationData = {
+    isActivated: true,
+    licenseKey: Buffer.from(licenseKey).toString('base64'), // Simple encoding for obfuscation
+    activationDate: new Date().toISOString(),
+    purchaseInfo: purchaseData,
+    signature: 'zeeexshan_shop_analytics_activation'
+  };
+  store.set('activation', activationData);
+  log.info('Activation data saved successfully.');
+  return true;
+}
+
+function checkActivation() {
+  const activation = store.get('activation');
+  const activated = activation && activation.isActivated === true;
+  log.info(`Checking activation status: ${activated}`);
+  return activated;
+}
+
+ipcMain.handle('activate-license', async (event, licenseKey) => {
+  log.info('=== LICENSE ACTIVATION STARTED ===');
+  if (!licenseKey || licenseKey.trim().length === 0) {
+    log.warn('License key validation failed: empty key');
+    return { success: false, error: 'Please enter a license key' };
+  }
+
+  const result = await verifyLicense(licenseKey.trim());
+  
+  if (result.success) {
+    log.info('Saving activation data...');
+    saveActivation(licenseKey.trim(), result.purchase);
+    log.info('=== LICENSE ACTIVATION COMPLETED SUCCESSFULLY ===');
+    return { success: true, message: 'License activated successfully!' };
+  } else {
+    log.error(`License verification failed: ${result.error}`);
+    log.error('=== LICENSE ACTIVATION FAILED ===');
+    return { success: false, error: result.error };
+  }
+});
+
+ipcMain.handle('check-activation', () => {
+  return { isActivated: checkActivation() };
+});
+
+module.exports = { createActivationWindow, checkActivation };
+
