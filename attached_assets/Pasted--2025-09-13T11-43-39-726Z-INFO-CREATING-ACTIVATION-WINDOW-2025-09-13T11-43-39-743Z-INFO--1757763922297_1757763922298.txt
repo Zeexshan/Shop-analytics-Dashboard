@@ -1,0 +1,28 @@
+[2025-09-13T11:43:39.726Z] INFO: === CREATING ACTIVATION WINDOW ===
+[2025-09-13T11:43:39.743Z] INFO: Creating new BrowserWindow for activation...
+[2025-09-13T11:43:40.630Z] INFO: BrowserWindow created successfully
+[2025-09-13T11:43:40.633Z] INFO: Loading activation HTML from: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\electron\activation.html
+[2025-09-13T11:43:40.755Z] INFO: Activation window setup complete
+[2025-09-13T11:43:42.281Z] INFO: Activation window ready to show
+[2025-09-13T11:43:42.309Z] INFO: Activation window shown to user
+[2025-09-13T11:43:42.314Z] INFO: Activation HTML loaded successfully
+[2025-09-13T11:43:47.359Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-13T11:43:47.363Z] INFO: License key received via IPC: 3C3D0458...
+[2025-09-13T11:43:47.365Z] INFO: Starting license verification process...
+[2025-09-13T11:43:47.367Z] INFO: Starting license verification for key: 3C3D0458...
+[2025-09-13T11:43:47.370Z] INFO: Using product_permalink: shop-analytics-dashboard
+[2025-09-13T11:43:47.372Z] INFO: Using API URL: https://api.gumroad.com/v2/licenses/verify
+[2025-09-13T11:43:47.377Z] INFO: POST data length: 90 characters
+[2025-09-13T11:43:47.379Z] INFO: Creating network request to: https://api.gumroad.com/v2/licenses/verify
+[2025-09-13T11:43:47.382Z] INFO: Headers set successfully
+[2025-09-13T11:43:47.385Z] INFO: Writing POST data (length: 90 chars, key: 3C3D04...)
+[2025-09-13T11:43:47.388Z] INFO: Ending request...
+[2025-09-13T11:43:47.394Z] INFO: Request data sent successfully
+[2025-09-13T11:43:47.400Z] ERROR: Network request error: net::ERR_INVALID_ARGUMENT
+[2025-09-13T11:43:47.403Z] ERROR: Error code: undefined
+[2025-09-13T11:43:47.409Z] ERROR: Error stack: Error: net::ERR_INVALID_ARGUMENT
+    at SimpleURLLoaderWrapper.<anonymous> (node:electron/js2c/browser_init:2:124413)
+    at SimpleURLLoaderWrapper.emit (node:events:518:28)
+[2025-09-13T11:43:47.413Z] INFO: License verification result: {"success":false,"error":"Cannot verify license. Check internet connection"}
+[2025-09-13T11:43:47.415Z] ERROR: License verification failed: Cannot verify license. Check internet connection
+[2025-09-13T11:43:47.417Z] INFO: === LICENSE ACTIVATION FAILED ===

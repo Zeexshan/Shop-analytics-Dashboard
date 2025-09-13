@@ -150,12 +150,11 @@ async function verifyLicense(licenseKey, productPermalink) {
       const request = net.request({
         method: 'POST',
         url: apiUrl,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Shop Analytics Dashboard/1.0.0'
+        }
       });
-
-      // Set headers
-      request.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-      request.setHeader('Content-Length', Buffer.byteLength(postData));
-      request.setHeader('User-Agent', 'Shop Analytics Dashboard/1.0.0');
       
       logToFile('Headers set successfully');
 
