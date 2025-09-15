@@ -18,9 +18,9 @@ async function startExpressServer() {
   }
   
   try {
-    // Fix path resolution for packaged applications
-    const base = isDev ? path.join(__dirname, '..') : process.resourcesPath || path.join(__dirname, '..');
-    const serverPath = path.join(base, 'dist', 'index.js');
+    // Correct path resolution for packaged applications
+    const appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
+    const serverPath = path.join(appPath, 'dist', 'index.js');
     
     console.log('Attempting to start Express server from:', serverPath);
     
@@ -32,13 +32,18 @@ async function startExpressServer() {
       return Promise.resolve();
     }
     
-    // Set production environment
+    // Set production environment for Electron
     process.env.NODE_ENV = 'production';
+    process.env.ELECTRON = '1'; // Flag for electron-specific behavior
     
     // Import the server module and start it
     const serverModule = await import(url.pathToFileURL(serverPath).href);
     
     console.log('Express server started in Electron process');
+    
+    // Wait for server to be ready
+    await waitForServer();
+    
     return Promise.resolve();
   } catch (error) {
     console.error('Failed to start server:', error);
@@ -47,7 +52,38 @@ async function startExpressServer() {
   }
 }
 
-function createWindow() {
+async function waitForServer(maxAttempts = 25, delayMs = 200) {
+  const http = require('http');
+  
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      await new Promise((resolve, reject) => {
+        const req = http.get('http://localhost:5000/health', (res) => {
+          if (res.statusCode === 200) {
+            console.log('Server health check passed');
+            resolve();
+          } else {
+            reject(new Error(`Health check failed with status ${res.statusCode}`));
+          }
+        });
+        
+        req.on('error', reject);
+        req.setTimeout(1000, () => reject(new Error('Health check timeout')));
+      });
+      
+      return; // Success
+    } catch (error) {
+      console.log(`Health check attempt ${i + 1}/${maxAttempts} failed:`, error.message);
+      if (i < maxAttempts - 1) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+  
+  throw new Error('Server failed to start within expected time');
+}
+
+async function createWindow() {
   // zeeexshan: Main application window
   const mainWindow = new BrowserWindow({
     width: 1400,
@@ -71,13 +107,30 @@ function createWindow() {
     mainWindow.show();
   });
 
-  if (isDev) {
-    // Development mode - load from dev server
-    mainWindow.loadURL('http://localhost:5000');
-    mainWindow.webContents.openDevTools();
-  } else {
-    // Production mode - load from localhost server
-    mainWindow.loadURL('http://localhost:5000');
+  try {
+    if (isDev) {
+      // Development mode - load from dev server
+      mainWindow.loadURL('http://localhost:5000');
+      mainWindow.webContents.openDevTools();
+    } else {
+      // Production mode - load from localhost server after ensuring it's ready
+      console.log('Loading main window from http://localhost:5000');
+      await mainWindow.loadURL('http://localhost:5000');
+    }
+  } catch (error) {
+    console.error('Failed to load main window content:', error);
+    
+    // Fallback: try loading static files directly
+    if (!isDev) {
+      try {
+        const appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
+        const indexPath = path.join(appPath, 'dist', 'public', 'index.html');
+        console.log('Fallback: loading static files from', indexPath);
+        await mainWindow.loadFile(indexPath);
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+      }
+    }
   }
 
   // Handle external links
@@ -112,11 +165,11 @@ app.whenReady().then(async () => {
           try {
             activationWin.close();
             await startExpressServer();
-            createWindow();
+            await createWindow();
           } catch (error) {
             console.error('Error starting main app after activation:', error);
             // Still create window even if server startup fails
-            createWindow();
+            await createWindow();
           }
         });
         
@@ -139,7 +192,7 @@ app.whenReady().then(async () => {
       await startExpressServer();
       
       // Then create the main window
-      createWindow();
+      await createWindow();
     }
   } catch (error) {
     console.error('CRITICAL: Failed to start application:', error);
@@ -147,11 +200,11 @@ app.whenReady().then(async () => {
     app.quit();
   }
   
-  app.on('activate', () => {
+  app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       const isActivated = checkActivation();
       if (isActivated || isDev) {
-        createWindow();
+        await createWindow();
       } else {
         createActivationWindow();
       }
