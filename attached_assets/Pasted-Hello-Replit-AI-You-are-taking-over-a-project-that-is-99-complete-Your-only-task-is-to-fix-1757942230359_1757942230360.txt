@@ -1,0 +1,28 @@
+Hello Replit AI,
+
+You are taking over a project that is 99% complete. Your **only task** is to fix the final bug that is causing a "white screen" to appear after the application starts.
+
+### **Part 1: What Is Already Working (Do Not Change This)**
+
+To save your time, please be aware that all other systems are fully functional and have been extensively debugged.
+
+* **Core Application Logic (✅ FIXED):** All bugs related to the date filter, data reset, and data management pages have been fixed.
+* **Build Configuration (✅ FIXED):** The `package.json` file is correct and allows for a successful build via GitHub Actions.
+* **License Activation System (✅ FIXED):** The license activation is **100% working**. The app successfully communicates with the Gumroad API, validates the key, and saves the activation status. The log files have confirmed this.
+
+### **Part 2: The Final, Unsolved Problem**
+
+The application has one remaining bug:
+
+* **The Error:** After a user is licensed and starts the app, the main application window opens, but it is just a **blank white screen**. The dashboard and UI never appear.
+* **The Root Cause:** This is a classic Electron issue. The main process (`main.cjs`) is successfully creating the `BrowserWindow`, but that window is **failing to load the React application's `index.html` file.** This is because the file path to `index.html` is incorrect in the final, packaged production application.
+
+### **Part 3: Your Task - Fix the File Path in Production**
+
+Your only task is to fix the file loading logic in the `createMainWindow` function inside the `electron/main.cjs` file.
+
+**Prompt Command:**
+
+**"You must modify the `createMainWindow` function in `electron/main.cjs` to correctly load the application's content in both development and production environments. The logic should be as follows:**
+1.  **In development mode**, it should continue to load the Vite development server URL.
+2.  **In production mode** (when the app is packaged), it must construct a `file://` path that correctly points to the `index.html` file located inside the `dist/public` folder. You will likely need to use Node's `path.join` and `__dirname` to create a reliable path."
