@@ -1,0 +1,144 @@
+so the license got activated but then the app just got closed 
+
+[2025-09-13T11:43:39.726Z] INFO: === CREATING ACTIVATION WINDOW ===
+[2025-09-13T11:43:39.743Z] INFO: Creating new BrowserWindow for activation...
+[2025-09-13T11:43:40.630Z] INFO: BrowserWindow created successfully
+[2025-09-13T11:43:40.633Z] INFO: Loading activation HTML from: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\electron\activation.html
+[2025-09-13T11:43:40.755Z] INFO: Activation window setup complete
+[2025-09-13T11:43:42.281Z] INFO: Activation window ready to show
+[2025-09-13T11:43:42.309Z] INFO: Activation window shown to user
+[2025-09-13T11:43:42.314Z] INFO: Activation HTML loaded successfully
+[2025-09-13T11:43:47.359Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-13T11:43:47.363Z] INFO: License key received via IPC: 3C3D0458...
+[2025-09-13T11:43:47.365Z] INFO: Starting license verification process...
+[2025-09-13T11:43:47.367Z] INFO: Starting license verification for key: 3C3D0458...
+[2025-09-13T11:43:47.370Z] INFO: Using product_permalink: shop-analytics-dashboard
+[2025-09-13T11:43:47.372Z] INFO: Using API URL: https://api.gumroad.com/v2/licenses/verify
+[2025-09-13T11:43:47.377Z] INFO: POST data length: 90 characters
+[2025-09-13T11:43:47.379Z] INFO: Creating network request to: https://api.gumroad.com/v2/licenses/verify
+[2025-09-13T11:43:47.382Z] INFO: Headers set successfully
+[2025-09-13T11:43:47.385Z] INFO: Writing POST data (length: 90 chars, key: 3C3D04...)
+[2025-09-13T11:43:47.388Z] INFO: Ending request...
+[2025-09-13T11:43:47.394Z] INFO: Request data sent successfully
+[2025-09-13T11:43:47.400Z] ERROR: Network request error: net::ERR_INVALID_ARGUMENT
+[2025-09-13T11:43:47.403Z] ERROR: Error code: undefined
+[2025-09-13T11:43:47.409Z] ERROR: Error stack: Error: net::ERR_INVALID_ARGUMENT
+    at SimpleURLLoaderWrapper.<anonymous> (node:electron/js2c/browser_init:2:124413)
+    at SimpleURLLoaderWrapper.emit (node:events:518:28)
+[2025-09-13T11:43:47.413Z] INFO: License verification result: {"success":false,"error":"Cannot verify license. Check internet connection"}
+[2025-09-13T11:43:47.415Z] ERROR: License verification failed: Cannot verify license. Check internet connection
+[2025-09-13T11:43:47.417Z] INFO: === LICENSE ACTIVATION FAILED ===
+[2025-09-13T11:47:45.279Z] INFO: Activation window closed
+[2025-09-13T12:06:45.427Z] INFO: === CREATING ACTIVATION WINDOW ===
+[2025-09-13T12:06:45.447Z] INFO: Creating new BrowserWindow for activation...
+[2025-09-13T12:06:45.988Z] INFO: BrowserWindow created successfully
+[2025-09-13T12:06:45.992Z] INFO: Loading activation HTML from: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\electron\activation.html
+[2025-09-13T12:06:46.097Z] INFO: Activation window setup complete
+[2025-09-13T12:06:47.232Z] INFO: Activation window ready to show
+[2025-09-13T12:06:47.271Z] INFO: Activation window shown to user
+[2025-09-13T12:06:47.322Z] INFO: Activation HTML loaded successfully
+[2025-09-13T12:07:02.425Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-13T12:07:02.428Z] INFO: License key received via IPC: 3C3D0458...
+[2025-09-13T12:07:02.430Z] INFO: Starting license verification process...
+[2025-09-13T12:07:02.432Z] INFO: Starting license verification for key: 3C3D0458...
+[2025-09-13T12:07:02.435Z] INFO: Using product_permalink: shop-analytics-dashboard
+[2025-09-13T12:07:02.437Z] INFO: Using API URL: https://api.gumroad.com/v2/licenses/verify
+[2025-09-13T12:07:02.441Z] INFO: POST data length: 90 characters
+[2025-09-13T12:07:02.444Z] INFO: POST data content: product_permalink=shop-analytics-dashboard&license_key=3C3D0458-F66C4A93-930C7793-2C4C7AED
+[2025-09-13T12:07:02.446Z] INFO: Parsed URL - host: api.gumroad.com, port: , path: /v2/licenses/verify
+[2025-09-13T12:07:02.451Z] INFO: HTTPS request options: {
+  "hostname": "api.gumroad.com",
+  "port": 443,
+  "path": "/v2/licenses/verify",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Length": 90,
+    "User-Agent": "Shop Analytics Dashboard/1.0.0",
+    "Accept": "application/json"
+  }
+}
+[2025-09-13T12:07:02.537Z] INFO: Writing POST data to HTTPS request: 90 bytes
+[2025-09-13T12:07:02.541Z] INFO: Ending HTTPS request...
+[2025-09-13T12:07:03.206Z] INFO: Received response with status code: 500
+[2025-09-13T12:07:03.211Z] INFO: Response headers: {"date":"Sat, 13 Sep 2025 12:07:03 GMT","content-type":"application/json; charset=utf-8","content-length":"178","connection":"keep-alive","cf-ray":"97e785a24e46d3d4-BLR","x-revision":"a53e714fa338","x-gr":"PROD","vary":"Accept, Origin","cache-control":"no-cache","set-cookie":["_gumroad_guid=04c5ebb9-cc8e-43f7-acad-24b1368d3c61; domain=gumroad.com; path=/; expires=Thu, 13 Sep 2035 12:07:03 GMT; httponly; samesite=lax; secure","_gumroad_app_session=qaIbe6Y6qcixs5VbU2rTzf2ImGCynJoV24Zz0msnZ7YbVrIEQPNzG3q95o5836PqSGWGXv0vRuvr6zwtJjn%2B1O%2FAQ21H36J9T%2FWYrsBlPMGCra1Lbcnk%2BfcNrm4h4zCquQlYXeqSi8IY0rs7vGzt1mAs36iPJ5t3CdD5zJogRBnSttpSddsObVUPwKwxcANbv%2BlmD7Y4T%2Fe0FcChxI3bBII3McLwIp41iEmoeU5AVszG8u6iSj6F5Uw3HQe1aWjB6LTDj8E7O57obMyBvGI%3D--bAy3d6zUT1YEB%2FOV--8Uzctv2RSmUQtenYanqRLw%3D%3D; domain=gumroad.com; path=/; expires=Mon, 13 Oct 2025 12:07:03 GMT; secure; httponly; samesite=lax"],"x-request-id":"d096fc32-a39f-427f-a8cd-b0ba5e751669","x-runtime":"0.009946","x-original-headers-class":"Rack::Headers","x-content-type-options":"nosniff","x-xss-protection":"1; mode=block","x-download-options":"noopen","x-permitted-cross-domain-policies":"none","content-security-policy":"default-src https 'self'; child-src * data: blob:; connect-src 'self' blob: www.dropbox.com api.dropboxapi.com s3.amazonaws.com/gumroad s3.amazonaws.com/gumroad/ gumroad-public-storage.s3.amazonaws.com gumroad-public-storage.s3.amazonaws.com/ s3.amazonaws.com/gumroad-public-storage s3.amazonaws.com/gumroad-public-storage/ www.google.com www.gstatic.com *.facebook.com *.facebook.net *.google-analytics.com *.g.doubleclick.net *.googletagmanager.com analytics.google.com *.analytics.google.com files.gumroad.com/ d1bdh6c3ceakz5.cloudfront.net/ *.braintreegateway.com www.paypalobjects.com *.paypal.com *.braintree-api.com iframe.ly help.gumroad.com gumroad.com wss://cable.gumroad.com assets.gumroad.com; font-src * data: blob:; frame-src * data: blob:; img-src * data: blob:; media-src * data: blob:; object-src * data: blob:; script-src 'self' 'unsafe-eval' ajax.cloudflare.com static.cloudflareinsights.com js.stripe.com api.stripe.com connect-js.stripe.com *.braintreegateway.com *.braintree-api.com www.paypalobjects.com *.paypal.com *.google-analytics.com *.googletagmanager.com optimize.google.com www.googleadservices.com www.google.com www.gstatic.com *.facebook.net *.facebook.com www.dropbox.com s.ytimg.com cdn.iframe.ly platform.twitter.com cdn.jwplayer.com *.jwpcdn.com gumroad.us3.list-manage.com analytics.twitter.com help.gumroad.com unpkg.com/@lottiefiles/lottie-player@latest/ gumroad.com assets.gumroad.com; style-src 'self' 'unsafe-inline' s.ytimg.com optimize.google.com fonts.googleapis.com assets.gumroad.com; worker-src * data: blob:","cf-cache-status":"DYNAMIC","server":"cloudflare","alt-svc":"h3=\":443\"; ma=86400"}
+[2025-09-13T12:07:03.214Z] INFO: Received data chunk (178 chars): {"success":false,"message":"The 'product_id' parameter is required to verify the license for this pr...
+[2025-09-13T12:07:03.216Z] INFO: Response complete. Total data length: 178
+[2025-09-13T12:07:03.218Z] INFO: Response data preview: {"success":false,"message":"The 'product_id' parameter is required to verify the license for this product. Please set 'product_id' to '9jzvbqovj9HtIE1MUCU3sQ==' in the request."}...
+[2025-09-13T12:07:03.220Z] INFO: Parsed JSON response - success: false, has purchase: false
+[2025-09-13T12:07:03.222Z] ERROR: License verification failed. API response: {"success":false,"message":"The 'product_id' parameter is required to verify the license for this product. Please set 'product_id' to '9jzvbqovj9HtIE1MUCU3sQ==' in the request."}
+[2025-09-13T12:07:03.227Z] INFO: License verification result: {"success":false,"error":"The 'product_id' parameter is required to verify the license for this product. Please set 'product_id' to '9jzvbqovj9HtIE1MUCU3sQ==' in the request."}
+[2025-09-13T12:07:03.229Z] ERROR: License verification failed: The 'product_id' parameter is required to verify the license for this product. Please set 'product_id' to '9jzvbqovj9HtIE1MUCU3sQ==' in the request.
+[2025-09-13T12:07:03.231Z] INFO: === LICENSE ACTIVATION FAILED ===
+[2025-09-13T12:11:54.138Z] INFO: Activation window closed
+[2025-09-13T12:39:43.046Z] INFO: === CREATING ACTIVATION WINDOW ===
+[2025-09-13T12:39:43.058Z] INFO: Creating new BrowserWindow for activation...
+[2025-09-13T12:39:43.641Z] INFO: BrowserWindow created successfully
+[2025-09-13T12:39:43.643Z] INFO: Loading activation HTML from: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\electron\activation.html
+[2025-09-13T12:39:44.891Z] INFO: Activation window ready to show
+[2025-09-13T12:39:55.537Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-13T12:39:55.541Z] INFO: Attempting to verify license for product "9jzvbqovj9HtIE1MUCU3sQ=="
+[2025-09-13T12:39:55.550Z] ERROR: CRITICAL NETWORK ERROR: net::ERR_INVALID_ARGUMENT
+[2025-09-13T12:39:55.552Z] ERROR: License verification failed: A critical network error occurred. Check logs.
+[2025-09-13T12:39:55.553Z] INFO: === LICENSE ACTIVATION FAILED ===
+[2025-09-13T12:39:57.168Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-13T12:39:57.170Z] INFO: Attempting to verify license for product "9jzvbqovj9HtIE1MUCU3sQ=="
+[2025-09-13T12:39:57.173Z] ERROR: CRITICAL NETWORK ERROR: net::ERR_INVALID_ARGUMENT
+[2025-09-13T12:39:57.175Z] ERROR: License verification failed: A critical network error occurred. Check logs.
+[2025-09-13T12:39:57.176Z] INFO: === LICENSE ACTIVATION FAILED ===
+[2025-09-13T12:44:24.465Z] INFO: Activation window closed
+[2025-09-15T11:18:52.322Z] INFO: === CREATING ACTIVATION WINDOW ===
+[2025-09-15T11:18:52.511Z] INFO: Creating new BrowserWindow for activation...
+[2025-09-15T11:18:53.339Z] INFO: BrowserWindow created successfully
+[2025-09-15T11:18:53.340Z] INFO: Loading activation HTML from: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\electron\activation.html
+[2025-09-15T11:19:01.444Z] INFO: Activation window ready to show
+[2025-09-15T11:20:09.899Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-15T11:20:09.904Z] INFO: Attempting to verify license for product "9jzvbqovj9HtIE1MUCU3sQ=="
+[2025-09-15T11:20:09.919Z] ERROR: CRITICAL NETWORK ERROR: net::ERR_INVALID_ARGUMENT
+[2025-09-15T11:20:09.921Z] ERROR: License verification failed: A critical network error occurred. Check logs.
+[2025-09-15T11:20:09.923Z] INFO: === LICENSE ACTIVATION FAILED ===
+[2025-09-15T11:20:19.319Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-15T11:20:19.320Z] INFO: Attempting to verify license for product "9jzvbqovj9HtIE1MUCU3sQ=="
+[2025-09-15T11:20:19.323Z] ERROR: CRITICAL NETWORK ERROR: net::ERR_INVALID_ARGUMENT
+[2025-09-15T11:20:19.324Z] ERROR: License verification failed: A critical network error occurred. Check logs.
+[2025-09-15T11:20:19.326Z] INFO: === LICENSE ACTIVATION FAILED ===
+[2025-09-15T12:05:49.793Z] INFO: Activation window closed
+[2025-09-15T12:15:17.507Z] INFO: === CREATING ACTIVATION WINDOW ===
+[2025-09-15T12:15:17.524Z] INFO: Creating new BrowserWindow for activation...
+[2025-09-15T12:15:20.913Z] INFO: BrowserWindow created successfully
+[2025-09-15T12:15:20.914Z] INFO: Loading activation HTML from: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\electron\activation.html
+[2025-09-15T12:15:23.935Z] INFO: Activation window ready to show
+[2025-09-15T12:15:56.735Z] INFO: === LICENSE ACTIVATION STARTED ===
+[2025-09-15T12:15:56.775Z] INFO: Starting license verification for key: 3C3D0458...
+[2025-09-15T12:15:56.777Z] INFO: Using product_id: 9jzvbqovj9HtIE1MUCU3sQ==
+[2025-09-15T12:15:56.778Z] INFO: Using API URL: https://api.gumroad.com/v2/licenses/verify
+[2025-09-15T12:15:56.779Z] INFO: POST data length: 114 characters
+[2025-09-15T12:15:56.780Z] INFO: POST data content: product_id=9jzvbqovj9HtIE1MUCU3sQ%3D%3D&license_key=3C3D0458-F66C4A93-930C7793-2C4C7AED&increment_uses_count=false
+[2025-09-15T12:15:56.781Z] INFO: Parsed URL - host: api.gumroad.com, port: 443, path: /v2/licenses/verify
+[2025-09-15T12:15:56.786Z] INFO: HTTPS request options: {
+  "hostname": "api.gumroad.com",
+  "port": 443,
+  "path": "/v2/licenses/verify",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Length": 114,
+    "User-Agent": "Shop Analytics Dashboard/1.0.0",
+    "Accept": "application/json"
+  }
+}
+[2025-09-15T12:15:56.876Z] INFO: Writing POST data to HTTPS request: 114 bytes
+[2025-09-15T12:15:56.879Z] INFO: Ending HTTPS request...
+[2025-09-15T12:15:58.056Z] INFO: Received response with status code: 200
+[2025-09-15T12:15:58.060Z] INFO: Response headers: {"date":"Mon, 15 Sep 2025 12:15:58 GMT","content-type":"application/json; charset=utf-8","content-length":"971","connection":"keep-alive","cf-ray":"97f80d6e1d550ff2-BOM","x-revision":"80f12fb4509c","x-gr":"PROD","vary":"Accept, Origin","etag":"W/\"40da1bd446ec60a1a713e14cd5f9b1b2\"","cache-control":"max-age=0, private, must-revalidate","set-cookie":["_gumroad_guid=fc622732-f6a6-4c34-ad3a-ec07f17c46f2; domain=gumroad.com; path=/; expires=Sat, 15 Sep 2035 12:15:57 GMT; httponly; samesite=lax; secure","XSRF-TOKEN=ohEJRfMWTQ9Dmofy2uwz64DsaxTbFQNfPAIpuBAVgnMJrRrJOu2ciCPW9IBI4we4v1ttXq_34Ab-XXJRECowNQ; path=/; samesite=lax; secure; HttpOnly","_gumroad_app_session=2Tc9fX2OxVoIVbiZfgJw6f2i8qfDsYLQMqqVKGqonN5JxNFkbSmS6Zrzcmcd6is4oEsTDHpvWyFPaqNgBq3o%2BSk%2FBAK9hjgh7OMO%2FUnOuSeFU7NxIoGfNtNG3QoxxpgPN29Q2WCcVe3rApymtt4rcI3PQO3YNYDL6ZOYEPL2GE%2Fc0sdSfcqfsQhnZsrul%2BkD0lFumLWCo84ViedBPZfShmt%2FwQ7u%2F5d3DK2GdT7f0sLxv9oKe1JDt9sRVhXsu4xy2Mm%2Fj6otQ5Rup5EaiBAbs9Src9v8CWJfnEI4GfhIPoHf1PbS0gCMBDfw28L7klrmnqDoi%2BArIvDVpkNvsuFSBRNx4vBbvxTfs1rl9rtTpb%2BFCHl5wHoQ9OF%2FqdQbLQ%3D%3D--g96zdU5v3WzZxHPe--lmuW%2BYI2aU5S3A%2F99i4b4Q%3D%3D; domain=gumroad.com; path=/; expires=Wed, 15 Oct 2025 12:15:58 GMT; secure; httponly; samesite=lax"],"x-request-id":"23ac5005-b5a9-46e6-8291-e3d8eae91420","x-runtime":"0.037285","x-original-headers-class":"Rack::Headers","x-content-type-options":"nosniff","x-xss-protection":"1; mode=block","x-download-options":"noopen","x-permitted-cross-domain-policies":"none","content-security-policy":"default-src https 'self'; child-src * data: blob:; connect-src 'self' blob: www.dropbox.com api.dropboxapi.com s3.amazonaws.com/gumroad s3.amazonaws.com/gumroad/ gumroad-public-storage.s3.amazonaws.com gumroad-public-storage.s3.amazonaws.com/ s3.amazonaws.com/gumroad-public-storage s3.amazonaws.com/gumroad-public-storage/ www.google.com www.gstatic.com *.facebook.com *.facebook.net *.google-analytics.com *.g.doubleclick.net *.googletagmanager.com analytics.google.com *.analytics.google.com files.gumroad.com/ d1bdh6c3ceakz5.cloudfront.net/ *.braintreegateway.com www.paypalobjects.com *.paypal.com *.braintree-api.com iframe.ly help.gumroad.com gumroad.com wss://cable.gumroad.com assets.gumroad.com; font-src * data: blob:; frame-src * data: blob:; img-src * data: blob:; media-src * data: blob:; object-src * data: blob:; script-src 'self' 'unsafe-eval' ajax.cloudflare.com static.cloudflareinsights.com js.stripe.com api.stripe.com connect-js.stripe.com *.braintreegateway.com *.braintree-api.com www.paypalobjects.com *.paypal.com *.google-analytics.com *.googletagmanager.com optimize.google.com www.googleadservices.com www.google.com www.gstatic.com *.facebook.net *.facebook.com www.dropbox.com s.ytimg.com cdn.iframe.ly platform.twitter.com cdn.jwplayer.com *.jwpcdn.com gumroad.us3.list-manage.com analytics.twitter.com help.gumroad.com unpkg.com/@lottiefiles/lottie-player@latest/ gumroad.com assets.gumroad.com; style-src 'self' 'unsafe-inline' s.ytimg.com optimize.google.com fonts.googleapis.com assets.gumroad.com; worker-src * data: blob:","cf-cache-status":"DYNAMIC","server":"cloudflare","alt-svc":"h3=\":443\"; ma=86400"}
+[2025-09-15T12:15:58.062Z] INFO: Received data chunk (952 chars): {"success":true,"uses":0,"purchase":{"seller_id":"iNJbf3_2fQOGoa1QI9nDkQ==","product_id":"9jzvbqovj9...
+[2025-09-15T12:15:58.063Z] INFO: Received data chunk (19 chars): argebacked":false}}...
+[2025-09-15T12:15:58.066Z] INFO: Response complete. Total data length: 971
+[2025-09-15T12:15:58.067Z] INFO: Response data preview: {"success":true,"uses":0,"purchase":{"seller_id":"iNJbf3_2fQOGoa1QI9nDkQ==","product_id":"9jzvbqovj9HtIE1MUCU3sQ==","product_name":"Shop Analytics Dashboard","permalink":"ihpuq","product_permalink":"h...
+[2025-09-15T12:15:58.068Z] INFO: Parsed JSON response - success: true, has purchase: true
+[2025-09-15T12:15:58.070Z] INFO: License verification successful!
+[2025-09-15T12:15:58.074Z] INFO: Saving activation data...
+[2025-09-15T12:15:58.098Z] INFO: === LICENSE ACTIVATION COMPLETED SUCCESSFULLY ===
+[2025-09-15T12:16:00.155Z] INFO: Activation window closed
+
+and its not opening now

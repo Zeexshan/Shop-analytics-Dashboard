@@ -179,6 +179,12 @@ ipcMain.handle('activate-license', async (event, licenseKey) => {
     logToFile('Saving activation data...');
     saveActivation(licenseKey.trim(), result.purchase);
     logToFile('=== LICENSE ACTIVATION COMPLETED SUCCESSFULLY ===');
+    
+    // Emit activation completed event to trigger main app startup
+    logToFile('Emitting activation-completed event to main process...');
+    const { ipcMain } = require('electron');
+    ipcMain.emit('activation-completed');
+    
     return { success: true, message: 'License activated successfully!' };
   } else {
     logToFile(`License verification failed: ${result.error}`, true);
