@@ -18,8 +18,19 @@ async function startExpressServer() {
   }
   
   try {
-    // Import and start the Express server directly in the Electron process
-    const serverPath = path.join(__dirname, '../dist/index.js');
+    // Fix path resolution for packaged applications
+    const base = isDev ? path.join(__dirname, '..') : process.resourcesPath || path.join(__dirname, '..');
+    const serverPath = path.join(base, 'dist', 'index.js');
+    
+    console.log('Attempting to start Express server from:', serverPath);
+    
+    // Check if server file exists
+    const fs = require('fs');
+    if (!fs.existsSync(serverPath)) {
+      console.log('Server file not found at:', serverPath);
+      console.log('Skipping server startup - app will use external server or file-based content');
+      return Promise.resolve();
+    }
     
     // Set production environment
     process.env.NODE_ENV = 'production';
@@ -31,7 +42,8 @@ async function startExpressServer() {
     return Promise.resolve();
   } catch (error) {
     console.error('Failed to start server:', error);
-    return Promise.reject(error);
+    console.log('Continuing without embedded server - app will use external content');
+    return Promise.resolve(); // Don't reject - continue without embedded server
   }
 }
 
@@ -97,9 +109,15 @@ app.whenReady().then(async () => {
         // Listen for successful activation
         ipcMain.once('activation-completed', async () => {
           console.log('Activation completed - starting main app');
-          activationWin.close();
-          await startExpressServer();
-          createWindow();
+          try {
+            activationWin.close();
+            await startExpressServer();
+            createWindow();
+          } catch (error) {
+            console.error('Error starting main app after activation:', error);
+            // Still create window even if server startup fails
+            createWindow();
+          }
         });
         
         // Handle activation window close without activation

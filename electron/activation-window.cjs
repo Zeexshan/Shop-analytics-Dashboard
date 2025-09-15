@@ -182,7 +182,6 @@ ipcMain.handle('activate-license', async (event, licenseKey) => {
     
     // Emit activation completed event to trigger main app startup
     logToFile('Emitting activation-completed event to main process...');
-    const { ipcMain } = require('electron');
     ipcMain.emit('activation-completed');
     
     return { success: true, message: 'License activated successfully!' };
