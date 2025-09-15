@@ -1,0 +1,73 @@
+index-dtMREeFt.js:105  Shop Analytics Dashboard 
+index-dtMREeFt.js:105  Professional Business Analytics Solution 
+index-dtMREeFt.js:105  © 2024 All Rights Reserved 
+index-dtMREeFt.js:105 Professional Shop Analytics Dashboard - Licensed Software
+W7e @ index-dtMREeFt.js:105
+index-dtMREeFt.js:105 License already activated
+localhost:5000/api/auth/login:1  Failed to load resource: net::ERR_CONNECTION_REFUSED
+localhost:5000/api/auth/login:1  Failed to load resource: net::ERR_CONNECTION_REFUSED
+index-dtMREeFt.js:31 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-dtMREeFt.js:31
+hZbjy @ index-dtMREeFt.js:19
+_2 @ index-dtMREeFt.js:19
+wmiGh @ index-dtMREeFt.js:19
+xh @ index-dtMREeFt.js:19
+eIWED @ index-dtMREeFt.js:19
+Sie @ index-dtMREeFt.js:19
+qJskw @ index-dtMREeFt.js:19
+Ru @ index-dtMREeFt.js:19
+cT @ index-dtMREeFt.js:19
+rpNIi @ index-dtMREeFt.js:19
+cu @ index-dtMREeFt.js:19
+(anonymous) @ index-dtMREeFt.js:19
+index-dtMREeFt.js:31  POST http://localhost:5000/api/auth/forgot-password net::ERR_CONNECTION_REFUSED
+EIGvI @ index-dtMREeFt.js:31
+_0xd377f4 @ index-dtMREeFt.js:31
+Vre @ index-dtMREeFt.js:19
+Gre @ index-dtMREeFt.js:19
+Wre @ index-dtMREeFt.js:19
+HzsmZ @ index-dtMREeFt.js:19
+U3 @ index-dtMREeFt.js:19
+GsFOo @ index-dtMREeFt.js:19
+t7 @ index-dtMREeFt.js:19
+(anonymous) @ index-dtMREeFt.js:19
+MN @ index-dtMREeFt.js:19
+_$ @ index-dtMREeFt.js:19
+a5 @ index-dtMREeFt.js:19
+hN @ index-dtMREeFt.js:19
+oqjJQ @ index-dtMREeFt.js:19
+cne @ index-dtMREeFt.js:19
+index-dtMREeFt.js:31  POST http://localhost:5000/api/auth/forgot-password net::ERR_CONNECTION_REFUSED
+EIGvI @ index-dtMREeFt.js:31
+_0xd377f4 @ index-dtMREeFt.js:31
+Vre @ index-dtMREeFt.js:19
+Gre @ index-dtMREeFt.js:19
+Wre @ index-dtMREeFt.js:19
+HzsmZ @ index-dtMREeFt.js:19
+U3 @ index-dtMREeFt.js:19
+GsFOo @ index-dtMREeFt.js:19
+t7 @ index-dtMREeFt.js:19
+(anonymous) @ index-dtMREeFt.js:19
+MN @ index-dtMREeFt.js:19
+_$ @ index-dtMREeFt.js:19
+a5 @ index-dtMREeFt.js:19
+hN @ index-dtMREeFt.js:19
+oqjJQ @ index-dtMREeFt.js:19
+cne @ index-dtMREeFt.js:19
+index-dtMREeFt.js:31  POST http://localhost:5000/api/auth/forgot-password net::ERR_CONNECTION_REFUSED
+EIGvI @ index-dtMREeFt.js:31
+_0xd377f4 @ index-dtMREeFt.js:31
+Vre @ index-dtMREeFt.js:19
+Gre @ index-dtMREeFt.js:19
+Wre @ index-dtMREeFt.js:19
+HzsmZ @ index-dtMREeFt.js:19
+U3 @ index-dtMREeFt.js:19
+GsFOo @ index-dtMREeFt.js:19
+t7 @ index-dtMREeFt.js:19
+(anonymous) @ index-dtMREeFt.js:19
+MN @ index-dtMREeFt.js:19
+_$ @ index-dtMREeFt.js:19
+a5 @ index-dtMREeFt.js:19
+hN @ index-dtMREeFt.js:19
+oqjJQ @ index-dtMREeFt.js:19
+cne @ index-dtMREeFt.js:19
