@@ -64,9 +64,12 @@ function createActivationWindow() {
   }
 }
 
-// --- FINAL, ROBUST LICENSE VERIFICATION USING ELECTRON.NET ---
+// --- FINAL, ROBUST LICENSE VERIFICATION USING HTTPS ---
 function verifyLicense(licenseKey) {
   return new Promise((resolve) => {
+    const https = require('https');
+    const { URL } = require('url');
+    
     const GUMROAD_PRODUCT_ID = '9jzvbqovj9HtIE1MUCU3sQ==';
     const postData = new URLSearchParams({
       product_id: GUMROAD_PRODUCT_ID,
@@ -74,46 +77,75 @@ function verifyLicense(licenseKey) {
       increment_uses_count: 'false'
     }).toString();
 
-    logToFile(`Attempting to verify license for product "${GUMROAD_PRODUCT_ID}"`);
+    logToFile(`Starting license verification for key: ${licenseKey.substring(0, 8)}...`);
+    logToFile(`Using product_id: ${GUMROAD_PRODUCT_ID}`);
+    logToFile(`Using API URL: https://api.gumroad.com/v2/licenses/verify`);
+    logToFile(`POST data length: ${postData.length} characters`);
+    logToFile(`POST data content: ${postData}`);
 
-    const request = net.request({
+    const parsedUrl = new URL('https://api.gumroad.com/v2/licenses/verify');
+    logToFile(`Parsed URL - host: ${parsedUrl.hostname}, port: ${parsedUrl.port || 443}, path: ${parsedUrl.pathname}`);
+
+    const options = {
+      hostname: parsedUrl.hostname,
+      port: 443,
+      path: parsedUrl.pathname,
       method: 'POST',
-      url: 'https://api.gumroad.com/v2/licenses/verify',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(postData),
-      },
-    });
+        'Content-Length': postData.length,
+        'User-Agent': 'Shop Analytics Dashboard/1.0.0',
+        'Accept': 'application/json'
+      }
+    };
 
-    request.on('response', (response) => {
-      logToFile(`Gumroad API Response Status: ${response.statusCode}`);
+    logToFile(`HTTPS request options: ${JSON.stringify(options, null, 2)}`);
+
+    const req = https.request(options, (res) => {
+      logToFile(`Received response with status code: ${res.statusCode}`);
+      logToFile(`Response headers: ${JSON.stringify(res.headers)}`);
+      
       let responseBody = '';
-      response.on('data', (chunk) => { responseBody += chunk; });
-      response.on('end', () => {
-        logToFile('Gumroad API Response Body: ' + responseBody);
+      
+      res.on('data', (chunk) => {
+        responseBody += chunk;
+        logToFile(`Received data chunk (${chunk.length} chars): ${chunk.toString().substring(0, 100)}...`);
+      });
+      
+      res.on('end', () => {
+        logToFile(`Response complete. Total data length: ${responseBody.length}`);
+        logToFile(`Response data preview: ${responseBody.substring(0, 200)}...`);
+        
         try {
           const data = JSON.parse(responseBody);
+          logToFile(`Parsed JSON response - success: ${data.success}, has purchase: ${!!data.purchase}`);
+          
           if (data.success === true) {
             logToFile('License verification successful!');
             resolve({ success: true, purchase: data.purchase });
           } else {
-            logToFile(`License verification failed: ${data.message}`, true);
+            logToFile(`License verification failed. API response: ${responseBody}`, true);
             resolve({ success: false, error: data.message || 'Invalid license key' });
           }
         } catch (e) {
-          logToFile(`CRITICAL ERROR parsing Gumroad JSON response: ${e.message}`, true);
-          resolve({ success: false, error: 'Error reading response from server.' });
+          logToFile(`CRITICAL ERROR parsing JSON response: ${e.message}`, true);
+          logToFile(`Raw response that failed to parse: ${responseBody}`, true);
+          resolve({ success: false, error: 'Error parsing server response.' });
         }
       });
     });
 
-    request.on('error', (error) => {
-      logToFile(`CRITICAL NETWORK ERROR: ${error.message}`, true);
-      resolve({ success: false, error: 'A critical network error occurred. Check logs.' });
+    req.on('error', (error) => {
+      logToFile(`HTTPS request error: ${error.message}`, true);
+      logToFile(`Error code: ${error.code}`, true);
+      logToFile(`Error stack: ${error.stack}`, true);
+      resolve({ success: false, error: 'Network connection failed. Check internet connection.' });
     });
 
-    request.write(postData);
-    request.end();
+    logToFile(`Writing POST data to HTTPS request: ${postData.length} bytes`);
+    req.write(postData);
+    logToFile('Ending HTTPS request...');
+    req.end();
   });
 }
 

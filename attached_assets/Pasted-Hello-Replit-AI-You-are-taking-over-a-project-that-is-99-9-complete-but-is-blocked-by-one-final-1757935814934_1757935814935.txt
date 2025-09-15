@@ -1,0 +1,26 @@
+Hello Replit AI,
+
+You are taking over a project that is 99.9% complete but is blocked by one final, critical bug. Please read this entire summary carefully to understand the full, complex history of this project and what has already been solved. Your only task is to apply one last fix to the license activation system.
+
+Part 1: What Is Already Working (Do Not Change This)
+Core Application Logic (✅ FIXED): A previous AI has already fixed all the main application bugs. The Custom Date Range Filter, Data Reset, and Data Management pages are all working correctly in the development environment. Do not work on these features.
+
+Automated Build System (✅ WORKING): The project does not build on Replit (due to disk space) or on a local PC (due to antivirus issues). Instead, we have successfully implemented a GitHub Actions workflow. This system automatically builds the application on GitHub's servers. Do not try to run the desktop build command (npm run build:desktop) in the Replit environment; it will fail.
+
+Part 2: Summary of Build Errors I Have Already Solved Myself
+To save your time and quota, here is a list of the complex build errors I have already diagnosed and fixed myself. This shows that the package.json has been heavily debugged and that simple configuration changes have already been tried.
+
+I fixed an Invalid configuration object error for an unknown electronRebuild property by removing it.
+
+I fixed another Invalid configuration object error for an unknown signing property by correctly changing it to forceCodeSigning: false.
+
+I fixed a runtime crash (Cannot find module 'electron-store') in the built app by correcting the build.files configuration in package.json.
+
+I fixed the build process hanging due to an enormous (565+ MB) app size by refining the build.files array to explicitly exclude node_modules.
+
+Part 3: The Final, Unsolved Problem & The Golden Clue
+The GitHub Actions workflow successfully builds the .exe installer. I can download, install, and run the application. However, the final step fails:
+
+The Error: When I enter a valid Gumroad license key into the activation window, it fails. The application's debug log file has successfully captured the exact error message from the Gumroad server:
+
+{"success":false,"message":"The 'product_id' parameter is required to verify the license for this product. Please set 'product_id' to '9jzvbqovj9HtIE1MUCU3sQ==' in the request."}
