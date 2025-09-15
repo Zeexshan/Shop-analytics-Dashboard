@@ -13,6 +13,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import { getApiUrl } from '@/config/api';
+import { Label } from '@/components/ui/label';
 import { Lock, Shield, User, Key, Database, BarChart3, AlertTriangle, Trash2 } from 'lucide-react';
 
 // Developer: zeeexshan - Professional Settings Management
@@ -265,7 +267,7 @@ export default function SettingsPage() {
   const fetchLicenseInfo = async () => {
     setIsLoadingLicense(true);
     try {
-      const response = await fetch('/api/license/current', {
+      const response = await fetch(getApiUrl('/api/license/current'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },

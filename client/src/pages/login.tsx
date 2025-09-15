@@ -12,6 +12,7 @@ import { Store, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import { useEffect } from 'react';
+import { getApiUrl } from '@/config/api';
 
 export default function LoginPage() {
   const { login, user } = useAuth();
@@ -69,7 +70,7 @@ export default function LoginPage() {
     }
     
     try {
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await fetch(getApiUrl('/api/auth/forgot-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

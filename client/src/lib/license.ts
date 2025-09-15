@@ -1,5 +1,6 @@
 // Enhanced device-bound license verification system
 // Professional license protection by zeeexshan
+import { getApiUrl } from '@/config/api';
 
 const licenseOwner = atob('emVleHNoYW4tbGljZW5zZQ=='); // decodes to "zeeexshan-license"
 
@@ -84,7 +85,7 @@ export class LicenseManager {
       const deviceId = await this.generateDeviceId();
       const deviceName = this.getDeviceName();
       
-      const response = await fetch('/api/license/activate', {
+      const response = await fetch(getApiUrl('/api/license/activate'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +145,7 @@ export class LicenseManager {
   // Send heartbeat to maintain license validity
   private async sendHeartbeat(licenseKey: string, deviceId: string): Promise<void> {
     try {
-      const response = await fetch('/api/license/heartbeat', {
+      const response = await fetch(getApiUrl('/api/license/heartbeat'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -353,7 +354,7 @@ export class LicenseManager {
     try {
       const deviceId = await this.generateDeviceId();
       
-      const response = await fetch('/api/license/deactivate', {
+      const response = await fetch(getApiUrl('/api/license/deactivate'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
