@@ -184,6 +184,12 @@ ipcMain.handle('activate-license', async (event, licenseKey) => {
     logToFile('Emitting activation-completed event to main process...');
     ipcMain.emit('activation-completed');
     
+    // Emit activation completed event to trigger main app startup
+    setTimeout(() => {
+      console.log('Emitting activation-success event...');
+      ipcMain.emit('activation-success');
+    }, 1000); // Small delay to ensure UI shows success message
+    
     return { success: true, message: 'License activated successfully!' };
   } else {
     logToFile(`License verification failed: ${result.error}`, true);

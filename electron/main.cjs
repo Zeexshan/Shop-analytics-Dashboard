@@ -219,9 +219,18 @@ app.whenReady().then(async () => {
         ipcMain.once('activation-completed', async () => {
           console.log('Activation completed - starting main app');
           try {
-            activationWin.close();
+            // Close activation window first
+            if (activationWin && !activationWin.isDestroyed()) {
+              activationWin.close();
+            }
+            
+            // Start Express server
             await startExpressServer();
+            
+            // Create main window
             await createWindow();
+            
+            console.log('Main application launched successfully');
           } catch (error) {
             console.error('Error starting main app after activation:', error);
             // Still create window even if server startup fails
@@ -314,8 +323,9 @@ ipcMain.handle('print-page', async () => {
   return { success: false, error: 'No window found' };
 });
 
-// zeeexshan: Handle successful activation
+// zeeexshan: Handle successful activation from activation window
 ipcMain.on('activation-success', async () => {
   console.log('License activated successfully');
+  // Emit the activation-completed event to trigger main app startup
   ipcMain.emit('activation-completed');
 });
