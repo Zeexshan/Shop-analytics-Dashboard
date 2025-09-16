@@ -32,14 +32,39 @@ async function startExpressServer() {
       return Promise.resolve();
     }
     
-    // Set production environment for Electron
-    process.env.NODE_ENV = 'production';
-    process.env.ELECTRON = '1'; // Flag for electron-specific behavior
+    // Use fork to start the server as a child process
+    const { fork } = require('child_process');
     
-    // Import the server module and start it
-    const serverModule = await import(url.pathToFileURL(serverPath).href);
+    console.log('Starting Express server as child process...');
     
-    console.log('Express server started in Electron process');
+    // Set environment variables for the child process
+    const env = {
+      ...process.env,
+      NODE_ENV: 'production',
+      ELECTRON: '1', // Flag for electron-specific behavior
+      PORT: '5000'
+    };
+    
+    // Fork the server process
+    const serverProcess = fork(serverPath, [], {
+      env: env,
+      silent: false, // Allow server logs to show in console
+      stdio: 'pipe'
+    });
+    
+    // Handle server process events
+    serverProcess.on('error', (error) => {
+      console.error('Server process error:', error);
+    });
+    
+    serverProcess.on('exit', (code, signal) => {
+      console.log(`Server process exited with code ${code} and signal ${signal}`);
+    });
+    
+    // Store reference to server process
+    expressApp = serverProcess;
+    
+    console.log('Express server process started with PID:', serverProcess.pid);
     
     // Wait for server to be ready
     await waitForServer();
@@ -215,6 +240,16 @@ app.whenReady().then(async () => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+// Clean up server process when app is quitting
+app.on('before-quit', () => {
+  console.log('App is quitting - cleaning up server process');
+  if (expressApp && !expressApp.killed) {
+    console.log('Terminating server process with PID:', expressApp.pid);
+    expressApp.kill('SIGTERM');
+    expressApp = null;
   }
 });
 

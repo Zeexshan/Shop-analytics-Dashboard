@@ -1,0 +1,29 @@
+Hello Replit AI,
+
+You are taking over a project that is 99% complete. Your **only task** is to fix the final bug that prevents the login and other features from working in the final, packaged desktop application.
+
+### **Project History (What is Already Solved)**
+
+To save your time, please be aware that all other systems are fully functional. **Do not work on these solved issues.**
+
+* **Core Application Logic (✅ FIXED):** All bugs related to the date filter, data reset, and data management pages have been fixed by a previous AI.
+* **Desktop Build Configuration (`package.json`) (✅ FIXED):** I have personally fixed numerous errors in the `package.json` file. The configuration is now correct and allows for a successful build via GitHub Actions.
+* **License Activation System (✅ FIXED):** The license activation is **100% working**. The app successfully validates the key and correctly shows the main application window.
+* **Automated Build System (✅ WORKING):** The project uses a **GitHub Actions workflow** to build the final `.exe` installer. This system works perfectly. **Do not try to run the desktop build command in the Replit environment; it will fail.**
+
+### **The Final, Unsolved Problem**
+
+The application has one remaining bug, confirmed by console logs from the final `.exe` file:
+
+* **The Error:** After the main window opens, any action that requires the backend (like logging in or resetting a password) fails with the error `net::ERR_CONNECTION_REFUSED`.
+* **The Root Cause:** This error proves that the frontend is running, but the **backend Express.js server is not being started** in the final, packaged application. The main process (`main.cjs`) loads the user interface but never starts the server process.
+
+### **Your Task: Start the Backend Server in Production**
+
+Your only task is to modify the main Electron process to start the backend server when the application launches.
+
+**Prompt Command:**
+
+**"You must modify the `electron/main.cjs` file to start the Express.js backend server when the application launches in a production environment. The logic should be as follows:**
+1.  **After a user's license is verified** (or on startup if already activated), you must first launch the compiled backend server script (`dist/index.js`) as a background child process using Node.js's `fork`.
+2.  **After the server process has been successfully started**, the code should then create the main `BrowserWindow` and load the user interface. This will ensure the 'brain' is on before the 'face' tries to talk to it."
