@@ -71,12 +71,13 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Health check endpoint
+// Health check endpoint (for Electron readiness check)
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'Server is running', 
     port: process.env.PORT || 5000,
-    timestamp: new Date().toISOString() 
+    timestamp: new Date().toISOString(),
+    author: 'zeeexshan'
   });
 });
 

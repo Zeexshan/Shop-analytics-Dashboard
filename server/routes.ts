@@ -26,7 +26,8 @@ const PRODUCTION_DEFAULTS = {
   ADMIN_RESET_CODE: 'SHOP2024RESET',
   JWT_SECRET: 'zeeexshan_shop_analytics_jwt_secret_2024_secure_token_key',
   LICENSE_HASH_SALT: 'l1c3ns3_h4sh_s4lt_2024_zeeexshan_analytics',
-  DEVICE_HASH_SALT: 'dev1c3_h4sh_s4lt_2024_zeeexshan_secure'
+  DEVICE_HASH_SALT: 'dev1c3_h4sh_s4lt_2024_zeeexshan_secure',
+  GUMROAD_PRODUCT_PERMALINK: 'ihpuq'
 };
 
 function getSecureConfig() {
@@ -37,7 +38,8 @@ function getSecureConfig() {
     JWT_SECRET: process.env.JWT_SECRET || PRODUCTION_DEFAULTS.JWT_SECRET,
     LICENSE_HASH_SALT: process.env.LICENSE_HASH_SALT || PRODUCTION_DEFAULTS.LICENSE_HASH_SALT,
     DEVICE_HASH_SALT: process.env.DEVICE_HASH_SALT || PRODUCTION_DEFAULTS.DEVICE_HASH_SALT,
-    GUMROAD_PRODUCT_ID: process.env.GUMROAD_PRODUCT_ID || 'ihpuq'
+    GUMROAD_PRODUCT_ID: process.env.GUMROAD_PRODUCT_ID || 'ihpuq',
+    GUMROAD_PRODUCT_PERMALINK: process.env.GUMROAD_PRODUCT_PERMALINK || 'ihpuq'
   };
 }
 
@@ -109,19 +111,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  app.get('/api/test-credentials', async (req, res) => {
-    const config = getSecureConfig();
-    const testPassword = 'ShopOwner@2024';
-    const isValid = await bcrypt.compare(testPassword, config.ADMIN_PASSWORD_HASH);
-    
-    res.json({
-      testPassword,
-      storedHash: config.ADMIN_PASSWORD_HASH,
-      isValid,
-      username: config.ADMIN_USERNAME,
-      environment: process.env.NODE_ENV
-    });
-  });
+  // Remove test-credentials endpoint for security (was exposing admin password)
 
   app.get('/api/auth/verify', authenticateAdminToken, (req: AuthRequest, res) => {
     res.json({ user: req.user });

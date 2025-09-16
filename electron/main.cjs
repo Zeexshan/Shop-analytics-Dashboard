@@ -9,6 +9,34 @@ const isDev = process.env.NODE_ENV === 'development';
 // zeeexshan: Application signature
 const APP_SIGNATURE_zeeexshan = 'shop_analytics_dashboard_by_zeeexshan';
 
+// Load environment variables for production desktop builds
+function loadEnvironmentVariables() {
+  // Set production defaults if not already set
+  const defaults = {
+    NODE_ENV: 'production',
+    ADMIN_USERNAME: 'admin',
+    ADMIN_PASSWORD_HASH: '$2b$10$mpcR0UEa9o5taMvrBDXUj.IB5R44buNw7KLxlImhUiSf5gOvIK0Aq',
+    JWT_SECRET: 'zeeexshan_shop_analytics_jwt_secret_2024_secure_token_key',
+    ADMIN_RESET_CODE: 'SHOP2024RESET',
+    LICENSE_HASH_SALT: 'l1c3ns3_h4sh_s4lt_2024_zeeexshan_analytics',
+    DEVICE_HASH_SALT: 'dev1c3_h4sh_s4lt_2024_zeeexshan_secure',
+    GUMROAD_PRODUCT_ID: 'ihpuq',
+    GUMROAD_PRODUCT_PERMALINK: 'ihpuq'
+  };
+
+  Object.keys(defaults).forEach(key => {
+    if (!process.env[key]) {
+      process.env[key] = defaults[key];
+    }
+  });
+
+  console.log('Environment loaded:', {
+    NODE_ENV: process.env.NODE_ENV,
+    hasAdminHash: !!process.env.ADMIN_PASSWORD_HASH,
+    hasJwtSecret: !!process.env.JWT_SECRET
+  });
+}
+
 let expressApp = null;
 
 async function startExpressServer() {
@@ -39,7 +67,7 @@ async function startExpressServer() {
     
     // Set environment variables for the child process
     const env = {
-      ...process.env,
+      ...process.env,  // This now includes our defaults from loadEnvironmentVariables()
       NODE_ENV: 'production',
       ELECTRON: '1', // Flag for electron-specific behavior
       PORT: '5000'
@@ -166,6 +194,9 @@ async function createWindow() {
 
   return mainWindow;
 }
+
+// Call this BEFORE app.whenReady()
+loadEnvironmentVariables();
 
 app.whenReady().then(async () => {
   try {
