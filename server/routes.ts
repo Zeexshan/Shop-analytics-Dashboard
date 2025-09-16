@@ -52,61 +52,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // It no longer depends on storage.ts, removing the timing issue.
   app.post('/api/auth/login', async (req, res, next) => {
     try {
-      // Secure login with required environment configuration
-      const ADMIN_USERNAME = 'admin';
-      const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+      console.log('Login attempt:', { 
+        username: req.body.username, 
+        hasPassword: !!req.body.password,
+        nodeEnv: process.env.NODE_ENV,
+        timestamp: new Date().toISOString()
+      });
 
-      let HASHED_PASSWORD: string;
+      const { username, password } = req.body;
+      const config = getSecureConfig();
 
-      // If no password hash is set, create one from the default password (development only)
-      if (!ADMIN_PASSWORD_HASH || ADMIN_PASSWORD_HASH === '') {
-        if (process.env.NODE_ENV !== 'development') {
-          console.error('CRITICAL: ADMIN_PASSWORD_HASH required in production');
-          return res.status(500).json({ message: 'Authentication system not configured' });
-        }
-        console.log('No admin password hash found, creating from default password (development)');
-        HASHED_PASSWORD = await bcrypt.hash('ShopOwner@2024', 10);
-      } else {
-        HASHED_PASSWORD = ADMIN_PASSWORD_HASH;
+      if (!username || !password) {
+        console.log('Login failed: Missing credentials');
+        return res.status(400).json({ message: 'Username and password required', success: false });
       }
 
-      // Try to load custom password if exists (from reset operations)
-      const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
-      try {
-        if (fs.existsSync(passwordFile)) {
-          const passwordData = JSON.parse(fs.readFileSync(passwordFile, 'utf8'));
-          HASHED_PASSWORD = passwordData.hashedPassword;
-          console.log('Using temporary password hash from file');
-        }
-      } catch (error) {
-        console.log('Error reading password file, using env hash:', (error as any)?.message || 'Unknown error');
+      if (username !== config.ADMIN_USERNAME) {
+        console.log('Login failed: Invalid username');
+        return res.status(401).json({ message: 'Invalid credentials', success: false });
       }
 
-      const { username, password } = loginSchema.parse(req.body);
+      const isValidPassword = await bcrypt.compare(password, config.ADMIN_PASSWORD_HASH);
+      console.log('Password validation:', { isValid: isValidPassword });
 
-      // Check if the username matches
-      if (username !== ADMIN_USERNAME) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+      if (!isValidPassword) {
+        console.log('Login failed: Invalid password');
+        return res.status(401).json({ message: 'Invalid credentials', success: false });
       }
 
-      // Check if the password is correct using bcrypt
-      const isValid = await bcrypt.compare(password, HASHED_PASSWORD);
-      if (!isValid) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      // If everything is correct, create the token
-      const user = { id: 'admin-user-id', username: ADMIN_USERNAME };
       const token = jwt.sign(
-        { id: user.id, username: user.username },
-        getJwtSecret(),
+        { username: config.ADMIN_USERNAME, role: 'admin', author: 'zeeexshan' },
+        config.JWT_SECRET,
         { expiresIn: '24h' }
       );
 
-      res.json({ token, user });
+      console.log('Login successful');
+      res.json({ success: true, message: 'Login successful', token, user: { username: config.ADMIN_USERNAME, role: 'admin' } });
 
     } catch (error) {
-      next(error);
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Authentication system error', success: false });
     }
   });
   // --- END OF THE CHANGED SECTION ---
