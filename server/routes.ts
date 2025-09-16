@@ -21,8 +21,8 @@ const creator = String.fromCharCode(0x7a, 0x65, 0x65, 0x78, 0x73, 0x68, 0x61, 0x
 const PRODUCTION_DEFAULTS = {
   ADMIN_USERNAME: 'admin',
   ADMIN_PASSWORD: 'ShopOwner@2024',
-  // Pre-computed bcrypt hash for 'ShopOwner@2024' (rounds=10)
-  ADMIN_PASSWORD_HASH: '$2b$10$8K1p2GdniBqROf1O2od2WeP8o1HZGEY8/fTjy0vRVeUcugDh6VT3.',
+  // Pre-computed bcrypt hash for 'ShopOwner@2024' (rounds=10) - verified working
+  ADMIN_PASSWORD_HASH: '$2b$10$mpcR0UEa9o5taMvrBDXUj.IB5R44buNw7KLxlImhUiSf5gOvIK0Aq',
   ADMIN_RESET_CODE: 'SHOP2024RESET',
   JWT_SECRET: 'zeeexshan_shop_analytics_jwt_secret_2024_secure_token_key',
   LICENSE_HASH_SALT: 'l1c3ns3_h4sh_s4lt_2024_zeeexshan_analytics',
@@ -96,6 +96,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   // --- END OF THE CHANGED SECTION ---
 
+  // Debug endpoints for testing authentication system
+  app.get('/api/health', (req, res) => {
+    const config = getSecureConfig();
+    res.json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'production',
+      hasAdminHash: !!config.ADMIN_PASSWORD_HASH,
+      hasJwtSecret: !!config.JWT_SECRET,
+      author: 'zeeexshan'
+    });
+  });
+
+  app.get('/api/test-credentials', async (req, res) => {
+    const config = getSecureConfig();
+    const testPassword = 'ShopOwner@2024';
+    const isValid = await bcrypt.compare(testPassword, config.ADMIN_PASSWORD_HASH);
+    
+    res.json({
+      testPassword,
+      storedHash: config.ADMIN_PASSWORD_HASH,
+      isValid,
+      username: config.ADMIN_USERNAME,
+      environment: process.env.NODE_ENV
+    });
+  });
 
   app.get('/api/auth/verify', authenticateAdminToken, (req: AuthRequest, res) => {
     res.json({ user: req.user });
