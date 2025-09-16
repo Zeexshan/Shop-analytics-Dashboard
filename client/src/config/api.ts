@@ -4,7 +4,8 @@ const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.i
 const isReplit = typeof window !== 'undefined' && (
   import.meta.env.VITE_REPLIT_DEV_DOMAIN || 
   window.location.hostname.includes('replit.dev') || 
-  window.location.hostname.includes('repl.co')
+  window.location.hostname.includes('repl.co') ||
+  window.location.hostname.includes('pike.replit.dev')
 );
 
 export const API_BASE_URL = isElectron 
