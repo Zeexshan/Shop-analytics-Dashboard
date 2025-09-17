@@ -42,6 +42,50 @@ function createDebugLogger() {
 
 const debugLog = createDebugLogger();
 
+// === NODE.JS EXECUTABLE DETECTION ===
+function findNodeExecutable() {
+  // In packaged Electron apps, process.execPath points to the main executable
+  // We need to find the actual Node.js runtime embedded in Electron
+  
+  if (isDev) {
+    // In development, use the system Node.js
+    return 'node';
+  }
+  
+  // For packaged apps, Electron embeds Node.js
+  // The executable path structure varies by platform
+  const electronPath = process.execPath;
+  debugLog.debug(`Electron execPath: ${electronPath}`);
+  
+  // Try different approaches to find Node.js
+  const attempts = [
+    // Attempt 1: Use system Node.js if available
+    'node',
+    // Attempt 2: Try common Node.js paths
+    'C:\\Program Files\\nodejs\\node.exe',
+    'C:\\Program Files (x86)\\nodejs\\node.exe',
+    // Attempt 3: Use process.execPath as last resort (Electron's embedded Node)
+    electronPath
+  ];
+  
+  for (const nodePath of attempts) {
+    debugLog.debug(`Checking Node.js path: ${nodePath}`);
+    try {
+      // Test if this path works by checking version
+      const { execSync } = require('child_process');
+      const version = execSync(`"${nodePath}" --version`, { encoding: 'utf8', timeout: 5000 });
+      debugLog.info(`Found working Node.js: ${nodePath} (${version.trim()})`);
+      return nodePath;
+    } catch (error) {
+      debugLog.debug(`Node.js path failed: ${nodePath} - ${error.message}`);
+    }
+  }
+  
+  // If all else fails, return the original execPath
+  debugLog.warn(`All Node.js detection methods failed, using execPath: ${electronPath}`);
+  return electronPath;
+}
+
 // zeeexshan: Application signature
 const APP_SIGNATURE_zeeexshan = 'shop_analytics_dashboard_by_zeeexshan';
 
@@ -210,6 +254,9 @@ async function startServerWithFork(port = 5000) {
   }
   
   try {
+    // For fork, we need to use the Node.js executable embedded in Electron
+    const nodeExecutable = findNodeExecutable();
+    
     const env = {
       ...process.env,
       NODE_ENV: 'production',
@@ -231,7 +278,8 @@ async function startServerWithFork(port = 5000) {
       env,
       silent: false,
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
-      cwd: serverDiagnostics.appPath
+      cwd: serverDiagnostics.appPath,
+      execPath: nodeExecutable // Use correct Node.js executable
     });
     
     diagnostics.processSpawned = true;
@@ -281,10 +329,14 @@ async function startServerWithSpawn(port = 5000) {
   debugLog.info(`Attempting spawn method for server startup on port ${port}...`);
   const { spawn } = require('child_process');
   
+  // In packaged apps, process.execPath points to the main executable, not Node
+  // We need to find the actual Node.js executable
+  const nodeExecutable = findNodeExecutable();
+  
   const diagnostics = {
     method: 'spawn',
     port,
-    nodeExecutable: process.execPath,
+    nodeExecutable,
     serverFileExists: fs.existsSync(serverDiagnostics.serverPath),
     processSpawned: false,
     pid: null
@@ -297,7 +349,7 @@ async function startServerWithSpawn(port = 5000) {
   try {
     debugLog.debug(`Using Node executable: ${diagnostics.nodeExecutable}`);
     
-    const serverProcess = spawn(process.execPath, [serverDiagnostics.serverPath], {
+    const serverProcess = spawn(nodeExecutable, [serverDiagnostics.serverPath], {
       env: {
         ...process.env,
         NODE_ENV: 'production',

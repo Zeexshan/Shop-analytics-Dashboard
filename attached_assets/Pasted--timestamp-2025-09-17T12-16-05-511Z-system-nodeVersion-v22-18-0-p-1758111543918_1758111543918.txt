@@ -1,0 +1,126 @@
+{
+  "timestamp": "2025-09-17T12:16:05.511Z",
+  "system": {
+    "nodeVersion": "v22.18.0",
+    "platform": "win32",
+    "arch": "x64",
+    "electronVersion": "38.0.0",
+    "isDev": false,
+    "appPath": "C:\\Program Files\\Shop Analytics Dashboard\\resources\\app.asar",
+    "serverPath": "C:\\Program Files\\Shop Analytics Dashboard\\resources\\app.asar\\dist\\index.js",
+    "portInUse": false,
+    "processSpawned": true,
+    "healthCheckPassed": false,
+    "selectedPort": null
+  },
+  "startupAttempts": [
+    {
+      "method": "fork_method",
+      "timestamp": "2025-09-17T12:11:26.199Z",
+      "success": false,
+      "error": "Health check failed after fork",
+      "diagnostics": {
+        "method": "fork",
+        "port": 5000,
+        "serverFileExists": true,
+        "processSpawned": true,
+        "error": "spawn C:\\Program Files\\Shop Analytics Dashboard\\Shop Analytics Dashboard.exe ENOENT"
+      }
+    },
+    {
+      "method": "spawn_method",
+      "timestamp": "2025-09-17T12:12:16.013Z",
+      "success": false,
+      "error": "Health check failed after spawn",
+      "diagnostics": {
+        "method": "spawn",
+        "port": 5000,
+        "nodeExecutable": "C:\\Program Files\\Shop Analytics Dashboard\\Shop Analytics Dashboard.exe",
+        "serverFileExists": true,
+        "processSpawned": true
+      }
+    },
+    {
+      "method": "require_method",
+      "timestamp": "2025-09-17T12:12:45.438Z",
+      "success": false,
+      "error": "Cannot find package 'vite' imported from C:\\Program Files\\Shop Analytics Dashboard\\resources\\app.asar\\dist\\index.js",
+      "diagnostics": {
+        "method": "require",
+        "port": 5000,
+        "serverFileExists": true,
+        "requireSuccessful": false
+      }
+    },
+    {
+      "method": "alternative_port",
+      "timestamp": "2025-09-17T12:12:46.218Z",
+      "success": false,
+      "error": "No alternative ports available",
+      "diagnostics": {
+        "testedPorts": [
+          5001,
+          5002,
+          3000,
+          8000
+        ]
+      }
+    }
+  ],
+  "fileSystemCheck": {
+    "appPathExists": true,
+    "distDirExists": true,
+    "publicDirExists": true,
+    "serverFileExists": true,
+    "serverFileSize": 106456,
+    "distContents": [
+      "index.js",
+      "public"
+    ],
+    "appPathContents": [
+      "assets",
+      "dist",
+      "electron",
+      "node_modules",
+      "package.json"
+    ]
+  },
+  "networkCheck": {
+    "port_5000": {
+      "available": true,
+      "port": 5000
+    },
+    "port_5001": {
+      "available": true,
+      "port": 5001
+    },
+    "port_5002": {
+      "available": true,
+      "port": 5002
+    },
+    "port_3000": {
+      "available": true,
+      "port": 3000
+    },
+    "port_8000": {
+      "available": true,
+      "port": 8000
+    }
+  },
+  "processCheck": {
+    "hasExpressApp": true,
+    "expressAppPid": null,
+    "expressAppKilled": null,
+    "nodeVersion": "v22.18.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cwd": "C:\\Program Files\\Shop Analytics Dashboard",
+    "memoryUsage": {
+      "rss": 128700416,
+      "heapTotal": 14307328,
+      "heapUsed": 13017692,
+      "external": 3974126,
+      "arrayBuffers": 0
+    }
+  }
+}

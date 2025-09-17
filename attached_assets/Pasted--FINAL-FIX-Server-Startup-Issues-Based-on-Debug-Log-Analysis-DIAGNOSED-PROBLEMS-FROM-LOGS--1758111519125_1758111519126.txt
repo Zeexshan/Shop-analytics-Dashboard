@@ -1,0 +1,175 @@
+# FINAL FIX: Server Startup Issues Based on Debug Log Analysis
+
+## DIAGNOSED PROBLEMS FROM LOGS
+
+The comprehensive debug logs reveal two critical issues preventing server startup:
+
+### Issue 1: Wrong Process Executable 
+**Error**: `spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT`
+**Problem**: System trying to spawn the main Electron executable instead of using Node.js runtime
+**Impact**: Server process never starts because wrong executable is used
+
+### Issue 2: Missing Dependencies in Production Build
+**Error**: `Cannot find package 'vite' imported from dist\index.js`  
+**Problem**: Server code imports Vite but it's not bundled in production build
+**Impact**: When server does try to start, it crashes immediately due to missing dependencies
+
+## SOLUTION IMPLEMENTATION
+
+### STEP 1: Fix Server Process Spawning
+
+**Problem**: Currently using wrong executable path
+**Fix**: Update Electron main process to use Node.js runtime instead of main executable
+
+In `electron/main.cjs`, find the server spawning logic and **replace** the executable detection:
+
+**Current broken code:**
+```javascript
+// This is wrong - uses main exe instead of Node
+spawn('C:\\Program Files\\Shop Analytics Dashboard\\Shop Analytics Dashboard.exe')
+```
+
+**Corrected approach:**
+```javascript
+// Use Electron's embedded Node.js runtime
+const nodeExecutable = process.execPath; // This gives Electron's Node runtime
+// Or use system Node.js if available
+const systemNode = 'node';
+```
+
+**Implementation requirements:**
+- Use `process.execPath` for Electron's Node runtime
+- Fallback to system `node` if needed
+- Ensure server file path is correct: `app.asar\\dist\\index.js`
+- Pass server file as argument, not try to execute it directly
+
+### STEP 2: Fix Dependency Bundling
+
+**Problem**: Server imports `vite` but it's not bundled for production
+**Fix**: Update build process to properly bundle server dependencies
+
+Update the build script in `package.json`:
+
+**Current build command:**
+```json
+"build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist"
+```
+
+**Fixed build command:**
+```json
+"build": "vite build && esbuild server/index.ts --platform=node --bundle --format=esm --outdir=dist --external:electron"
+```
+
+**Key changes:**
+- Remove `--packages=external` (this was excluding dependencies)
+- Add only `--external:electron` to exclude Electron-specific modules
+- This bundles all server dependencies (Express, Vite, etc.) into the output
+
+### STEP 3: Fix Server File Structure
+
+**Problem**: Server may be importing Vite unnecessarily for production
+**Fix**: Remove or conditionally import Vite in server code
+
+In your server file (`server/index.ts`), find any Vite imports and make them conditional:
+
+**If you have:**
+```typescript
+import { defineConfig } from 'vite'; // This breaks in production
+```
+
+**Replace with:**
+```typescript
+// Only import Vite in development
+if (process.env.NODE_ENV === 'development') {
+  const { defineConfig } = await import('vite');
+  // Use Vite config only in dev
+}
+```
+
+**Or better yet:** Remove Vite imports entirely from server code if they're not needed for production.
+
+### STEP 4: Update Electron Main Process Server Startup
+
+**Fix the exact spawning logic** that was failing in the logs:
+
+```javascript
+function startServer() {
+  const serverPath = path.join(__dirname, '../dist/index.js');
+  
+  // Use correct Node.js executable
+  const nodeExecutable = process.execPath; // Electron's Node runtime
+  
+  // Spawn with correct arguments
+  serverProcess = spawn(nodeExecutable, [serverPath], {
+    env: { 
+      ...process.env,
+      NODE_ENV: 'production',
+      PORT: '5000'
+    },
+    stdio: ['pipe', 'pipe', 'pipe']
+  });
+  
+  // Rest of the startup logic...
+}
+```
+
+### STEP 5: Test Dependency Resolution
+
+**Verify the fix** by checking what's actually bundled:
+
+1. After building, check `dist/index.js` file size
+   - Should be much larger (500KB+) if dependencies are bundled
+   - Currently shows 106KB which suggests missing dependencies
+
+2. Test server independently:
+   ```bash
+   node dist/index.js
+   # Should start server without missing dependency errors
+   ```
+
+3. Look for this success pattern in logs:
+   ```
+   Server STDOUT: Server running on port 5000
+   ✅ EXPRESS SERVER IS READY!
+   ```
+
+## EXPECTED RESULTS AFTER FIX
+
+### Before Fix (Current):
+- `spawn C:\...\Shop Analytics Dashboard.exe ENOENT` ❌
+- `Cannot find package 'vite'` ❌  
+- All health checks fail ❌
+- Server never responds ❌
+
+### After Fix (Expected):
+- `spawn node dist/index.js` succeeds ✅
+- All dependencies bundled ✅
+- Health check passes ✅  
+- Authentication works ✅
+
+## IMPLEMENTATION ORDER
+
+1. **First**: Fix build script to bundle dependencies properly
+2. **Second**: Remove/fix Vite imports in server code  
+3. **Third**: Update Electron spawn logic to use correct Node executable
+4. **Fourth**: Test build and server startup
+5. **Fifth**: Verify authentication works in packaged app
+
+## CRITICAL SUCCESS METRICS
+
+You'll know it's fixed when the debug logs show:
+```
+[INFO] Fork process spawned with PID: [actual_number]
+[INFO] Server STDOUT: Server running on port 5000  
+[INFO] ✅ EXPRESS SERVER IS READY!
+[INFO] Health check 1/50 passed
+```
+
+Instead of the current:
+```
+[ERROR] spawn ... ENOENT
+[ERROR] Cannot find package 'vite'
+[ERROR] ❌ All health check attempts failed
+```
+
+The diagnostic system is already in place - it will clearly show success or failure after implementing these fixes.

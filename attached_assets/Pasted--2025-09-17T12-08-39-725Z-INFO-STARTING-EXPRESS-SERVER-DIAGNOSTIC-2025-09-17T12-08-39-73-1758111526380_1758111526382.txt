@@ -1,0 +1,1095 @@
+[2025-09-17T12:08:39.725Z] [INFO] === STARTING EXPRESS SERVER DIAGNOSTIC ===
+[2025-09-17T12:08:39.738Z] [INFO] System Info: Node v22.18.0, Platform win32, Arch x64
+[2025-09-17T12:08:39.740Z] [INFO] Electron Version: 38.0.0
+[2025-09-17T12:08:39.742Z] [INFO] App Packaged: true
+[2025-09-17T12:08:39.743Z] [INFO] App Path: C:\Program Files\Shop Analytics Dashboard\resources\app.asar
+[2025-09-17T12:08:39.744Z] [INFO] Server Path: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:08:39.745Z] [INFO] Step 1: Checking if port 5000 is available...
+[2025-09-17T12:08:39.778Z] [INFO] Port 5000 is available for server binding
+[2025-09-17T12:08:39.780Z] [INFO] Step 3: Attempting startup method: fork_method
+[2025-09-17T12:08:39.782Z] [INFO] Attempting fork method for server startup on port 5000...
+[2025-09-17T12:08:39.784Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:08:39.785Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:08:39.786Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:08:39.787Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:08:39.789Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:08:39.790Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:08:39.791Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:08:39.792Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:08:39.793Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:08:39.795Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:08:39.796Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:08:39.797Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:08:39.798Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:08:39.799Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:08:39.800Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:08:39.802Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:08:39.803Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:08:39.804Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:08:39.805Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:08:39.807Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:08:39.809Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:08:39.810Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:08:39.811Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:08:39.812Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:08:39.813Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:08:39.815Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:08:39.816Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:08:39.817Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:08:39.818Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:08:39.819Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:08:39.820Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:08:39.821Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:08:39.822Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:08:39.823Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:08:39.824Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:08:39.825Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:08:39.827Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:08:39.829Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:08:39.830Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:08:39.831Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:08:39.832Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:08:39.834Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:08:39.835Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:08:39.836Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:08:39.837Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:08:39.838Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:08:39.839Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:08:39.841Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:08:39.843Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:08:39.844Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:08:39.845Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:08:39.846Z] [DEBUG]   PORT: 5000
+[2025-09-17T12:08:39.847Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:08:39.864Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:08:39.878Z] [INFO] Starting health check for port 5000 (50 attempts, 1000ms delay)
+[2025-09-17T12:08:39.891Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:08:40.703Z] [DEBUG] Health check 1/50 failed (824ms): 
+[2025-09-17T12:08:49.843Z] [DEBUG] Health check 10/50 failed (7ms): 
+[2025-09-17T12:08:59.997Z] [DEBUG] Health check 20/50 failed (5ms): 
+[2025-09-17T12:09:10.128Z] [DEBUG] Health check 30/50 failed (5ms): 
+[2025-09-17T12:09:20.269Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:09:30.417Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:09:30.418Z] [ERROR] ❌ All 50 health check attempts failed over 50539ms
+[2025-09-17T12:09:30.420Z] [WARN] ❌ Method fork_method failed: Health check failed after fork
+[2025-09-17T12:09:30.421Z] [INFO] Step 4: Attempting startup method: spawn_method
+[2025-09-17T12:09:30.422Z] [INFO] Attempting spawn method for server startup on port 5000...
+[2025-09-17T12:09:30.423Z] [DEBUG] Using Node executable: C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe
+[2025-09-17T12:09:30.426Z] [INFO] Spawn process started with PID: undefined
+[2025-09-17T12:09:30.427Z] [INFO] Starting health check for port 5000 (30 attempts, 1000ms delay)
+[2025-09-17T12:09:30.429Z] [ERROR] Spawn process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:09:30.433Z] [DEBUG] Health check 1/30 failed (5ms): 
+[2025-09-17T12:09:39.569Z] [DEBUG] Health check 10/30 failed (4ms): 
+[2025-09-17T12:09:49.725Z] [DEBUG] Health check 20/30 failed (5ms): 
+[2025-09-17T12:09:59.880Z] [DEBUG] Health check 30/30 failed (4ms): 
+[2025-09-17T12:09:59.882Z] [ERROR] ❌ All 30 health check attempts failed over 29454ms
+[2025-09-17T12:09:59.885Z] [WARN] ❌ Method spawn_method failed: Health check failed after spawn
+[2025-09-17T12:09:59.887Z] [INFO] Step 5: Attempting startup method: require_method
+[2025-09-17T12:09:59.890Z] [INFO] Attempting direct require method for server startup on port 5000...
+[2025-09-17T12:09:59.894Z] [INFO] Attempting to require server directly...
+[2025-09-17T12:10:01.019Z] [ERROR] Direct require failed: Cannot find package 'vite' imported from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:10:01.020Z] [WARN] ❌ Method require_method failed: Cannot find package 'vite' imported from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:10:01.021Z] [INFO] Step 6: Attempting startup method: alternative_port
+[2025-09-17T12:10:01.022Z] [INFO] Attempting server startup on alternative port...
+[2025-09-17T12:10:01.023Z] [INFO] Testing alternative port: 5001
+[2025-09-17T12:10:01.027Z] [INFO] Port 5001 is available, attempting server startup...
+[2025-09-17T12:10:01.028Z] [INFO] Attempting fork method for server startup on port 5001...
+[2025-09-17T12:10:01.030Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:10:01.031Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:10:01.032Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:10:01.033Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:10:01.034Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:10:01.035Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:10:01.036Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:10:01.037Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:10:01.038Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:10:01.039Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:10:01.040Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:10:01.041Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:10:01.042Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:10:01.042Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:10:01.044Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:10:01.045Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:10:01.045Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:10:01.046Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:10:01.047Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:10:01.048Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:10:01.050Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:10:01.051Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:10:01.052Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:10:01.053Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:10:01.054Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:10:01.055Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:10:01.056Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:10:01.057Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:10:01.058Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:10:01.059Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:10:01.060Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:10:01.061Z] [DEBUG]   PORT: 5001
+[2025-09-17T12:10:01.062Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:10:01.063Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:10:01.064Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:10:01.065Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:10:01.066Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:10:01.067Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:10:01.068Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:10:01.070Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:10:01.071Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:10:01.072Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:10:01.073Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:10:01.074Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:10:01.075Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:10:01.076Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:10:01.076Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:10:01.077Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:10:01.078Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:10:01.080Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:10:01.081Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:10:01.082Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:10:01.083Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:10:01.085Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:10:01.087Z] [INFO] Starting health check for port 5001 (50 attempts, 1000ms delay)
+[2025-09-17T12:10:01.088Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:10:01.106Z] [DEBUG] Health check 1/50 failed (18ms): 
+[2025-09-17T12:10:10.231Z] [DEBUG] Health check 10/50 failed (3ms): 
+[2025-09-17T12:10:20.357Z] [DEBUG] Health check 20/50 failed (2ms): 
+[2025-09-17T12:10:30.507Z] [DEBUG] Health check 30/50 failed (6ms): 
+[2025-09-17T12:10:31.265Z] [INFO] === STARTING EXPRESS SERVER DIAGNOSTIC ===
+[2025-09-17T12:10:31.267Z] [INFO] System Info: Node v22.18.0, Platform win32, Arch x64
+[2025-09-17T12:10:31.268Z] [INFO] Electron Version: 38.0.0
+[2025-09-17T12:10:31.269Z] [INFO] App Packaged: true
+[2025-09-17T12:10:31.270Z] [INFO] App Path: C:\Program Files\Shop Analytics Dashboard\resources\app.asar
+[2025-09-17T12:10:31.271Z] [INFO] Server Path: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:10:31.272Z] [INFO] Step 1: Checking if port 5000 is available...
+[2025-09-17T12:10:31.295Z] [INFO] Port 5000 is available for server binding
+[2025-09-17T12:10:31.297Z] [INFO] Step 3: Attempting startup method: fork_method
+[2025-09-17T12:10:31.298Z] [INFO] Attempting fork method for server startup on port 5000...
+[2025-09-17T12:10:31.300Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:10:31.301Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:10:31.302Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:10:31.303Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:10:31.304Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:10:31.305Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:10:31.306Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:10:31.307Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:10:31.308Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:10:31.310Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:10:31.311Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:10:31.312Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:10:31.313Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:10:31.314Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:10:31.315Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:10:31.316Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:10:31.317Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:10:31.318Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:10:31.319Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:10:31.320Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:10:31.321Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:10:31.322Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:10:31.323Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:10:31.324Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:10:31.325Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:10:31.326Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:10:31.327Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:10:31.328Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:10:31.329Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:10:31.330Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:10:31.331Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:10:31.332Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:10:31.333Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:10:31.334Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:10:31.335Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:10:31.336Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:10:31.337Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:10:31.338Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:10:31.339Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:10:31.340Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:10:31.341Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:10:31.342Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:10:31.343Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:10:31.345Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:10:31.346Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:10:31.347Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:10:31.348Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:10:31.349Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:10:31.350Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:10:31.351Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:10:31.352Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:10:31.353Z] [DEBUG]   PORT: 5000
+[2025-09-17T12:10:31.354Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:10:31.364Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:10:31.377Z] [INFO] Starting health check for port 5000 (50 attempts, 1000ms delay)
+[2025-09-17T12:10:31.391Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:10:31.428Z] [DEBUG] Health check 1/50 failed (49ms): 
+[2025-09-17T12:10:40.554Z] [DEBUG] Health check 10/50 failed (3ms): 
+[2025-09-17T12:10:40.646Z] [DEBUG] Health check 40/50 failed (3ms): 
+[2025-09-17T12:10:50.691Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:10:50.767Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:10:50.768Z] [ERROR] ❌ All 50 health check attempts failed over 49680ms
+[2025-09-17T12:10:50.769Z] [INFO] Testing alternative port: 5002
+[2025-09-17T12:10:50.772Z] [INFO] Port 5002 is available, attempting server startup...
+[2025-09-17T12:10:50.774Z] [INFO] Attempting fork method for server startup on port 5002...
+[2025-09-17T12:10:50.776Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:10:50.777Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:10:50.778Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:10:50.779Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:10:50.780Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:10:50.781Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:10:50.782Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:10:50.783Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:10:50.784Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:10:50.785Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:10:50.786Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:10:50.787Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:10:50.788Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:10:50.789Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:10:50.791Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:10:50.792Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:10:50.793Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:10:50.794Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:10:50.795Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:10:50.796Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:10:50.797Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:10:50.798Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:10:50.799Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:10:50.800Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:10:50.801Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:10:50.802Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:10:50.803Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:10:50.804Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:10:50.805Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:10:50.806Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:10:50.807Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:10:50.808Z] [DEBUG]   PORT: 5002
+[2025-09-17T12:10:50.809Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:10:50.810Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:10:50.811Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:10:50.812Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:10:50.813Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:10:50.814Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:10:50.815Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:10:50.816Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:10:50.817Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:10:50.818Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:10:50.819Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:10:50.820Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:10:50.821Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:10:50.822Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:10:50.823Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:10:50.823Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:10:50.824Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:10:50.825Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:10:50.826Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:10:50.827Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:10:50.828Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:10:50.831Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:10:50.833Z] [INFO] Starting health check for port 5002 (50 attempts, 1000ms delay)
+[2025-09-17T12:10:50.835Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:10:50.838Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:10:59.984Z] [DEBUG] Health check 10/50 failed (3ms): 
+[2025-09-17T12:11:00.836Z] [DEBUG] Health check 30/50 failed (3ms): 
+[2025-09-17T12:11:10.123Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:11:10.986Z] [DEBUG] Health check 40/50 failed (5ms): 
+[2025-09-17T12:11:20.283Z] [DEBUG] Health check 30/50 failed (4ms): 
+[2025-09-17T12:11:21.141Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:11:21.143Z] [ERROR] ❌ All 50 health check attempts failed over 49765ms
+[2025-09-17T12:11:21.144Z] [WARN] ❌ Method fork_method failed: Health check failed after fork
+[2025-09-17T12:11:21.145Z] [INFO] Step 4: Attempting startup method: spawn_method
+[2025-09-17T12:11:21.146Z] [INFO] Attempting spawn method for server startup on port 5000...
+[2025-09-17T12:11:21.147Z] [DEBUG] Using Node executable: C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe
+[2025-09-17T12:11:21.150Z] [INFO] Spawn process started with PID: undefined
+[2025-09-17T12:11:21.151Z] [INFO] Starting health check for port 5000 (30 attempts, 1000ms delay)
+[2025-09-17T12:11:21.152Z] [ERROR] Spawn process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:11:21.157Z] [DEBUG] Health check 1/30 failed (5ms): 
+[2025-09-17T12:11:26.161Z] [INFO] === STARTING EXPRESS SERVER DIAGNOSTIC ===
+[2025-09-17T12:11:26.164Z] [INFO] System Info: Node v22.18.0, Platform win32, Arch x64
+[2025-09-17T12:11:26.165Z] [INFO] Electron Version: 38.0.0
+[2025-09-17T12:11:26.166Z] [INFO] App Packaged: true
+[2025-09-17T12:11:26.167Z] [INFO] App Path: C:\Program Files\Shop Analytics Dashboard\resources\app.asar
+[2025-09-17T12:11:26.168Z] [INFO] Server Path: C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:11:26.169Z] [INFO] Step 1: Checking if port 5000 is available...
+[2025-09-17T12:11:26.196Z] [INFO] Port 5000 is available for server binding
+[2025-09-17T12:11:26.198Z] [INFO] Step 3: Attempting startup method: fork_method
+[2025-09-17T12:11:26.199Z] [INFO] Attempting fork method for server startup on port 5000...
+[2025-09-17T12:11:26.202Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:11:26.203Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:11:26.205Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:11:26.206Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:11:26.207Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:11:26.208Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:11:26.210Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:11:26.211Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:11:26.212Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:11:26.213Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:11:26.215Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:11:26.216Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:11:26.217Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:11:26.218Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:11:26.219Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:11:26.221Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:11:26.222Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:11:26.223Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:11:26.224Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:11:26.225Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:11:26.226Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:11:26.227Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:11:26.228Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:11:26.229Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:11:26.231Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:11:26.232Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:11:26.233Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:11:26.234Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:11:26.235Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:11:26.236Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:11:26.237Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:11:26.238Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:11:26.239Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:11:26.241Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:11:26.242Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:11:26.243Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:11:26.244Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:11:26.245Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:11:26.246Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:11:26.247Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:11:26.248Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:11:26.249Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:11:26.250Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:11:26.251Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:11:26.252Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:11:26.253Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:11:26.254Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:11:26.255Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:11:26.257Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:11:26.258Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:11:26.259Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:11:26.260Z] [DEBUG]   PORT: 5000
+[2025-09-17T12:11:26.261Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:11:26.272Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:11:26.284Z] [INFO] Starting health check for port 5000 (50 attempts, 1000ms delay)
+[2025-09-17T12:11:26.302Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:11:26.333Z] [DEBUG] Health check 1/50 failed (48ms): 
+[2025-09-17T12:11:30.313Z] [DEBUG] Health check 10/30 failed (2ms): 
+[2025-09-17T12:11:30.436Z] [DEBUG] Health check 40/50 failed (1ms): 
+[2025-09-17T12:11:35.465Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:11:40.462Z] [DEBUG] Health check 20/30 failed (2ms): 
+[2025-09-17T12:11:40.573Z] [DEBUG] Health check 50/50 failed (4ms): 
+[2025-09-17T12:11:40.574Z] [ERROR] ❌ All 50 health check attempts failed over 49740ms
+[2025-09-17T12:11:40.576Z] [INFO] Testing alternative port: 3000
+[2025-09-17T12:11:40.581Z] [INFO] Port 3000 is available, attempting server startup...
+[2025-09-17T12:11:40.583Z] [INFO] Attempting fork method for server startup on port 3000...
+[2025-09-17T12:11:40.587Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:11:40.589Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:11:40.591Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:11:40.593Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:11:40.594Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:11:40.596Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:11:40.598Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:11:40.600Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:11:40.601Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:11:40.603Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:11:40.605Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:11:40.607Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:11:40.608Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:11:40.610Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:11:40.612Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:11:40.614Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:11:40.616Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:11:40.617Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:11:40.619Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:11:40.620Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:11:40.621Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:11:40.622Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:11:40.623Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:11:40.624Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:11:40.625Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:11:40.627Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:11:40.628Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:11:40.629Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:11:40.630Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:11:40.631Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:11:40.632Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:11:40.634Z] [DEBUG]   PORT: 3000
+[2025-09-17T12:11:40.635Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:11:40.636Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:11:40.637Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:11:40.638Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:11:40.639Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:11:40.641Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:11:40.642Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:11:40.643Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:11:40.644Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:11:40.645Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:11:40.646Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:11:40.647Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:11:40.648Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:11:40.649Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:11:40.650Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:11:40.651Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:11:40.652Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:11:40.653Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:11:40.654Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:11:40.655Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:11:40.656Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:11:40.658Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:11:40.659Z] [INFO] Starting health check for port 3000 (50 attempts, 1000ms delay)
+[2025-09-17T12:11:40.661Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:11:40.664Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:11:45.588Z] [DEBUG] Health check 20/50 failed (2ms): 
+[2025-09-17T12:11:49.780Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:11:50.591Z] [DEBUG] Health check 30/30 failed (2ms): 
+[2025-09-17T12:11:50.592Z] [ERROR] ❌ All 30 health check attempts failed over 29440ms
+[2025-09-17T12:11:50.593Z] [WARN] ❌ Method spawn_method failed: Health check failed after spawn
+[2025-09-17T12:11:50.594Z] [INFO] Step 5: Attempting startup method: require_method
+[2025-09-17T12:11:50.596Z] [INFO] Attempting direct require method for server startup on port 5000...
+[2025-09-17T12:11:50.597Z] [INFO] Attempting to require server directly...
+[2025-09-17T12:11:51.407Z] [ERROR] Direct require failed: Cannot find package 'vite' imported from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:11:51.408Z] [WARN] ❌ Method require_method failed: Cannot find package 'vite' imported from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:11:51.408Z] [INFO] Step 6: Attempting startup method: alternative_port
+[2025-09-17T12:11:51.409Z] [INFO] Attempting server startup on alternative port...
+[2025-09-17T12:11:51.410Z] [INFO] Testing alternative port: 5001
+[2025-09-17T12:11:51.413Z] [INFO] Port 5001 is available, attempting server startup...
+[2025-09-17T12:11:51.414Z] [INFO] Attempting fork method for server startup on port 5001...
+[2025-09-17T12:11:51.415Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:11:51.416Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:11:51.417Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:11:51.418Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:11:51.419Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:11:51.420Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:11:51.421Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:11:51.422Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:11:51.424Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:11:51.425Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:11:51.426Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:11:51.427Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:11:51.428Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:11:51.429Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:11:51.430Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:11:51.431Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:11:51.432Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:11:51.433Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:11:51.433Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:11:51.434Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:11:51.435Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:11:51.436Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:11:51.437Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:11:51.438Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:11:51.439Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:11:51.440Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:11:51.441Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:11:51.442Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:11:51.443Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:11:51.444Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:11:51.445Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:11:51.446Z] [DEBUG]   PORT: 5001
+[2025-09-17T12:11:51.447Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:11:51.448Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:11:51.449Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:11:51.450Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:11:51.451Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:11:51.452Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:11:51.453Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:11:51.454Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:11:51.455Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:11:51.456Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:11:51.457Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:11:51.458Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:11:51.459Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:11:51.460Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:11:51.461Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:11:51.462Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:11:51.463Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:11:51.464Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:11:51.465Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:11:51.466Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:11:51.467Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:11:51.470Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:11:51.471Z] [INFO] Starting health check for port 5001 (50 attempts, 1000ms delay)
+[2025-09-17T12:11:51.472Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:11:51.482Z] [DEBUG] Health check 1/50 failed (10ms): 
+[2025-09-17T12:11:55.740Z] [DEBUG] Health check 30/50 failed (2ms): 
+[2025-09-17T12:11:59.916Z] [DEBUG] Health check 20/50 failed (5ms): 
+[2025-09-17T12:12:00.618Z] [DEBUG] Health check 10/50 failed (4ms): 
+[2025-09-17T12:12:05.880Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:12:10.065Z] [DEBUG] Health check 30/50 failed (3ms): 
+[2025-09-17T12:12:10.769Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:12:16.009Z] [DEBUG] Health check 50/50 failed (3ms): 
+[2025-09-17T12:12:16.010Z] [ERROR] ❌ All 50 health check attempts failed over 49725ms
+[2025-09-17T12:12:16.011Z] [WARN] ❌ Method fork_method failed: Health check failed after fork
+[2025-09-17T12:12:16.012Z] [INFO] Step 4: Attempting startup method: spawn_method
+[2025-09-17T12:12:16.014Z] [INFO] Attempting spawn method for server startup on port 5000...
+[2025-09-17T12:12:16.015Z] [DEBUG] Using Node executable: C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe
+[2025-09-17T12:12:16.018Z] [INFO] Spawn process started with PID: undefined
+[2025-09-17T12:12:16.020Z] [INFO] Starting health check for port 5000 (30 attempts, 1000ms delay)
+[2025-09-17T12:12:16.021Z] [ERROR] Spawn process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:12:16.025Z] [DEBUG] Health check 1/30 failed (4ms): 
+[2025-09-17T12:12:20.204Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:12:20.905Z] [DEBUG] Health check 30/50 failed (2ms): 
+[2025-09-17T12:12:25.162Z] [DEBUG] Health check 10/30 failed (2ms): 
+[2025-09-17T12:12:30.337Z] [DEBUG] Health check 50/50 failed (3ms): 
+[2025-09-17T12:12:30.338Z] [ERROR] ❌ All 50 health check attempts failed over 49678ms
+[2025-09-17T12:12:30.340Z] [INFO] Testing alternative port: 8000
+[2025-09-17T12:12:30.343Z] [INFO] Port 8000 is available, attempting server startup...
+[2025-09-17T12:12:30.344Z] [INFO] Attempting fork method for server startup on port 8000...
+[2025-09-17T12:12:30.346Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:12:30.347Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:12:30.349Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:12:30.350Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:12:30.351Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:12:30.352Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:12:30.353Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:12:30.354Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:12:30.355Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:12:30.357Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:12:30.357Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:12:30.359Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:12:30.360Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:12:30.361Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:12:30.362Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:12:30.363Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:12:30.364Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:12:30.365Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:12:30.366Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:12:30.367Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:12:30.368Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:12:30.369Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:12:30.370Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:12:30.371Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:12:30.372Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:12:30.374Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:12:30.375Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:12:30.376Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:12:30.377Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:12:30.378Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:12:30.379Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:12:30.380Z] [DEBUG]   PORT: 8000
+[2025-09-17T12:12:30.381Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:12:30.382Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:12:30.383Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:12:30.384Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:12:30.385Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:12:30.386Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:12:30.387Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:12:30.388Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:12:30.389Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:12:30.390Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:12:30.391Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:12:30.392Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:12:30.393Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:12:30.393Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:12:30.395Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:12:30.396Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:12:30.397Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:12:30.397Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:12:30.398Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:12:30.399Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:12:30.400Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:12:30.403Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:12:30.404Z] [INFO] Starting health check for port 8000 (50 attempts, 1000ms delay)
+[2025-09-17T12:12:30.406Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:12:30.409Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:12:31.028Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:12:35.290Z] [DEBUG] Health check 20/30 failed (2ms): 
+[2025-09-17T12:12:39.527Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:12:41.168Z] [DEBUG] Health check 50/50 failed (3ms): 
+[2025-09-17T12:12:41.169Z] [ERROR] ❌ All 50 health check attempts failed over 49697ms
+[2025-09-17T12:12:41.170Z] [INFO] Testing alternative port: 5002
+[2025-09-17T12:12:41.174Z] [INFO] Port 5002 is available, attempting server startup...
+[2025-09-17T12:12:41.175Z] [INFO] Attempting fork method for server startup on port 5002...
+[2025-09-17T12:12:41.177Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:12:41.178Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:12:41.179Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:12:41.180Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:12:41.181Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:12:41.182Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:12:41.183Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:12:41.184Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:12:41.184Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:12:41.185Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:12:41.186Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:12:41.187Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:12:41.188Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:12:41.190Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:12:41.191Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:12:41.191Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:12:41.192Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:12:41.193Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:12:41.194Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:12:41.195Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:12:41.196Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:12:41.197Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:12:41.198Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:12:41.199Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:12:41.200Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:12:41.201Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:12:41.202Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:12:41.203Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:12:41.204Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:12:41.205Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:12:41.206Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:12:41.207Z] [DEBUG]   PORT: 5002
+[2025-09-17T12:12:41.208Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:12:41.209Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:12:41.210Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:12:41.210Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:12:41.211Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:12:41.212Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:12:41.213Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:12:41.214Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:12:41.215Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:12:41.216Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:12:41.217Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:12:41.218Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:12:41.219Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:12:41.220Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:12:41.221Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:12:41.222Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:12:41.223Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:12:41.224Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:12:41.225Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:12:41.226Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:12:41.227Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:12:41.230Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:12:41.231Z] [INFO] Starting health check for port 5002 (50 attempts, 1000ms delay)
+[2025-09-17T12:12:41.233Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:12:41.236Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:12:45.433Z] [DEBUG] Health check 30/30 failed (2ms): 
+[2025-09-17T12:12:45.434Z] [ERROR] ❌ All 30 health check attempts failed over 29413ms
+[2025-09-17T12:12:45.436Z] [WARN] ❌ Method spawn_method failed: Health check failed after spawn
+[2025-09-17T12:12:45.437Z] [INFO] Step 5: Attempting startup method: require_method
+[2025-09-17T12:12:45.438Z] [INFO] Attempting direct require method for server startup on port 5000...
+[2025-09-17T12:12:45.440Z] [INFO] Attempting to require server directly...
+[2025-09-17T12:12:46.215Z] [ERROR] Direct require failed: Cannot find package 'vite' imported from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:12:46.216Z] [WARN] ❌ Method require_method failed: Cannot find package 'vite' imported from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\index.js
+[2025-09-17T12:12:46.217Z] [INFO] Step 6: Attempting startup method: alternative_port
+[2025-09-17T12:12:46.218Z] [INFO] Attempting server startup on alternative port...
+[2025-09-17T12:12:46.219Z] [INFO] Testing alternative port: 5001
+[2025-09-17T12:12:46.221Z] [INFO] Port 5001 is available, attempting server startup...
+[2025-09-17T12:12:46.222Z] [INFO] Attempting fork method for server startup on port 5001...
+[2025-09-17T12:12:46.223Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:12:46.224Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:12:46.225Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:12:46.226Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:12:46.226Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:12:46.227Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:12:46.228Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:12:46.229Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:12:46.231Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:12:46.231Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:12:46.232Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:12:46.233Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:12:46.234Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:12:46.235Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:12:46.236Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:12:46.237Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:12:46.238Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:12:46.239Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:12:46.240Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:12:46.241Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:12:46.242Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:12:46.243Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:12:46.244Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:12:46.245Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:12:46.246Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:12:46.247Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:12:46.248Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:12:46.249Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:12:46.250Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:12:46.251Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:12:46.252Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:12:46.253Z] [DEBUG]   PORT: 5001
+[2025-09-17T12:12:46.254Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:12:46.255Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:12:46.256Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:12:46.257Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:12:46.258Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:12:46.259Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:12:46.260Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:12:46.261Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:12:46.262Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:12:46.263Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:12:46.264Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:12:46.265Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:12:46.266Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:12:46.267Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:12:46.268Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:12:46.269Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:12:46.270Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:12:46.271Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:12:46.272Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:12:46.273Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:12:46.274Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:12:46.277Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:12:46.278Z] [INFO] Starting health check for port 5001 (50 attempts, 1000ms delay)
+[2025-09-17T12:12:46.280Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:12:46.286Z] [DEBUG] Health check 1/50 failed (7ms): 
+[2025-09-17T12:12:49.673Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:12:50.345Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:12:55.413Z] [DEBUG] Health check 10/50 failed (4ms): 
+[2025-09-17T12:12:59.795Z] [DEBUG] Health check 30/50 failed (2ms): 
+[2025-09-17T12:13:00.483Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:13:05.521Z] [DEBUG] Health check 20/50 failed (2ms): 
+[2025-09-17T12:13:09.929Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:13:10.617Z] [DEBUG] Health check 30/50 failed (3ms): 
+[2025-09-17T12:13:15.677Z] [DEBUG] Health check 30/50 failed (4ms): 
+[2025-09-17T12:13:20.020Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:13:20.021Z] [ERROR] ❌ All 50 health check attempts failed over 49616ms
+[2025-09-17T12:13:20.022Z] [WARN] ❌ Method alternative_port failed: No alternative ports available
+[2025-09-17T12:13:20.023Z] [ERROR] 🚨 ALL SERVER STARTUP METHODS FAILED
+[2025-09-17T12:13:20.024Z] [ERROR] Generating comprehensive diagnostic report...
+[2025-09-17T12:13:20.025Z] [INFO] === GENERATING COMPREHENSIVE DIAGNOSTIC REPORT ===
+[2025-09-17T12:13:20.026Z] [INFO] Checking file system...
+[2025-09-17T12:13:20.029Z] [INFO] Server file exists: true
+[2025-09-17T12:13:20.030Z] [INFO] Server file size: 106456 bytes
+[2025-09-17T12:13:20.031Z] [INFO] Checking network ports...
+[2025-09-17T12:13:20.042Z] [INFO] Diagnostic report saved to: C:\Users\zixsh\AppData\Roaming\rest-express\server-diagnostic-report.json
+[2025-09-17T12:13:20.043Z] [INFO] === DIAGNOSTIC REPORT COMPLETE ===
+[2025-09-17T12:13:20.044Z] [WARN] Continuing without embedded server - app will use external content or fail gracefully
+[2025-09-17T12:13:20.552Z] [INFO] Production mode: Loading main window from http://localhost:5000
+[2025-09-17T12:13:20.777Z] [DEBUG] Health check 40/50 failed (4ms): 
+[2025-09-17T12:13:23.458Z] [ERROR] Failed to load main window content: ERR_CONNECTION_REFUSED (-102) loading 'http://localhost:5000/'
+[2025-09-17T12:13:23.461Z] [INFO] Fallback: loading static files from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\public\index.html
+[2025-09-17T12:13:25.784Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:13:30.913Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:13:30.914Z] [ERROR] ❌ All 50 health check attempts failed over 49682ms
+[2025-09-17T12:13:30.915Z] [INFO] Testing alternative port: 3000
+[2025-09-17T12:13:30.918Z] [INFO] Port 3000 is available, attempting server startup...
+[2025-09-17T12:13:30.919Z] [INFO] Attempting fork method for server startup on port 3000...
+[2025-09-17T12:13:30.921Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:13:30.922Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:13:30.923Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:13:30.924Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:13:30.925Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:13:30.926Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:13:30.927Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:13:30.928Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:13:30.929Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:13:30.930Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:13:30.931Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:13:30.932Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:13:30.934Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:13:30.935Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:13:30.936Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:13:30.937Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:13:30.938Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:13:30.939Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:13:30.940Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:13:30.941Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:13:30.942Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:13:30.943Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:13:30.944Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:13:30.946Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:13:30.947Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:13:30.948Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:13:30.949Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:13:30.950Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:13:30.951Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:13:30.953Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:13:30.954Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:13:30.955Z] [DEBUG]   PORT: 3000
+[2025-09-17T12:13:30.956Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:13:30.958Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:13:30.959Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:13:30.960Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:13:30.961Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:13:30.962Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:13:30.963Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:13:30.964Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:13:30.965Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:13:30.966Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:13:30.967Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:13:30.968Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:13:30.969Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:13:30.970Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:13:30.971Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:13:30.972Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:13:30.973Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:13:30.974Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:13:30.975Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:13:30.976Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:13:30.977Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:13:30.979Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:13:30.981Z] [INFO] Starting health check for port 3000 (50 attempts, 1000ms delay)
+[2025-09-17T12:13:30.982Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:13:30.985Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:13:35.899Z] [DEBUG] Health check 50/50 failed (3ms): 
+[2025-09-17T12:13:35.900Z] [ERROR] ❌ All 50 health check attempts failed over 49621ms
+[2025-09-17T12:13:35.901Z] [INFO] Testing alternative port: 5002
+[2025-09-17T12:13:35.905Z] [INFO] Port 5002 is available, attempting server startup...
+[2025-09-17T12:13:35.906Z] [INFO] Attempting fork method for server startup on port 5002...
+[2025-09-17T12:13:35.908Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:13:35.909Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:13:35.910Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:13:35.911Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:13:35.912Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:13:35.913Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:13:35.914Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:13:35.915Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:13:35.916Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:13:35.917Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:13:35.918Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:13:35.919Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:13:35.920Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:13:35.921Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:13:35.922Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:13:35.923Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:13:35.924Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:13:35.926Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:13:35.927Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:13:35.928Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:13:35.929Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:13:35.930Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:13:35.931Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:13:35.932Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:13:35.933Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:13:35.934Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:13:35.935Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:13:35.937Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:13:35.938Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:13:35.939Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:13:35.940Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:13:35.941Z] [DEBUG]   PORT: 5002
+[2025-09-17T12:13:35.942Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:13:35.943Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:13:35.945Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:13:35.946Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:13:35.947Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:13:35.948Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:13:35.949Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:13:35.950Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:13:35.951Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:13:35.952Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:13:35.953Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:13:35.954Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:13:35.955Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:13:35.956Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:13:35.957Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:13:35.958Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:13:35.959Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:13:35.960Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:13:35.961Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:13:35.962Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:13:35.963Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:13:35.966Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:13:35.967Z] [INFO] Starting health check for port 5002 (50 attempts, 1000ms delay)
+[2025-09-17T12:13:35.969Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:13:35.972Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:13:40.091Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:13:45.084Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:13:50.191Z] [DEBUG] Health check 20/50 failed (2ms): 
+[2025-09-17T12:13:55.218Z] [DEBUG] Health check 20/50 failed (2ms): 
+[2025-09-17T12:14:00.380Z] [DEBUG] Health check 30/50 failed (5ms): 
+[2025-09-17T12:14:05.449Z] [DEBUG] Health check 30/50 failed (2ms): 
+[2025-09-17T12:14:10.461Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:14:15.560Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:14:20.596Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:14:20.597Z] [ERROR] ❌ All 50 health check attempts failed over 49616ms
+[2025-09-17T12:14:20.598Z] [INFO] Testing alternative port: 8000
+[2025-09-17T12:14:20.601Z] [INFO] Port 8000 is available, attempting server startup...
+[2025-09-17T12:14:20.602Z] [INFO] Attempting fork method for server startup on port 8000...
+[2025-09-17T12:14:20.604Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:14:20.605Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:14:20.606Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:14:20.607Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:14:20.608Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:14:20.609Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:14:20.610Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:14:20.611Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:14:20.613Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:14:20.614Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:14:20.616Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:14:20.617Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:14:20.618Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:14:20.620Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:14:20.621Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:14:20.622Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:14:20.623Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:14:20.624Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:14:20.625Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:14:20.626Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:14:20.627Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:14:20.628Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:14:20.630Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:14:20.631Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:14:20.632Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:14:20.633Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:14:20.634Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:14:20.635Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:14:20.636Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:14:20.637Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:14:20.639Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:14:20.640Z] [DEBUG]   PORT: 8000
+[2025-09-17T12:14:20.641Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:14:20.642Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:14:20.643Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:14:20.644Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:14:20.645Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:14:20.646Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:14:20.648Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:14:20.649Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:14:20.650Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:14:20.651Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:14:20.652Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:14:20.653Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:14:20.655Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:14:20.656Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:14:20.657Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:14:20.658Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:14:20.659Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:14:20.661Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:14:20.662Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:14:20.663Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:14:20.664Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:14:20.667Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:14:20.669Z] [INFO] Starting health check for port 8000 (50 attempts, 1000ms delay)
+[2025-09-17T12:14:20.670Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:14:20.674Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:14:25.676Z] [DEBUG] Health check 50/50 failed (2ms): 
+[2025-09-17T12:14:25.678Z] [ERROR] ❌ All 50 health check attempts failed over 49710ms
+[2025-09-17T12:14:25.679Z] [INFO] Testing alternative port: 3000
+[2025-09-17T12:14:25.682Z] [INFO] Port 3000 is available, attempting server startup...
+[2025-09-17T12:14:25.683Z] [INFO] Attempting fork method for server startup on port 3000...
+[2025-09-17T12:14:25.684Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:14:25.686Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:14:25.687Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:14:25.688Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:14:25.689Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:14:25.690Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:14:25.691Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:14:25.692Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:14:25.693Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:14:25.695Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:14:25.696Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:14:25.697Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:14:25.698Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:14:25.699Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:14:25.700Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:14:25.701Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:14:25.702Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:14:25.703Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:14:25.704Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:14:25.706Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:14:25.707Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:14:25.708Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:14:25.709Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:14:25.710Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:14:25.711Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:14:25.713Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:14:25.714Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:14:25.715Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:14:25.716Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:14:25.717Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:14:25.719Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:14:25.720Z] [DEBUG]   PORT: 3000
+[2025-09-17T12:14:25.721Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:14:25.722Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:14:25.723Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:14:25.725Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:14:25.726Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:14:25.727Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:14:25.728Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:14:25.729Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:14:25.731Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:14:25.732Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:14:25.733Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:14:25.734Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:14:25.736Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:14:25.737Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:14:25.738Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:14:25.739Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:14:25.740Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:14:25.742Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:14:25.743Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:14:25.744Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:14:25.745Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:14:25.748Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:14:25.750Z] [INFO] Starting health check for port 3000 (50 attempts, 1000ms delay)
+[2025-09-17T12:14:25.751Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:14:25.755Z] [DEBUG] Health check 1/50 failed (4ms): 
+[2025-09-17T12:14:29.758Z] [DEBUG] Health check 10/50 failed (3ms): 
+[2025-09-17T12:14:34.921Z] [DEBUG] Health check 10/50 failed (2ms): 
+[2025-09-17T12:14:39.880Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:14:45.208Z] [DEBUG] Health check 20/50 failed (3ms): 
+[2025-09-17T12:14:50.035Z] [DEBUG] Health check 30/50 failed (3ms): 
+[2025-09-17T12:14:55.353Z] [DEBUG] Health check 30/50 failed (2ms): 
+[2025-09-17T12:15:00.169Z] [DEBUG] Health check 40/50 failed (5ms): 
+[2025-09-17T12:15:05.509Z] [DEBUG] Health check 40/50 failed (2ms): 
+[2025-09-17T12:15:10.326Z] [DEBUG] Health check 50/50 failed (7ms): 
+[2025-09-17T12:15:10.329Z] [ERROR] ❌ All 50 health check attempts failed over 49659ms
+[2025-09-17T12:15:10.332Z] [WARN] ❌ Method alternative_port failed: No alternative ports available
+[2025-09-17T12:15:10.334Z] [ERROR] 🚨 ALL SERVER STARTUP METHODS FAILED
+[2025-09-17T12:15:10.336Z] [ERROR] Generating comprehensive diagnostic report...
+[2025-09-17T12:15:10.339Z] [INFO] === GENERATING COMPREHENSIVE DIAGNOSTIC REPORT ===
+[2025-09-17T12:15:10.342Z] [INFO] Checking file system...
+[2025-09-17T12:15:10.347Z] [INFO] Server file exists: true
+[2025-09-17T12:15:10.349Z] [INFO] Server file size: 106456 bytes
+[2025-09-17T12:15:10.351Z] [INFO] Checking network ports...
+[2025-09-17T12:15:10.370Z] [INFO] Diagnostic report saved to: C:\Users\zixsh\AppData\Roaming\rest-express\server-diagnostic-report.json
+[2025-09-17T12:15:10.371Z] [INFO] === DIAGNOSTIC REPORT COMPLETE ===
+[2025-09-17T12:15:10.373Z] [WARN] Continuing without embedded server - app will use external content or fail gracefully
+[2025-09-17T12:15:10.553Z] [INFO] Production mode: Loading main window from http://localhost:5000
+[2025-09-17T12:15:14.613Z] [ERROR] Failed to load main window content: ERR_CONNECTION_REFUSED (-102) loading 'http://localhost:5000/'
+[2025-09-17T12:15:14.616Z] [INFO] Fallback: loading static files from C:\Program Files\Shop Analytics Dashboard\resources\app.asar\dist\public\index.html
+[2025-09-17T12:15:15.697Z] [DEBUG] Health check 50/50 failed (7ms): 
+[2025-09-17T12:15:15.698Z] [ERROR] ❌ All 50 health check attempts failed over 49947ms
+[2025-09-17T12:15:15.699Z] [INFO] Testing alternative port: 8000
+[2025-09-17T12:15:15.703Z] [INFO] Port 8000 is available, attempting server startup...
+[2025-09-17T12:15:15.704Z] [INFO] Attempting fork method for server startup on port 8000...
+[2025-09-17T12:15:15.706Z] [DEBUG] Environment variables for fork:
+[2025-09-17T12:15:15.707Z] [DEBUG]   ADMIN_PASSWORD_HASH: [HIDDEN]
+[2025-09-17T12:15:15.708Z] [DEBUG]   ADMIN_RESET_CODE: SHOP2024RESET
+[2025-09-17T12:15:15.709Z] [DEBUG]   ADMIN_USERNAME: admin
+[2025-09-17T12:15:15.711Z] [DEBUG]   ALLUSERSPROFILE: C:\ProgramData
+[2025-09-17T12:15:15.712Z] [DEBUG]   APPDATA: C:\Users\zixsh\AppData\Roaming
+[2025-09-17T12:15:15.713Z] [DEBUG]   CommonProgramFiles: C:\Program Files\Common Files
+[2025-09-17T12:15:15.714Z] [DEBUG]   CommonProgramFiles(x86): C:\Program Files (x86)\Common Files
+[2025-09-17T12:15:15.715Z] [DEBUG]   CommonProgramW6432: C:\Program Files\Common Files
+[2025-09-17T12:15:15.716Z] [DEBUG]   COMPUTERNAME: XZCOM
+[2025-09-17T12:15:15.717Z] [DEBUG]   ComSpec: C:\WINDOWS\system32\cmd.exe
+[2025-09-17T12:15:15.719Z] [DEBUG]   DEVICE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:15:15.720Z] [DEBUG]   DriverData: C:\Windows\System32\Drivers\DriverData
+[2025-09-17T12:15:15.721Z] [DEBUG]   ELECTRON: 1
+[2025-09-17T12:15:15.722Z] [DEBUG]   FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[2025-09-17T12:15:15.723Z] [DEBUG]   FPS_BROWSER_USER_PROFILE_STRING: Default
+[2025-09-17T12:15:15.724Z] [DEBUG]   GUMROAD_PRODUCT_ID: ihpuq
+[2025-09-17T12:15:15.725Z] [DEBUG]   GUMROAD_PRODUCT_PERMALINK: ihpuq
+[2025-09-17T12:15:15.727Z] [DEBUG]   HOMEDRIVE: C:
+[2025-09-17T12:15:15.728Z] [DEBUG]   HOMEPATH: \Users\zixsh
+[2025-09-17T12:15:15.729Z] [DEBUG]   JWT_SECRET: [HIDDEN]
+[2025-09-17T12:15:15.730Z] [DEBUG]   LICENSE_HASH_SALT: [HIDDEN]
+[2025-09-17T12:15:15.731Z] [DEBUG]   LOCALAPPDATA: C:\Users\zixsh\AppData\Local
+[2025-09-17T12:15:15.733Z] [DEBUG]   LOGONSERVER: \\XZCOM
+[2025-09-17T12:15:15.734Z] [DEBUG]   NODE_ENV: production
+[2025-09-17T12:15:15.735Z] [DEBUG]   NUMBER_OF_PROCESSORS: 4
+[2025-09-17T12:15:15.736Z] [DEBUG]   OneDrive: C:\Users\zixsh\OneDrive
+[2025-09-17T12:15:15.737Z] [DEBUG]   ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[2025-09-17T12:15:15.738Z] [DEBUG]   OS: Windows_NT
+[2025-09-17T12:15:15.740Z] [DEBUG]   Path: C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\GitHub CLI\;C:\Users\zixsh\AppData\Local\Microsoft\WindowsApps;C:\Users\zixsh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zixsh\AppData\Roaming\npm
+[2025-09-17T12:15:15.741Z] [DEBUG]   PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+[2025-09-17T12:15:15.742Z] [DEBUG]   PORT: 8000
+[2025-09-17T12:15:15.744Z] [DEBUG]   PROCESSOR_ARCHITECTURE: AMD64
+[2025-09-17T12:15:15.745Z] [DEBUG]   PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+[2025-09-17T12:15:15.746Z] [DEBUG]   PROCESSOR_LEVEL: 6
+[2025-09-17T12:15:15.747Z] [DEBUG]   PROCESSOR_REVISION: 3d04
+[2025-09-17T12:15:15.748Z] [DEBUG]   ProgramData: C:\ProgramData
+[2025-09-17T12:15:15.749Z] [DEBUG]   ProgramFiles: C:\Program Files
+[2025-09-17T12:15:15.751Z] [DEBUG]   ProgramFiles(x86): C:\Program Files (x86)
+[2025-09-17T12:15:15.752Z] [DEBUG]   ProgramW6432: C:\Program Files
+[2025-09-17T12:15:15.753Z] [DEBUG]   PSModulePath: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+[2025-09-17T12:15:15.754Z] [DEBUG]   PUBLIC: C:\Users\Public
+[2025-09-17T12:15:15.755Z] [DEBUG]   SESSIONNAME: Console
+[2025-09-17T12:15:15.756Z] [DEBUG]   SystemDrive: C:
+[2025-09-17T12:15:15.758Z] [DEBUG]   SystemRoot: C:\WINDOWS
+[2025-09-17T12:15:15.759Z] [DEBUG]   TEMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:15:15.760Z] [DEBUG]   TMP: C:\Users\zixsh\AppData\Local\Temp
+[2025-09-17T12:15:15.762Z] [DEBUG]   USERDOMAIN: XZCOM
+[2025-09-17T12:15:15.763Z] [DEBUG]   USERDOMAIN_ROAMINGPROFILE: XZCOM
+[2025-09-17T12:15:15.764Z] [DEBUG]   USERNAME: zixsh
+[2025-09-17T12:15:15.766Z] [DEBUG]   USERPROFILE: C:\Users\zixsh
+[2025-09-17T12:15:15.767Z] [DEBUG]   windir: C:\WINDOWS
+[2025-09-17T12:15:15.768Z] [DEBUG]   FORCE_COLOR: 0
+[2025-09-17T12:15:15.772Z] [INFO] Fork process spawned with PID: undefined
+[2025-09-17T12:15:15.773Z] [INFO] Starting health check for port 8000 (50 attempts, 1000ms delay)
+[2025-09-17T12:15:15.775Z] [ERROR] Fork process error: spawn C:\Program Files\Shop Analytics Dashboard\Shop Analytics Dashboard.exe ENOENT
+[2025-09-17T12:15:15.779Z] [DEBUG] Health check 1/50 failed (5ms): 
+[2025-09-17T12:15:24.957Z] [DEBUG] Health check 10/50 failed (18ms): 
+[2025-09-17T12:15:35.079Z] [DEBUG] Health check 20/50 failed (3ms): 

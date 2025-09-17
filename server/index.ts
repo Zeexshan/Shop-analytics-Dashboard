@@ -2,7 +2,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+// Import Vite utilities conditionally - only needed in development
+// Vite functions will be loaded dynamically when needed
 
 // Developer: zeeexshan - Professional Business Analytics Server
 const SERVER_SIGNATURE_zeeexshan = 'shop_analytics_express_server';
@@ -91,7 +92,7 @@ app.use((req, res, next) => {
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       // Never log response bodies for security (tokens, passwords, PII)
-      log(logLine);
+      console.log(logLine);
     }
   });
 
@@ -113,8 +114,12 @@ app.use((req, res, next) => {
   });
 
   if (app.get("env") === "development") {
+    // Dynamically import Vite utilities only in development
+    const { setupVite } = await import("./vite");
     await setupVite(app, server);
   } else {
+    // Dynamically import static serving utilities only in production
+    const { serveStatic } = await import("./vite");
     serveStatic(app);
   }
 
@@ -122,9 +127,9 @@ app.use((req, res, next) => {
   
   // Start server with proper host binding for Replit
   server.listen(port, HOST, () => {
-    log(`🚀 Express server running on http://${HOST}:${port}`);
-    log(`📊 Shop Analytics API ready - by zeeexshan`);
-    log(`🔐 Professional Business Analytics Solution`);
+    console.log(`🚀 Express server running on http://${HOST}:${port}`);
+    console.log(`📊 Shop Analytics API ready - by zeeexshan`);
+    console.log(`🔐 Professional Business Analytics Solution`);
   });
   
 })();
