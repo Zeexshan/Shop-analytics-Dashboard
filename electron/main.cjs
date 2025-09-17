@@ -3,8 +3,44 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
 const { createActivationWindow, checkActivation } = require('./activation-window.cjs');
 const isDev = process.env.NODE_ENV === 'development';
+
+// === COMPREHENSIVE DEBUGGING SYSTEM ===
+function createDebugLogger() {
+  const logFilePath = path.join(app.getPath('userData'), 'server-debug.log');
+  
+  function log(message, level = 'INFO') {
+    const timestamp = new Date().toISOString();
+    const logLine = `[${timestamp}] [${level}] ${message}\n`;
+    
+    // Console output
+    if (level === 'ERROR') {
+      console.error(logLine.trim());
+    } else {
+      console.log(logLine.trim());
+    }
+    
+    // File output
+    try {
+      fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
+      fs.appendFileSync(logFilePath, logLine);
+    } catch (err) {
+      console.error('Failed to write debug log:', err.message);
+    }
+  }
+  
+  return {
+    info: (msg) => log(msg, 'INFO'),
+    warn: (msg) => log(msg, 'WARN'),
+    error: (msg) => log(msg, 'ERROR'),
+    debug: (msg) => log(msg, 'DEBUG'),
+    getLogPath: () => logFilePath
+  };
+}
+
+const debugLog = createDebugLogger();
 
 // zeeexshan: Application signature
 const APP_SIGNATURE_zeeexshan = 'shop_analytics_dashboard_by_zeeexshan';
@@ -38,102 +74,488 @@ function loadEnvironmentVariables() {
 }
 
 let expressApp = null;
+let serverStartupAttempts = [];
+let selectedServerPort = 5000; // Track the port the server is actually running on
+let serverDiagnostics = {
+  nodeVersion: process.version,
+  platform: process.platform,
+  arch: process.arch,
+  electronVersion: process.versions.electron,
+  isDev,
+  appPath: null,
+  serverPath: null,
+  portInUse: false,
+  processSpawned: false,
+  healthCheckPassed: false,
+  selectedPort: null
+};
 
 async function startExpressServer() {
+  debugLog.info('=== STARTING EXPRESS SERVER DIAGNOSTIC ===');
+  
   if (isDev) {
-    // In development, assume server is already running
+    debugLog.info('Development mode - assuming external server is running');
     return Promise.resolve();
+  }
+  
+  // Update diagnostics with basic system info
+  serverDiagnostics.appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
+  serverDiagnostics.serverPath = path.join(serverDiagnostics.appPath, 'dist', 'index.js');
+  
+  debugLog.info(`System Info: Node ${serverDiagnostics.nodeVersion}, Platform ${serverDiagnostics.platform}, Arch ${serverDiagnostics.arch}`);
+  debugLog.info(`Electron Version: ${serverDiagnostics.electronVersion}`);
+  debugLog.info(`App Packaged: ${app.isPackaged}`);
+  debugLog.info(`App Path: ${serverDiagnostics.appPath}`);
+  debugLog.info(`Server Path: ${serverDiagnostics.serverPath}`);
+  
+  // Step 1: Check if port 5000 is already in use
+  debugLog.info('Step 1: Checking if port 5000 is available...');
+  const portCheck = await checkPortAvailability(5000);
+  serverDiagnostics.portInUse = !portCheck.available;
+  
+  if (!portCheck.available) {
+    debugLog.warn(`Port 5000 is already in use: ${portCheck.error}`);
+    // Try to find what's using the port
+    debugLog.info('Attempting to identify process using port 5000...');
+  } else {
+    debugLog.info('Port 5000 is available for server binding');
+  }
+  
+  // Step 2: Attempt multiple server startup methods
+  const startupMethods = [
+    { name: 'fork_method', handler: () => startServerWithFork(5000) },
+    { name: 'spawn_method', handler: () => startServerWithSpawn(5000) },
+    { name: 'require_method', handler: () => startServerWithRequire(5000) },
+    { name: 'alternative_port', handler: startServerOnAlternativePort }
+  ];
+  
+  for (let i = 0; i < startupMethods.length; i++) {
+    const method = startupMethods[i];
+    debugLog.info(`Step ${i + 3}: Attempting startup method: ${method.name}`);
+    
+    const attempt = {
+      method: method.name,
+      timestamp: new Date().toISOString(),
+      success: false,
+      error: null,
+      diagnostics: {}
+    };
+    
+    try {
+      const result = await method.handler();
+      if (result.success) {
+        attempt.success = true;
+        attempt.diagnostics = result.diagnostics;
+        serverStartupAttempts.push(attempt);
+        debugLog.info(`✅ Server startup successful with method: ${method.name}`);
+        return Promise.resolve();
+      } else {
+        attempt.error = result.error;
+        attempt.diagnostics = result.diagnostics;
+        debugLog.warn(`❌ Method ${method.name} failed: ${result.error}`);
+      }
+    } catch (error) {
+      attempt.error = error.message;
+      debugLog.error(`❌ Method ${method.name} threw exception: ${error.message}`);
+      debugLog.error(`Stack trace: ${error.stack}`);
+    }
+    
+    serverStartupAttempts.push(attempt);
+  }
+  
+  // All methods failed
+  debugLog.error('🚨 ALL SERVER STARTUP METHODS FAILED');
+  debugLog.error('Generating comprehensive diagnostic report...');
+  await generateDiagnosticReport();
+  
+  debugLog.warn('Continuing without embedded server - app will use external content or fail gracefully');
+  return Promise.resolve();
+}
+
+// === PORT AVAILABILITY CHECKER ===
+async function checkPortAvailability(port) {
+  return new Promise((resolve) => {
+    const net = require('net');
+    const server = net.createServer();
+    
+    server.listen(port, '127.0.0.1', () => {
+      server.once('close', () => {
+        resolve({ available: true, port });
+      });
+      server.close();
+    });
+    
+    server.on('error', (err) => {
+      resolve({ available: false, port, error: err.message });
+    });
+  });
+}
+
+// === SERVER STARTUP METHODS ===
+async function startServerWithFork(port = 5000) {
+  debugLog.info(`Attempting fork method for server startup on port ${port}...`);
+  const { fork } = require('child_process');
+  
+  const diagnostics = {
+    method: 'fork',
+    port,
+    serverFileExists: fs.existsSync(serverDiagnostics.serverPath),
+    processSpawned: false,
+    pid: null,
+    error: null
+  };
+  
+  if (!diagnostics.serverFileExists) {
+    return { success: false, error: 'Server file not found', diagnostics };
   }
   
   try {
-    // Correct path resolution for packaged applications
-    const appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
-    const serverPath = path.join(appPath, 'dist', 'index.js');
-    
-    console.log('Attempting to start Express server from:', serverPath);
-    
-    // Check if server file exists
-    const fs = require('fs');
-    if (!fs.existsSync(serverPath)) {
-      console.log('Server file not found at:', serverPath);
-      console.log('Skipping server startup - app will use external server or file-based content');
-      return Promise.resolve();
-    }
-    
-    // Use fork to start the server as a child process
-    const { fork } = require('child_process');
-    
-    console.log('Starting Express server as child process...');
-    
-    // Set environment variables for the child process
     const env = {
-      ...process.env,  // This now includes our defaults from loadEnvironmentVariables()
+      ...process.env,
       NODE_ENV: 'production',
-      ELECTRON: '1', // Flag for electron-specific behavior
-      PORT: '5000'
+      ELECTRON: '1',
+      PORT: port.toString(),
+      FORCE_COLOR: '0' // Disable colors in child process
     };
     
-    // Fork the server process
-    const serverProcess = fork(serverPath, [], {
-      env: env,
-      silent: false, // Allow server logs to show in console
-      stdio: 'pipe'
+    debugLog.debug('Environment variables for fork:');
+    Object.keys(env).forEach(key => {
+      if (key.includes('SECRET') || key.includes('HASH')) {
+        debugLog.debug(`  ${key}: [HIDDEN]`);
+      } else {
+        debugLog.debug(`  ${key}: ${env[key]}`);
+      }
     });
     
-    // Handle server process events
+    const serverProcess = fork(serverDiagnostics.serverPath, [], {
+      env,
+      silent: false,
+      stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
+      cwd: serverDiagnostics.appPath
+    });
+    
+    diagnostics.processSpawned = true;
+    diagnostics.pid = serverProcess.pid;
+    serverDiagnostics.processSpawned = true;
+    
+    debugLog.info(`Fork process spawned with PID: ${serverProcess.pid}`);
+    
+    // Enhanced process event handling
     serverProcess.on('error', (error) => {
-      console.error('Server process error:', error);
+      debugLog.error(`Fork process error: ${error.message}`);
+      diagnostics.error = error.message;
     });
     
     serverProcess.on('exit', (code, signal) => {
-      console.log(`Server process exited with code ${code} and signal ${signal}`);
+      debugLog.warn(`Fork process exited with code ${code}, signal ${signal}`);
     });
     
-    // Store reference to server process
+    serverProcess.stdout?.on('data', (data) => {
+      debugLog.debug(`Fork stdout: ${data.toString().trim()}`);
+    });
+    
+    serverProcess.stderr?.on('data', (data) => {
+      debugLog.error(`Fork stderr: ${data.toString().trim()}`);
+    });
+    
     expressApp = serverProcess;
     
-    console.log('Express server process started with PID:', serverProcess.pid);
-    
     // Wait for server to be ready
-    await waitForServer();
+    const healthResult = await waitForServer(port, 50, 1000); // port, maxAttempts, delayMs
+    if (healthResult.success) {
+      serverDiagnostics.healthCheckPassed = true;
+      serverDiagnostics.selectedPort = port;
+      selectedServerPort = port;
+      return { success: true, diagnostics, port };
+    } else {
+      return { success: false, error: 'Health check failed after fork', diagnostics };
+    }
     
-    return Promise.resolve();
   } catch (error) {
-    console.error('Failed to start server:', error);
-    console.log('Continuing without embedded server - app will use external content');
-    return Promise.resolve(); // Don't reject - continue without embedded server
+    debugLog.error(`Fork method exception: ${error.message}`);
+    return { success: false, error: error.message, diagnostics };
   }
 }
 
-async function waitForServer(maxAttempts = 25, delayMs = 200) {
+async function startServerWithSpawn(port = 5000) {
+  debugLog.info(`Attempting spawn method for server startup on port ${port}...`);
+  const { spawn } = require('child_process');
+  
+  const diagnostics = {
+    method: 'spawn',
+    port,
+    nodeExecutable: process.execPath,
+    serverFileExists: fs.existsSync(serverDiagnostics.serverPath),
+    processSpawned: false,
+    pid: null
+  };
+  
+  if (!diagnostics.serverFileExists) {
+    return { success: false, error: 'Server file not found', diagnostics };
+  }
+  
+  try {
+    debugLog.debug(`Using Node executable: ${diagnostics.nodeExecutable}`);
+    
+    const serverProcess = spawn(process.execPath, [serverDiagnostics.serverPath], {
+      env: {
+        ...process.env,
+        NODE_ENV: 'production',
+        ELECTRON: '1',
+        PORT: port.toString()
+      },
+      cwd: serverDiagnostics.appPath,
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+    
+    diagnostics.processSpawned = true;
+    diagnostics.pid = serverProcess.pid;
+    
+    debugLog.info(`Spawn process started with PID: ${serverProcess.pid}`);
+    
+    serverProcess.on('error', (error) => {
+      debugLog.error(`Spawn process error: ${error.message}`);
+    });
+    
+    serverProcess.stdout.on('data', (data) => {
+      debugLog.debug(`Spawn stdout: ${data.toString().trim()}`);
+    });
+    
+    serverProcess.stderr.on('data', (data) => {
+      debugLog.error(`Spawn stderr: ${data.toString().trim()}`);
+    });
+    
+    expressApp = serverProcess;
+    
+    const healthResult = await waitForServer(port, 30, 1000);
+    if (healthResult.success) {
+      serverDiagnostics.selectedPort = port;
+      selectedServerPort = port;
+      return { success: true, diagnostics, port };
+    } else {
+      return { success: false, error: 'Health check failed after spawn', diagnostics };
+    }
+    
+  } catch (error) {
+    return { success: false, error: error.message, diagnostics };
+  }
+}
+
+async function startServerWithRequire(port = 5000) {
+  debugLog.info(`Attempting direct require method for server startup on port ${port}...`);
+  
+  const diagnostics = {
+    method: 'require',
+    port,
+    serverFileExists: fs.existsSync(serverDiagnostics.serverPath),
+    requireSuccessful: false
+  };
+  
+  if (!diagnostics.serverFileExists) {
+    return { success: false, error: 'Server file not found', diagnostics };
+  }
+  
+  try {
+    // Set environment before requiring
+    process.env.NODE_ENV = 'production';
+    process.env.ELECTRON = '1';
+    process.env.PORT = port.toString();
+    
+    debugLog.info('Attempting to require server directly...');
+    require(serverDiagnostics.serverPath);
+    diagnostics.requireSuccessful = true;
+    
+    debugLog.info('Server required successfully, testing health...');
+    const healthResult = await waitForServer(port, 20, 1500);
+    
+    if (healthResult.success) {
+      serverDiagnostics.selectedPort = port;
+      selectedServerPort = port;
+      return { success: true, diagnostics, port };
+    } else {
+      return { success: false, error: 'Health check failed after require', diagnostics };
+    }
+    
+  } catch (error) {
+    debugLog.error(`Direct require failed: ${error.message}`);
+    return { success: false, error: error.message, diagnostics };
+  }
+}
+
+async function startServerOnAlternativePort() {
+  debugLog.info('Attempting server startup on alternative port...');
+  
+  const alternativePorts = [5001, 5002, 3000, 8000];
+  
+  for (const port of alternativePorts) {
+    debugLog.info(`Testing alternative port: ${port}`);
+    
+    const portCheck = await checkPortAvailability(port);
+    if (portCheck.available) {
+      debugLog.info(`Port ${port} is available, attempting server startup...`);
+      
+      // Try fork with alternative port
+      const result = await startServerWithFork(port);
+      if (result.success) {
+        debugLog.info(`✅ Server started successfully on alternative port ${port}`);
+        return { success: true, port, diagnostics: result.diagnostics };
+      }
+    } else {
+      debugLog.debug(`Port ${port} not available: ${portCheck.error}`);
+    }
+  }
+  
+  return { success: false, error: 'No alternative ports available', diagnostics: { testedPorts: alternativePorts } };
+}
+
+// === ENHANCED HEALTH CHECK SYSTEM ===
+async function waitForServer(port = 5000, maxAttempts = 50, delayMs = 1000) {
   const http = require('http');
   
+  debugLog.info(`Starting health check for port ${port} (${maxAttempts} attempts, ${delayMs}ms delay)`);
+  
+  const healthResults = {
+    success: false,
+    attempts: [],
+    totalTime: 0
+  };
+  
+  const startTime = Date.now();
+  
   for (let i = 0; i < maxAttempts; i++) {
+    const attemptStart = Date.now();
+    const attempt = {
+      number: i + 1,
+      timestamp: new Date().toISOString(),
+      success: false,
+      error: null,
+      responseTime: 0,
+      statusCode: null
+    };
+    
     try {
       await new Promise((resolve, reject) => {
-        const req = http.get('http://localhost:5000/health', (res) => {
-          if (res.statusCode === 200) {
-            console.log('Server health check passed');
-            resolve();
-          } else {
-            reject(new Error(`Health check failed with status ${res.statusCode}`));
-          }
+        const req = http.get(`http://localhost:${port}/health`, (res) => {
+          attempt.statusCode = res.statusCode;
+          
+          let body = '';
+          res.on('data', chunk => body += chunk);
+          res.on('end', () => {
+            attempt.responseTime = Date.now() - attemptStart;
+            
+            if (res.statusCode === 200) {
+              debugLog.debug(`Health check ${i + 1} passed (${attempt.responseTime}ms): ${body.substring(0, 100)}`);
+              attempt.success = true;
+              resolve();
+            } else {
+              reject(new Error(`Status ${res.statusCode}: ${body}`));
+            }
+          });
         });
         
         req.on('error', reject);
-        req.setTimeout(1000, () => reject(new Error('Health check timeout')));
+        req.setTimeout(3000, () => reject(new Error('Request timeout')));
       });
       
-      return; // Success
+      // Success!
+      healthResults.success = true;
+      healthResults.attempts.push(attempt);
+      healthResults.totalTime = Date.now() - startTime;
+      
+      debugLog.info(`✅ Server health check passed on attempt ${i + 1} after ${healthResults.totalTime}ms`);
+      serverDiagnostics.healthCheckPassed = true;
+      
+      return healthResults;
+      
     } catch (error) {
-      console.log(`Health check attempt ${i + 1}/${maxAttempts} failed:`, error.message);
+      attempt.error = error.message;
+      attempt.responseTime = Date.now() - attemptStart;
+      healthResults.attempts.push(attempt);
+      
+      if (i === 0 || i % 10 === 9) { // Log every 10th attempt
+        debugLog.debug(`Health check ${i + 1}/${maxAttempts} failed (${attempt.responseTime}ms): ${error.message}`);
+      }
+      
       if (i < maxAttempts - 1) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
     }
   }
   
-  throw new Error('Server failed to start within expected time');
+  healthResults.totalTime = Date.now() - startTime;
+  debugLog.error(`❌ All ${maxAttempts} health check attempts failed over ${healthResults.totalTime}ms`);
+  
+  return healthResults;
+}
+
+// === DIAGNOSTIC REPORT GENERATOR ===
+async function generateDiagnosticReport() {
+  debugLog.info('=== GENERATING COMPREHENSIVE DIAGNOSTIC REPORT ===');
+  
+  const report = {
+    timestamp: new Date().toISOString(),
+    system: serverDiagnostics,
+    startupAttempts: serverStartupAttempts,
+    fileSystemCheck: {},
+    networkCheck: {},
+    processCheck: {}
+  };
+  
+  // File system diagnostics
+  debugLog.info('Checking file system...');
+  try {
+    const distDir = path.join(serverDiagnostics.appPath, 'dist');
+    const publicDir = path.join(distDir, 'public');
+    
+    report.fileSystemCheck = {
+      appPathExists: fs.existsSync(serverDiagnostics.appPath),
+      distDirExists: fs.existsSync(distDir),
+      publicDirExists: fs.existsSync(publicDir),
+      serverFileExists: fs.existsSync(serverDiagnostics.serverPath),
+      serverFileSize: fs.existsSync(serverDiagnostics.serverPath) ? fs.statSync(serverDiagnostics.serverPath).size : 0,
+      distContents: fs.existsSync(distDir) ? fs.readdirSync(distDir) : [],
+      appPathContents: fs.existsSync(serverDiagnostics.appPath) ? fs.readdirSync(serverDiagnostics.appPath) : []
+    };
+    
+    debugLog.info(`Server file exists: ${report.fileSystemCheck.serverFileExists}`);
+    debugLog.info(`Server file size: ${report.fileSystemCheck.serverFileSize} bytes`);
+    
+  } catch (error) {
+    report.fileSystemCheck.error = error.message;
+    debugLog.error(`File system check failed: ${error.message}`);
+  }
+  
+  // Network diagnostics
+  debugLog.info('Checking network ports...');
+  const portsToCheck = [5000, 5001, 5002, 3000, 8000];
+  for (const port of portsToCheck) {
+    const check = await checkPortAvailability(port);
+    report.networkCheck[`port_${port}`] = check;
+  }
+  
+  // Process diagnostics
+  report.processCheck = {
+    hasExpressApp: !!expressApp,
+    expressAppPid: expressApp?.pid || null,
+    expressAppKilled: expressApp?.killed || null,
+    nodeVersion: process.version,
+    platform: process.platform,
+    arch: process.arch,
+    cwd: process.cwd(),
+    memoryUsage: process.memoryUsage()
+  };
+  
+  // Write report to file
+  const reportPath = path.join(app.getPath('userData'), 'server-diagnostic-report.json');
+  try {
+    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+    debugLog.info(`Diagnostic report saved to: ${reportPath}`);
+  } catch (error) {
+    debugLog.error(`Failed to save diagnostic report: ${error.message}`);
+  }
+  
+  debugLog.info('=== DIAGNOSTIC REPORT COMPLETE ===');
+  return report;
 }
 
 async function createWindow() {
@@ -163,14 +585,17 @@ async function createWindow() {
   try {
     if (isDev) {
       // Development mode - load from dev server
+      debugLog.info('Development mode: Loading from http://localhost:5000');
       mainWindow.loadURL('http://localhost:5000');
       mainWindow.webContents.openDevTools();
     } else {
-      // Production mode - load from localhost server after ensuring it's ready
-      console.log('Loading main window from http://localhost:5000');
-      await mainWindow.loadURL('http://localhost:5000');
+      // Production mode - load from localhost server using the actual server port
+      const serverUrl = `http://localhost:${selectedServerPort}`;
+      debugLog.info(`Production mode: Loading main window from ${serverUrl}`);
+      await mainWindow.loadURL(serverUrl);
     }
   } catch (error) {
+    debugLog.error(`Failed to load main window content: ${error.message}`);
     console.error('Failed to load main window content:', error);
     
     // Fallback: try loading static files directly
@@ -178,9 +603,11 @@ async function createWindow() {
       try {
         const appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
         const indexPath = path.join(appPath, 'dist', 'public', 'index.html');
+        debugLog.info(`Fallback: loading static files from ${indexPath}`);
         console.log('Fallback: loading static files from', indexPath);
         await mainWindow.loadFile(indexPath);
       } catch (fallbackError) {
+        debugLog.error(`Fallback also failed: ${fallbackError.message}`);
         console.error('Fallback also failed:', fallbackError);
       }
     }
