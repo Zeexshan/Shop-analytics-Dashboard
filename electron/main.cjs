@@ -104,7 +104,7 @@ async function startExpressServer() {
   
   // Update diagnostics with basic system info
   serverDiagnostics.appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
-  serverDiagnostics.serverPath = path.join(serverDiagnostics.appPath, 'dist', 'index.js');
+  serverDiagnostics.serverPath = path.join(serverDiagnostics.appPath, 'dist', 'index.cjs');
   
   debugLog.info(`System Info: Node ${serverDiagnostics.nodeVersion}, Platform ${serverDiagnostics.platform}, Arch ${serverDiagnostics.arch}`);
   debugLog.info(`Electron Version: ${serverDiagnostics.electronVersion}`);
@@ -231,7 +231,7 @@ async function startServerWithFork(port = 5000) {
       }
     });
     
-    const serverProcess = fork(serverDiagnostics.serverPath.replace('.js', '.cjs'), [], {
+    const serverProcess = fork(serverDiagnostics.serverPath, [], {
       env,
       silent: false,
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
@@ -301,9 +301,9 @@ async function startServerWithSpawn(port = 5000) {
   
   try {
     debugLog.debug(`Using Electron executable as Node: ${diagnostics.nodeExecutable}`);
-    debugLog.debug(`Server path: ${serverDiagnostics.serverPath.replace('.js', '.cjs')}`);
+    debugLog.debug(`Server path: ${serverDiagnostics.serverPath}`);
     
-    const serverProcess = spawn(process.execPath, [serverDiagnostics.serverPath.replace('.js', '.cjs')], {
+    const serverProcess = spawn(process.execPath, [serverDiagnostics.serverPath], {
       env: {
         ...process.env,
         NODE_ENV: 'production',
