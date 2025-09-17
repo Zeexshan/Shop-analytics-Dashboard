@@ -42,49 +42,9 @@ function createDebugLogger() {
 
 const debugLog = createDebugLogger();
 
-// === NODE.JS EXECUTABLE DETECTION ===
-function findNodeExecutable() {
-  // In packaged Electron apps, process.execPath points to the main executable
-  // We need to find the actual Node.js runtime embedded in Electron
-  
-  if (isDev) {
-    // In development, use the system Node.js
-    return 'node';
-  }
-  
-  // For packaged apps, Electron embeds Node.js
-  // The executable path structure varies by platform
-  const electronPath = process.execPath;
-  debugLog.debug(`Electron execPath: ${electronPath}`);
-  
-  // Try different approaches to find Node.js
-  const attempts = [
-    // Attempt 1: Use system Node.js if available
-    'node',
-    // Attempt 2: Try common Node.js paths
-    'C:\\Program Files\\nodejs\\node.exe',
-    'C:\\Program Files (x86)\\nodejs\\node.exe',
-    // Attempt 3: Use process.execPath as last resort (Electron's embedded Node)
-    electronPath
-  ];
-  
-  for (const nodePath of attempts) {
-    debugLog.debug(`Checking Node.js path: ${nodePath}`);
-    try {
-      // Test if this path works by checking version
-      const { execSync } = require('child_process');
-      const version = execSync(`"${nodePath}" --version`, { encoding: 'utf8', timeout: 5000 });
-      debugLog.info(`Found working Node.js: ${nodePath} (${version.trim()})`);
-      return nodePath;
-    } catch (error) {
-      debugLog.debug(`Node.js path failed: ${nodePath} - ${error.message}`);
-    }
-  }
-  
-  // If all else fails, return the original execPath
-  debugLog.warn(`All Node.js detection methods failed, using execPath: ${electronPath}`);
-  return electronPath;
-}
+// === ELECTRON NODE.JS SERVER EXECUTION ===
+// In Electron, we use process.execPath (Electron executable) with ELECTRON_RUN_AS_NODE=1
+// This makes Electron behave like Node.js and execute our server script
 
 // zeeexshan: Application signature
 const APP_SIGNATURE_zeeexshan = 'shop_analytics_dashboard_by_zeeexshan';
@@ -254,13 +214,10 @@ async function startServerWithFork(port = 5000) {
   }
   
   try {
-    // For fork, we need to use the Node.js executable embedded in Electron
-    const nodeExecutable = findNodeExecutable();
-    
     const env = {
       ...process.env,
       NODE_ENV: 'production',
-      ELECTRON: '1',
+      ELECTRON_RUN_AS_NODE: '1', // Critical: Make Electron behave as Node
       PORT: port.toString(),
       FORCE_COLOR: '0' // Disable colors in child process
     };
@@ -274,12 +231,12 @@ async function startServerWithFork(port = 5000) {
       }
     });
     
-    const serverProcess = fork(serverDiagnostics.serverPath, [], {
+    const serverProcess = fork(serverDiagnostics.serverPath.replace('.js', '.cjs'), [], {
       env,
       silent: false,
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
       cwd: serverDiagnostics.appPath,
-      execPath: nodeExecutable // Use correct Node.js executable
+      execPath: process.execPath // Use Electron executable with ELECTRON_RUN_AS_NODE
     });
     
     diagnostics.processSpawned = true;
@@ -329,14 +286,10 @@ async function startServerWithSpawn(port = 5000) {
   debugLog.info(`Attempting spawn method for server startup on port ${port}...`);
   const { spawn } = require('child_process');
   
-  // In packaged apps, process.execPath points to the main executable, not Node
-  // We need to find the actual Node.js executable
-  const nodeExecutable = findNodeExecutable();
-  
   const diagnostics = {
     method: 'spawn',
     port,
-    nodeExecutable,
+    nodeExecutable: process.execPath, // Always use Electron executable
     serverFileExists: fs.existsSync(serverDiagnostics.serverPath),
     processSpawned: false,
     pid: null
@@ -347,13 +300,14 @@ async function startServerWithSpawn(port = 5000) {
   }
   
   try {
-    debugLog.debug(`Using Node executable: ${diagnostics.nodeExecutable}`);
+    debugLog.debug(`Using Electron executable as Node: ${diagnostics.nodeExecutable}`);
+    debugLog.debug(`Server path: ${serverDiagnostics.serverPath.replace('.js', '.cjs')}`);
     
-    const serverProcess = spawn(nodeExecutable, [serverDiagnostics.serverPath], {
+    const serverProcess = spawn(process.execPath, [serverDiagnostics.serverPath.replace('.js', '.cjs')], {
       env: {
         ...process.env,
         NODE_ENV: 'production',
-        ELECTRON: '1',
+        ELECTRON_RUN_AS_NODE: '1', // Critical: Make Electron behave as Node
         PORT: port.toString()
       },
       cwd: serverDiagnostics.appPath,
