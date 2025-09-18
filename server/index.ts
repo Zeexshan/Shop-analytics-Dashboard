@@ -33,7 +33,7 @@ function validateEnvironment() {
       'GUMROAD_PRODUCT_ID': 'ihpuq',
       'LICENSE_HASH_SALT': 'fde44662d9be69b2ed51fb82867162831c5c7eea266d3d04e148ca596a032e8c',
       'DEVICE_HASH_SALT': 'db65c403bede2554e2750c63527b8d8926008a095f1546f14a24d928cc9ced4e',
-      'FRONTEND_URL': 'http://localhost:5000'
+      'FRONTEND_URL': process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000'
     };
     
     Object.entries(defaults).forEach(([key, value]) => {
