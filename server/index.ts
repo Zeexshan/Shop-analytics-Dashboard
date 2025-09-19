@@ -10,25 +10,31 @@ const SERVER_SIGNATURE_zeeexshan = 'shop_analytics_express_server';
 
 // Critical security configuration check
 function validateEnvironment() {
-  const required = [
+  const isElectron = process.env.ELECTRON === '1' || typeof process !== 'undefined' && process.versions && process.versions.electron;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
+  // Core required secrets (always required)
+  const coreSecrets = [
     'JWT_SECRET',
-    'ADMIN_PASSWORD_HASH',
-    'ADMIN_RESET_CODE',
-    'GUMROAD_PRODUCT_PERMALINK',
-    'GUMROAD_PRODUCT_ID',
+    'ADMIN_PASSWORD_HASH', 
     'LICENSE_HASH_SALT',
-    'DEVICE_HASH_SALT',
+    'DEVICE_HASH_SALT'
+  ];
+  
+  // Optional in desktop mode
+  const webOptional = [
+    'ADMIN_RESET_CODE',
+    'GUMROAD_PRODUCT_PERMALINK', 
+    'GUMROAD_PRODUCT_ID',
     'FRONTEND_URL'
   ];
   
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  
-  if (isDevelopment) {
-    // Set default values only in development
+  // Set defaults ONLY for development and desktop apps, NEVER for production web
+  if (isDevelopment || isElectron) {
     const defaults = {
       'JWT_SECRET': '8e5f79925d1ee68a96667620ff2f9930260562b36687725db980a7adde696d2b',
-      'ADMIN_PASSWORD_HASH': '',
-      'ADMIN_RESET_CODE': 'DEPRECATED_NOT_USED',
+      'ADMIN_PASSWORD_HASH': '$2b$10$mpcR0UEa9o5taMvrBDXUj.IB5R44buNw7KLxlImhUiSf5gOvIK0Aq',
+      'ADMIN_RESET_CODE': 'SHOP2024RESET',
       'GUMROAD_PRODUCT_PERMALINK': 'ihpuq',
       'GUMROAD_PRODUCT_ID': 'ihpuq',
       'LICENSE_HASH_SALT': 'fde44662d9be69b2ed51fb82867162831c5c7eea266d3d04e148ca596a032e8c',
@@ -36,35 +42,55 @@ function validateEnvironment() {
       'FRONTEND_URL': process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000'
     };
     
+    // Set defaults for missing environment variables in dev/desktop only
     Object.entries(defaults).forEach(([key, value]) => {
       if (!process.env[key]) {
         process.env[key] = value;
-        console.log(`Setting ${key} to default value for development`);
+        if (isDevelopment) {
+          console.log(`Setting ${key} to default value for development`);
+        }
       }
     });
-  } else {
-    // In production, fail fast if any required environment variables are missing
-    const missing = required.filter(key => !process.env[key]);
+  }
+  
+  // Production web security: fail fast if core secrets missing or using known defaults
+  if (!isDevelopment && !isElectron) {
+    const knownDefaults = {
+      'JWT_SECRET': '8e5f79925d1ee68a96667620ff2f9930260562b36687725db980a7adde696d2b',
+      'ADMIN_PASSWORD_HASH': '$2b$10$mpcR0UEa9o5taMvrBDXUj.IB5R44buNw7KLxlImhUiSf5gOvIK0Aq',
+      'LICENSE_HASH_SALT': 'fde44662d9be69b2ed51fb82867162831c5c7eea266d3d04e148ca596a032e8c',
+      'DEVICE_HASH_SALT': 'db65c403bede2554e2750c63527b8d8926008a095f1546f14a24d928cc9ced4e'
+    };
     
-    if (missing.length > 0) {
-      console.error('CRITICAL: Missing required environment variables in production:');
-      missing.forEach(key => console.error(`  - ${key}`));
-      console.error('Set these in your environment before starting the server.');
+    const missing = coreSecrets.filter(key => !process.env[key] || process.env[key] === '');
+    const usingDefaults = coreSecrets.filter(key => process.env[key] === (knownDefaults as any)[key]);
+    
+    if (missing.length > 0 || usingDefaults.length > 0) {
+      console.error('CRITICAL SECURITY: Production deployment failed security validation:');
+      if (missing.length > 0) {
+        console.error('Missing required secrets:', missing);
+      }
+      if (usingDefaults.length > 0) {
+        console.error('Using known default secrets (SECURITY RISK):', usingDefaults);
+      }
+      console.error('Set unique, secure values for all core secrets before starting production server.');
       process.exit(1);
     }
   }
   
-  console.log('✓ All required environment variables are configured');
+  console.log('✓ Environment variables configured for', isElectron ? 'desktop app' : isDevelopment ? 'development' : 'production web');
 }
 
 const app = express();
 const HOST = '0.0.0.0'; // Critical: Must bind to 0.0.0.0 for Replit
 
-// CORS configuration - secure for production, permissive for development
+// CORS configuration - secure for production, permissive for development and desktop
 const isDevelopment = process.env.NODE_ENV === 'development';
+const isElectron = !!(process.env.ELECTRON === '1' || typeof process !== 'undefined' && process.versions && process.versions.electron);
+
 app.use(cors({
-  origin: isDevelopment ? true : process.env.FRONTEND_URL || false,
-  credentials: isDevelopment,
+  origin: isDevelopment || isElectron ? true : process.env.FRONTEND_URL || false,
+  credentials: isDevelopment || isElectron,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -109,8 +135,16 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
+    console.error('Server error:', err);
+    
+    if (!res.headersSent) {
+      res.status(status).json({ message });
+    }
+    
+    // Don't rethrow in production to prevent server crashes
+    if (process.env.NODE_ENV === 'development') {
+      throw err;
+    }
   });
 
   if (app.get("env") === "development") {
@@ -118,9 +152,56 @@ app.use((req, res, next) => {
     const { setupVite } = await import("./vite");
     await setupVite(app, server);
   } else {
-    // Dynamically import static serving utilities only in production
-    const { serveStatic } = await import("./vite");
-    serveStatic(app);
+    // Production mode - serve static files without Vite dependencies
+    const express = (await import("express")).default;
+    const path = (await import("path")).default;
+    const fs = (await import("fs")).default;
+    const { fileURLToPath } = await import("url");
+    
+    // Determine the correct static assets path for different environments
+    let distPath;
+    const isElectron = process.env.ELECTRON === '1' || typeof process !== 'undefined' && process.versions && process.versions.electron;
+    
+    if (isElectron) {
+      // For Electron apps, use path relative to current file location
+      const __dirname = path.dirname(fileURLToPath(import.meta.url));
+      distPath = path.resolve(__dirname, "../dist/public");
+    } else {
+      // For regular Node.js deployments, use relative to working directory
+      distPath = path.resolve(process.cwd(), "dist", "public");
+    }
+    
+    console.log(`Looking for static assets at: ${distPath}`);
+    
+    if (!fs.existsSync(distPath)) {
+      console.warn(`Build directory not found: ${distPath}, serving minimal fallback`);
+      app.get("*", (_req, res) => {
+        res.send(`<!DOCTYPE html>
+        <html><head><title>Shop Analytics Dashboard</title></head>
+        <body>
+          <h1>Shop Analytics Dashboard</h1>
+          <p>Loading...</p>
+          <script>
+            // Try to redirect to proper frontend if running in development
+            if (window.location.port === '5000') {
+              console.log('Frontend build not found, you may need to run npm run build');
+            }
+          </script>
+        </body></html>`);
+      });
+    } else {
+      app.use(express.static(distPath));
+      
+      // Fall through to index.html for SPA routing
+      app.use("*", (_req, res) => {
+        const indexPath = path.resolve(distPath, "index.html");
+        if (fs.existsSync(indexPath)) {
+          res.sendFile(indexPath);
+        } else {
+          res.status(404).send('Frontend build not found');
+        }
+      });
+    }
   }
 
   const port = parseInt(process.env.PORT || '5000', 10);
