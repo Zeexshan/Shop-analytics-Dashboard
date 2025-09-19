@@ -31,8 +31,8 @@ export class SimpleLicenseStorage {
   };
 
   constructor() {
-    // Store in app data directory
-    const dataDir = path.join(process.cwd(), 'data');
+    // Use DATA_DIR environment variable if set (from Electron), otherwise use project directory
+    const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }

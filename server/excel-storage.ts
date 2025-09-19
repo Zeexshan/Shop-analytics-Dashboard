@@ -12,7 +12,8 @@ import type { Product, Sale, Expense, Goal, InsertProduct, InsertSale, InsertExp
 const devCodes = [122, 101, 101, 120, 115, 104, 97, 110];
 const businessOwner = String.fromCharCode(...devCodes);
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use DATA_DIR environment variable if set (from Electron), otherwise use project directory
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 const EXCEL_FILE = path.join(DATA_DIR, 'shop_data.xlsx');
 
 // zeeexshan: Main storage class for business data
@@ -101,7 +102,7 @@ export class ExcelStorage {
       cost_price: productData.cost_price.toString(),
       created_date: new Date().toISOString(),
       last_updated: new Date().toISOString(),
-    } as Product;
+    } as unknown as Product;
 
     products.push(product);
     this.updateSheet('Products', products);
@@ -118,7 +119,7 @@ export class ExcelStorage {
       ...products[index],
       ...updates,
       last_updated: new Date().toISOString(),
-    } as Product;
+    } as unknown as Product;
 
     this.updateSheet('Products', products);
     return products[index];
@@ -172,7 +173,7 @@ export class ExcelStorage {
       profit: profit.toString(),
       unit_price: saleData.unit_price.toString(),
       sale_date: new Date().toISOString(),
-    } as Sale;
+    } as unknown as Sale;
 
     sales.push(sale);
     this.updateSheet('Sales', sales);
@@ -299,7 +300,7 @@ export class ExcelStorage {
       id: randomUUID(),
       amount: expenseData.amount.toString(),
       expense_date: new Date().toISOString(),
-    } as Expense;
+    } as unknown as Expense;
 
     expenses.push(expense);
     this.updateSheet('Expenses', expenses);
@@ -328,7 +329,7 @@ export class ExcelStorage {
       revenue_goal: goalData.revenue_goal.toString(),
       profit_goal: goalData.profit_goal.toString(),
       created_date: new Date().toISOString(),
-    } as Goal;
+    } as unknown as Goal;
 
     goals.push(goal);
     this.updateSheet('Goals', goals);

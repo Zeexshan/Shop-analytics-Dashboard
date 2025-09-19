@@ -104,7 +104,14 @@ async function startExpressServer() {
   
   // Update diagnostics with basic system info
   serverDiagnostics.appPath = app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
-  serverDiagnostics.serverPath = path.join(serverDiagnostics.appPath, 'dist', 'index.cjs');
+  
+  // Fix server path for packaged apps - handle app.asar properly
+  if (app.isPackaged) {
+    // In packaged builds, dist should be unpacked from asar
+    serverDiagnostics.serverPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'dist', 'index.cjs');
+  } else {
+    serverDiagnostics.serverPath = path.join(serverDiagnostics.appPath, 'dist', 'index.cjs');
+  }
   
   debugLog.info(`System Info: Node ${serverDiagnostics.nodeVersion}, Platform ${serverDiagnostics.platform}, Arch ${serverDiagnostics.arch}`);
   debugLog.info(`Electron Version: ${serverDiagnostics.electronVersion}`);
@@ -214,11 +221,16 @@ async function startServerWithFork(port = 5000) {
   }
   
   try {
+    // Get user data directory from Electron - cross-platform
+    const userDataDir = app.getPath('userData');
+    const dataDir = path.join(userDataDir, 'data');
+    
     const env = {
       ...process.env,
       NODE_ENV: 'production',
       ELECTRON_RUN_AS_NODE: '1', // Critical: Make Electron behave as Node
       PORT: port.toString(),
+      DATA_DIR: dataDir, // Pass data directory directly to server
       FORCE_COLOR: '0' // Disable colors in child process
     };
     
@@ -303,12 +315,17 @@ async function startServerWithSpawn(port = 5000) {
     debugLog.debug(`Using Electron executable as Node: ${diagnostics.nodeExecutable}`);
     debugLog.debug(`Server path: ${serverDiagnostics.serverPath}`);
     
+    // Get user data directory from Electron - cross-platform  
+    const userDataDir = app.getPath('userData');
+    const dataDir = path.join(userDataDir, 'data');
+    
     const serverProcess = spawn(process.execPath, [serverDiagnostics.serverPath], {
       env: {
         ...process.env,
         NODE_ENV: 'production',
         ELECTRON_RUN_AS_NODE: '1', // Critical: Make Electron behave as Node
-        PORT: port.toString()
+        PORT: port.toString(),
+        DATA_DIR: dataDir // Pass data directory directly to server
       },
       cwd: serverDiagnostics.appPath,
       stdio: ['pipe', 'pipe', 'pipe']

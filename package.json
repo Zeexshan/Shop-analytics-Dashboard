@@ -137,6 +137,9 @@
       "electron/**/*",
       "assets/**/*"
     ],
+    "asarUnpack": [
+      "dist/**/*"
+    ],
     "win": {
       "icon": "assets/logo.png",
       "target": "nsis"

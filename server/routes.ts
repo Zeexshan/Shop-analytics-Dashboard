@@ -487,8 +487,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const saltRounds = 12;
       const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-      // Save new password hash
-      const dataDir = path.join(process.cwd(), 'data');
+      // Save new password hash - use DATA_DIR environment variable if set (from Electron)
+      const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
       if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
       }

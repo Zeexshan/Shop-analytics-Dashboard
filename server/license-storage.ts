@@ -7,7 +7,8 @@ import { createHash } from 'crypto';
 import path from 'path';
 import fs from 'fs';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use DATA_DIR environment variable if set (from Electron), otherwise use project directory
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 const LICENSE_DB = path.join(DATA_DIR, 'licenses.db');
 
 export interface LicenseRecord {
