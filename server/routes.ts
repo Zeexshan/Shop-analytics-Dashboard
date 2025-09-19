@@ -158,6 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         body: new URLSearchParams({
           product_permalink: config.GUMROAD_PRODUCT_PERMALINK,
+          product_id: '9jzvbqovj9HtIE1MUCU3sQ==',
           license_key: licenseKey,
           increment_uses_count: 'false'
         }).toString()
@@ -214,6 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         body: new URLSearchParams({
           product_permalink: config.GUMROAD_PRODUCT_PERMALINK, // Use 'ihpuq' as default
+          product_id: '9jzvbqovj9HtIE1MUCU3sQ==',
           license_key,
           increment_uses_count: 'true' // Track usage for first activation
         }).toString()
@@ -403,6 +405,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         body: new URLSearchParams({
           product_permalink: product_permalink || config.GUMROAD_PRODUCT_PERMALINK,
+          product_id: '9jzvbqovj9HtIE1MUCU3sQ==',
           license_key,
           increment_uses_count: 'false'
         }).toString()
