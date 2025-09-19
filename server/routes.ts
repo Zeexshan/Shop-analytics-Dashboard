@@ -149,13 +149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('License key validation initiated');
 
       // Verify license key using Gumroad API - NO FALLBACKS for security
-      const GUMROAD_PRODUCT_PERMALINK = process.env.GUMROAD_PRODUCT_PERMALINK;
-      const GUMROAD_PRODUCT_ID = process.env.GUMROAD_PRODUCT_ID || '9jzvbqovj9HtIE1MUCU3sQ==';
-
-      if (!GUMROAD_PRODUCT_PERMALINK) {
-        console.error('CRITICAL: Gumroad product permalink not configured');
-        return res.status(500).json({ message: 'Service temporarily unavailable' });
-      }
+      const config = getSecureConfig();
 
       const gumroadResponse = await fetch('https://api.gumroad.com/v2/licenses/verify', {
         method: 'POST',
@@ -163,8 +157,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          product_permalink: GUMROAD_PRODUCT_PERMALINK,
-          product_id: GUMROAD_PRODUCT_ID,
+          product_permalink: config.GUMROAD_PRODUCT_PERMALINK,
           license_key: licenseKey,
           increment_uses_count: 'false'
         }).toString()
@@ -212,15 +205,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log('Activating license for device:', device_name || 'Unknown Device');
 
-      // First verify with Gumroad
+      // First verify with Gumroad - use correct product permalink
+      const config = getSecureConfig();
       const gumroadResponse = await fetch('https://api.gumroad.com/v2/licenses/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          product_permalink: process.env.GUMROAD_PRODUCT_PERMALINK!,
-          product_id: process.env.GUMROAD_PRODUCT_ID || '9jzvbqovj9HtIE1MUCU3sQ==',
+          product_permalink: config.GUMROAD_PRODUCT_PERMALINK, // Use 'ihpuq' as default
           license_key,
           increment_uses_count: 'true' // Track usage for first activation
         }).toString()
@@ -228,8 +221,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const gumroadData = await gumroadResponse.json();
       console.log('Gumroad activation response status:', gumroadData.success ? 'Valid' : 'Invalid');
+      console.log('Gumroad response details:', { 
+        success: gumroadData.success, 
+        message: gumroadData.message,
+        uses: gumroadData.uses 
+      });
+      console.log('License verification request details:', {
+        product_permalink: config.GUMROAD_PRODUCT_PERMALINK,
+        license_key_preview: license_key.substring(0, 8) + '...',
+        api_url: 'https://api.gumroad.com/v2/licenses/verify'
+      });
 
-      if (!gumroadData.success || gumroadData.uses < 0) {
+      if (!gumroadData.success) {
         return res.status(401).json({
           success: false,
           message: 'Invalid license key'
@@ -384,22 +387,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { product_permalink, license_key } = req.body;
 
-      if (!product_permalink || !license_key) {
+      if (!license_key) {
         return res.status(400).json({ 
           success: false, 
-          message: 'Product permalink and license key are required. Please use the new activation system.' 
+          message: 'License key is required' 
         });
       }
 
       // For backward compatibility, we'll do a simple verification
+      const config = getSecureConfig();
       const gumroadResponse = await fetch('https://api.gumroad.com/v2/licenses/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          product_permalink,
-          product_id: '9jzvbqovj9HtIE1MUCU3sQ==',
+          product_permalink: product_permalink || config.GUMROAD_PRODUCT_PERMALINK,
           license_key,
           increment_uses_count: 'false'
         }).toString()
