@@ -107,8 +107,23 @@ async function startExpressServer() {
   
   // Fix server path for packaged apps - handle app.asar properly
   if (app.isPackaged) {
-    // In packaged builds, dist should be unpacked from asar
-    serverDiagnostics.serverPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'dist', 'index.cjs');
+    // Try multiple possible locations for the server file
+    const possiblePaths = [
+      path.join(process.resourcesPath, 'app.asar.unpacked', 'dist', 'index.cjs'),
+      path.join(app.getAppPath(), 'dist', 'index.cjs'),
+      path.join(process.resourcesPath, 'app.asar', 'dist', 'index.cjs'),
+    ];
+    
+    for (const serverPath of possiblePaths) {
+      if (fs.existsSync(serverPath)) {
+        serverDiagnostics.serverPath = serverPath;
+        break;
+      }
+    }
+    
+    if (!serverDiagnostics.serverPath) {
+      serverDiagnostics.serverPath = possiblePaths[0]; // fallback
+    }
   } else {
     serverDiagnostics.serverPath = path.join(serverDiagnostics.appPath, 'dist', 'index.cjs');
   }
@@ -236,7 +251,7 @@ async function startServerWithFork(port = 5000) {
     
     debugLog.debug('Environment variables for fork:');
     Object.keys(env).forEach(key => {
-      if (key.includes('SECRET') || key.includes('HASH')) {
+      if (key.includes('SECRET') || key.includes('HASH') || key.includes('RESET') || key.includes('TOKEN') || key.includes('KEY')) {
         debugLog.debug(`  ${key}: [HIDDEN]`);
       } else {
         debugLog.debug(`  ${key}: ${env[key]}`);
@@ -247,7 +262,7 @@ async function startServerWithFork(port = 5000) {
       env,
       silent: false,
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
-      cwd: serverDiagnostics.appPath,
+      cwd: process.resourcesPath || path.dirname(serverDiagnostics.serverPath),
       execPath: process.execPath // Use Electron executable with ELECTRON_RUN_AS_NODE
     });
     
@@ -327,7 +342,7 @@ async function startServerWithSpawn(port = 5000) {
         PORT: port.toString(),
         DATA_DIR: dataDir // Pass data directory directly to server
       },
-      cwd: serverDiagnostics.appPath,
+      cwd: process.resourcesPath || path.dirname(serverDiagnostics.serverPath),
       stdio: ['pipe', 'pipe', 'pipe']
     });
     

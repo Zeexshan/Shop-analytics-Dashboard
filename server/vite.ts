@@ -74,9 +74,14 @@ export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
 
   if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
+    // In production, create a simple fallback if static files aren't found
+    console.warn(`Build directory not found: ${distPath}, serving minimal fallback`);
+    app.get("*", (_req, res) => {
+      res.send(`<!DOCTYPE html>
+      <html><head><title>Shop Analytics Dashboard</title></head>
+      <body><h1>Shop Analytics Dashboard</h1><p>Loading...</p></body></html>`);
+    });
+    return;
   }
 
   app.use(express.static(distPath));

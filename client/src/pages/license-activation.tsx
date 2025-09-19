@@ -58,11 +58,13 @@ export default function LicenseActivation({ onLicenseVerified }: LicenseActivati
         });
       }
     } catch (error) {
+      console.error('License activation error:', error);
       console.error('License verification error:', error);
-      setVerificationError('Unable to verify license. Please check your internet connection and try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unable to verify license. Please check your internet connection and try again.';
+      setVerificationError(errorMessage);
       toast({
         title: "Verification Error",
-        description: "Unable to connect to license server. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
