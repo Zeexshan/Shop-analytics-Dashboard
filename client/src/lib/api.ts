@@ -15,9 +15,24 @@ const getAuthHeaders = (): Record<string, string> => {
 };
 
 export const api = {
-  get: async (url: string) => {
+  get: async (url: string, options?: { params?: Record<string, any> }) => {
     const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
-    const response = await fetch(fullUrl, {
+    let finalUrl = fullUrl;
+    
+    if (options?.params) {
+      const searchParams = new URLSearchParams();
+      Object.entries(options.params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      });
+      const queryString = searchParams.toString();
+      if (queryString) {
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + queryString;
+      }
+    }
+    
+    const response = await fetch(finalUrl, {
       credentials: 'include',
       headers: getAuthHeaders()
     });

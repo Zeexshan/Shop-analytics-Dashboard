@@ -33,12 +33,16 @@ function LicenseProtectedApp({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check if license is already activated
-    const isActive = licenseManager.isLicenseActive();
-    setIsLicenseValid(isActive);
+    const checkLicense = async () => {
+      const isActive = await licenseManager.isLicenseActive();
+      setIsLicenseValid(isActive);
+      
+      if (isActive) {
+        console.log('License already activated');
+      }
+    };
     
-    if (isActive) {
-      console.log('License already activated');
-    }
+    checkLicense();
   }, []);
 
   const handleLicenseVerified = (data: LicenseData) => {
