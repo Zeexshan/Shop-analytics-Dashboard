@@ -10,7 +10,7 @@
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:client": "vite --host 0.0.0.0 --port 5000",
-    "build": "vite build && esbuild server/index.ts --platform=node --bundle --format=cjs --outdir=dist --out-extension:.js=.cjs --external:electron --external:better-sqlite3 --external:lightningcss --external:@babel/preset-typescript --external:sharp --external:vite --external:esbuild --external:@vitejs/plugin-react --external:@tanstack/react-query",
+    "build": "vite build && esbuild server/index.ts --platform=node --bundle --format=cjs --outdir=dist --out-extension:.js=.cjs --external:electron --external:better-sqlite3 --external:lightningcss --external:@babel/preset-typescript --external:sharp --external:vite --external:esbuild --external:@vitejs/plugin-react --external:@tanstack/react-query --define:process.env.NODE_ENV='\"production\"'",
     "start": "cross-env NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
     "db:push": "drizzle-kit push",

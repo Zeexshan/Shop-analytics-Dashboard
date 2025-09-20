@@ -147,11 +147,11 @@ async function startExpressServer() {
     debugLog.info('Port 5000 is available for server binding');
   }
   
-  // Step 2: Attempt multiple server startup methods
+  // Step 2: Attempt multiple server startup methods (require first - most reliable)
   const startupMethods = [
+    { name: 'require_method', handler: () => startServerWithRequire(5000) },
     { name: 'fork_method', handler: () => startServerWithFork(5000) },
     { name: 'spawn_method', handler: () => startServerWithSpawn(5000) },
-    { name: 'require_method', handler: () => startServerWithRequire(5000) },
     { name: 'alternative_port', handler: startServerOnAlternativePort }
   ];
   
@@ -398,6 +398,10 @@ async function startServerWithRequire(port = 5000) {
     process.env.NODE_ENV = 'production';
     process.env.ELECTRON = '1';
     process.env.PORT = port.toString();
+    process.env.DATA_DIR = app.getPath('userData');
+    
+    // Load all environment variables from the defaults
+    loadEnvironmentVariables();
     
     debugLog.info('Attempting to require server directly...');
     require(serverDiagnostics.serverPath);

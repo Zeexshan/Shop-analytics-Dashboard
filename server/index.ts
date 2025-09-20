@@ -147,7 +147,7 @@ app.use((req, res, next) => {
     }
   });
 
-  if (app.get("env") === "development") {
+  if (process.env.NODE_ENV === "development") {
     // Dynamically import Vite utilities only in development
     const { setupVite } = await import("./vite");
     await setupVite(app, server);
@@ -163,12 +163,12 @@ app.use((req, res, next) => {
     const isElectron = process.env.ELECTRON === '1' || typeof process !== 'undefined' && process.versions && process.versions.electron;
     
     if (isElectron) {
-      // For Electron apps, use path relative to current file location
-      const __dirname = path.dirname(fileURLToPath(import.meta.url));
-      distPath = path.resolve(__dirname, "../dist/public");
+      // For Electron apps, use path relative to current file location  
+      const __dirname = path.dirname(__filename || '.');
+      distPath = path.resolve(__dirname, "../dist");
     } else {
       // For regular Node.js deployments, use relative to working directory
-      distPath = path.resolve(process.cwd(), "dist", "public");
+      distPath = path.resolve(process.cwd(), "dist");
     }
     
     console.log(`Looking for static assets at: ${distPath}`);
