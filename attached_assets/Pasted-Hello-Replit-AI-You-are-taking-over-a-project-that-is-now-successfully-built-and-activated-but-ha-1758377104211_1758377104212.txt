@@ -1,0 +1,34 @@
+Hello Replit AI,
+
+You are taking over a project that is now successfully built and activated, but has several critical, final bugs that prevent it from being commercially viable. Your task is to fix these remaining issues.
+
+Part 1: Current Project Status
+License & Login (✅ WORKING): The application's license system activates correctly, and users can successfully log in with the default credentials (admin / ShopOwner@2024) to see the main dashboard. Do not change the login or initial activation logic.
+
+Build System (✅ WORKING): The automated GitHub Actions workflow correctly builds the final .exe installer.
+
+Part 2: The Final, Unsolved Problems
+There are two categories of critical issues that must be fixed.
+
+A. (!!! VERY IMPORTANT !!!) Enforce One-License-Per-Device
+
+The Problem: The current license activation logic can be used multiple times on different devices. This is a critical security flaw for a commercial application.
+
+The Fix: You must enforce a one-license-per-device policy. To do this, modify the Gumroad API call in electron/activation-window.cjs. You must find the increment_uses_count parameter in the request body and change its value from 'false' to 'true'. This will instruct Gumroad to mark the license as used upon the first successful activation, preventing it from being used again on another device.
+
+B. All Post-Login Features are Broken
+
+The Problem: After a user successfully logs in, the application is completely non-functional.
+
+The dashboard shows no data (KPIs, charts, etc.).
+
+The reports section is empty, even after creating sales.
+
+The "Reset Data" feature does not work.
+
+The "Reset Password" feature does not work.
+
+The Root Cause (Confirmed by Console Logs): The console log shows that every API request made after the user logs in is failing with 401 (Unauthorized) and 403 (Forbidden) errors. This proves that there is a critical flaw in the backend's authentication middleware. The JWT token generated during login is not being correctly validated by the protected API routes. As a result, the backend is rejecting all requests from the logged-in user, causing all features to fail.
+
+Part 3: Your Task
+Your task is to fix both of the above issues. The primary goal is to create a fully functional and secure .exe installer.

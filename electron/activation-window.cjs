@@ -74,7 +74,7 @@ function verifyLicense(licenseKey) {
     const postData = new URLSearchParams({
       product_id: GUMROAD_PRODUCT_ID,
       license_key: licenseKey.trim(),
-      increment_uses_count: 'false'
+      increment_uses_count: 'true'
     }).toString();
 
     logToFile(`Starting license verification for key: ${licenseKey.substring(0, 8)}...`);
