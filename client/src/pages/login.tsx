@@ -61,6 +61,8 @@ export default function LoginPage() {
   const forgotPasswordHandler = atob('emVleHNoYW4tZm9yZ290LXBhc3N3b3Jk');
   
   const handleForgotPassword = async () => {
+    console.log('Forgot password clicked, license key:', licenseKey);
+    
     if (!licenseKey.trim()) {
       toast({
         title: "License Key Required",
@@ -70,13 +72,17 @@ export default function LoginPage() {
       return;
     }
     
+    const requestBody = { 
+      licenseKey: licenseKey.trim()
+    };
+    
+    console.log('Sending forgot password request:', requestBody);
+    
     try {
       const response = await fetch(getApiUrl('/api/auth/forgot-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          licenseKey: licenseKey.trim()
-        })
+        body: JSON.stringify(requestBody)
       });
       
       if (response.ok) {

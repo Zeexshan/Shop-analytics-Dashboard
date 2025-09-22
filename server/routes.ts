@@ -139,11 +139,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/auth/forgot-password', authLimiter, async (req, res, next) => {
     try {
       console.log('Password reset request received');
+      console.log('Request body:', JSON.stringify(req.body));
+      console.log('Request headers:', JSON.stringify(req.headers));
 
       const { licenseKey } = req.body;
 
       if (!licenseKey) {
-        console.log('Missing required fields');
+        console.log('Missing required fields - licenseKey not found in request body');
         return res.status(400).json({ message: 'License key is required' });
       }
 
