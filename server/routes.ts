@@ -13,35 +13,13 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
+import rateLimit from 'express-rate-limit';
 
 // Method 4: Hex encoding
 const creator = String.fromCharCode(0x7a, 0x65, 0x65, 0x78, 0x73, 0x68, 0x61, 0x6e);
 
-// Production defaults for authentication system
-const PRODUCTION_DEFAULTS = {
-  ADMIN_USERNAME: 'admin',
-  ADMIN_PASSWORD: 'ShopOwner@2024',
-  // Pre-computed bcrypt hash for 'ShopOwner@2024' (rounds=10) - verified working
-  ADMIN_PASSWORD_HASH: '$2b$10$mpcR0UEa9o5taMvrBDXUj.IB5R44buNw7KLxlImhUiSf5gOvIK0Aq',
-  ADMIN_RESET_CODE: 'SHOP2024RESET',
-  JWT_SECRET: 'zeeexshan_shop_analytics_jwt_secret_2024_secure_token_key',
-  LICENSE_HASH_SALT: 'l1c3ns3_h4sh_s4lt_2024_zeeexshan_analytics',
-  DEVICE_HASH_SALT: 'dev1c3_h4sh_s4lt_2024_zeeexshan_secure',
-  GUMROAD_PRODUCT_PERMALINK: 'ihpuq'
-};
-
-function getSecureConfig() {
-  return {
-    ADMIN_USERNAME: process.env.ADMIN_USERNAME || PRODUCTION_DEFAULTS.ADMIN_USERNAME,
-    ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH || PRODUCTION_DEFAULTS.ADMIN_PASSWORD_HASH,
-    ADMIN_RESET_CODE: process.env.ADMIN_RESET_CODE || PRODUCTION_DEFAULTS.ADMIN_RESET_CODE,
-    JWT_SECRET: process.env.JWT_SECRET || PRODUCTION_DEFAULTS.JWT_SECRET,
-    LICENSE_HASH_SALT: process.env.LICENSE_HASH_SALT || PRODUCTION_DEFAULTS.LICENSE_HASH_SALT,
-    DEVICE_HASH_SALT: process.env.DEVICE_HASH_SALT || PRODUCTION_DEFAULTS.DEVICE_HASH_SALT,
-    GUMROAD_PRODUCT_ID: process.env.GUMROAD_PRODUCT_ID || 'ihpuq',
-    GUMROAD_PRODUCT_PERMALINK: process.env.GUMROAD_PRODUCT_PERMALINK || 'ihpuq'
-  };
-}
+// Import centralized configuration
+import { getSecureConfig } from "./config";
 
 // Helper function to get JWT secret at runtime (after environment validation)
 function getJwtSecret(): string {
@@ -49,10 +27,27 @@ function getJwtSecret(): string {
   return config.JWT_SECRET;
 }
 
+// Rate limiting for authentication endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: { message: 'Too many authentication attempts, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const licenseLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // Limit each IP to 10 license requests per hour
+  message: { message: 'Too many license requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // --- THIS IS THE ONLY SECTION THAT HAS BEEN CHANGED ---
   // It no longer depends on storage.ts, removing the timing issue.
-  app.post('/api/auth/login', async (req, res, next) => {
+  app.post('/api/auth/login', authLimiter, async (req, res, next) => {
     try {
       console.log('Login attempt:', { 
         username: req.body.username, 
@@ -132,16 +127,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ user: req.user });
   });
 
-  // Secure password reset with admin reset code
-  app.post('/api/auth/forgot-password', async (req, res, next) => {
+  // Secure password reset with admin reset code validation
+  app.post('/api/auth/forgot-password', authLimiter, async (req, res, next) => {
     try {
       console.log('Password reset request received');
 
-      const { licenseKey } = req.body;
+      const { licenseKey, adminResetCode } = req.body;
 
-      if (!licenseKey) {
-        console.log('No license key provided');
-        return res.status(400).json({ message: 'License key is required' });
+      if (!licenseKey || !adminResetCode) {
+        console.log('Missing required fields');
+        return res.status(400).json({ message: 'License key and admin reset code are required' });
+      }
+
+      // Validate admin reset code
+      const config = getSecureConfig();
+      if (adminResetCode !== config.ADMIN_RESET_CODE) {
+        console.log('Invalid admin reset code provided');
+        return res.status(401).json({ message: 'Invalid admin reset code. Contact support if you need assistance.' });
       }
 
       console.log('Verifying license key against local storage');
@@ -156,7 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(401).json({ message: 'Invalid license key. Please use the license key that was used to activate this application.' });
         }
 
-        console.log('License key verified against local storage - password reset authorized');
+        console.log('License key and admin reset code verified - password reset authorized');
 
         // Remove any temporary password file to revert to default password
         const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
@@ -166,7 +168,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         res.json({ 
-          message: 'Password has been reset to the default admin password. Please log in with your original admin credentials.',
+          message: 'Password has been reset successfully. Please log in with the default admin credentials.',
           resetAt: new Date().toISOString()
         });
       } catch (error) {
@@ -181,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enhanced device-bound license activation endpoint
-  app.post('/api/license/activate', async (req, res, next) => {
+  app.post('/api/license/activate', licenseLimiter, async (req, res, next) => {
     try {
       const { license_key, device_id, device_name } = req.body;
 

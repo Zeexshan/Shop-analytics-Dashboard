@@ -68,6 +68,17 @@ export default function LoginPage() {
       });
       return;
     }
+
+    // Prompt for admin reset code - never hardcode it
+    const adminResetCode = prompt('Enter admin reset code:');
+    if (!adminResetCode) {
+      toast({
+        title: "Reset Code Required",
+        description: "Admin reset code is required for password reset.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     try {
       const response = await fetch(getApiUrl('/api/auth/forgot-password'), {
@@ -75,14 +86,14 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           licenseKey: licenseKey.trim(),
-          adminResetCode: 'RESET-ADMIN-2024'
+          adminResetCode: adminResetCode.trim()
         })
       });
       
       if (response.ok) {
         toast({
           title: "Password Reset Successful", 
-          description: "Your password has been reset to the default. Please login with: admin / ShopOwner@2024",
+          description: "Your password has been reset to the default. Please login with your original admin credentials.",
         });
         setIsForgotPasswordOpen(false);
         setLicenseKey('');

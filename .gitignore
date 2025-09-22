@@ -1,24 +1,7 @@
-# Dependencies
-/node_modules
-
-# Build output
-/dist
-/dist-electron
-
-# Environment variables
+data/
+*.log
+node_modules/
+dist/
 .env
-
-# Other temp files
-/.replit
-/.local/
-
-# Dependencies
-/node_modules
-
-# Build output
-/dist
-/dist-electron
-
-# Environment variables
-.envdata/
-ShopOwner@2024
+data/**
+**/*.db
