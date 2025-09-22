@@ -210,7 +210,7 @@ export class SimpleLicenseStorage {
     } catch (error) {
       return {
         success: false,
-        message: 'Failed to activate device'
+        message: (error as Error).message || 'Failed to activate device'
       };
     }
   }

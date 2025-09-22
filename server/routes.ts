@@ -229,10 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Store license in our database  
-      await licenseStorage.storeLicense(license_key, gumroadData);
-
-      // Activate device
+      // Activate device (this will handle storing the license with correct device ID)
       const activationResult = await licenseStorage.activateDevice(
         license_key, 
         device_id, 
