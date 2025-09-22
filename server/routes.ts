@@ -135,23 +135,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ user: req.user });
   });
 
-  // Secure password reset with admin reset code validation
+  // Secure password reset with license key verification
   app.post('/api/auth/forgot-password', authLimiter, async (req, res, next) => {
     try {
       console.log('Password reset request received');
 
-      const { licenseKey, adminResetCode } = req.body;
+      const { licenseKey } = req.body;
 
-      if (!licenseKey || !adminResetCode) {
+      if (!licenseKey) {
         console.log('Missing required fields');
-        return res.status(400).json({ message: 'License key and admin reset code are required' });
-      }
-
-      // Validate admin reset code
-      const config = getSecureConfig();
-      if (adminResetCode !== config.ADMIN_RESET_CODE) {
-        console.log('Invalid admin reset code provided');
-        return res.status(401).json({ message: 'Invalid admin reset code. Contact support if you need assistance.' });
+        return res.status(400).json({ message: 'License key is required' });
       }
 
       console.log('Verifying license key against local storage');
@@ -166,7 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(401).json({ message: 'Invalid license key. Please use the license key that was used to activate this application.' });
         }
 
-        console.log('License key and admin reset code verified - password reset authorized');
+        console.log('License key verified - password reset authorized');
 
         // Remove any temporary password file to revert to default password
         const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');

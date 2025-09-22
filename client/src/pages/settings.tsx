@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { getApiUrl } from '@/config/api';
 import { Label } from '@/components/ui/label';
-import { Lock, Shield, User, Key, Database, BarChart3, AlertTriangle, Trash2 } from 'lucide-react';
+import { Lock, Shield, User, Key, Database, BarChart3, AlertTriangle, Trash2, Eye, EyeOff } from 'lucide-react';
 
 // Developer: zeeexshan - Professional Settings Management
 const SETTINGS_SIGNATURE_zeeexshan = 'shop_analytics_settings_page';
@@ -231,6 +231,9 @@ export default function SettingsPage() {
   const [activationData, setActivationData] = useState<any>(null);
   const [licenseInfo, setLicenseInfo] = useState<any>(null);
   const [isLoadingLicense, setIsLoadingLicense] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
   const form = useForm<PasswordChangeData>({
@@ -411,11 +414,27 @@ export default function SettingsPage() {
                       <FormItem>
                         <FormLabel>Current Password</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="password" 
-                            placeholder="Enter your current password" 
-                            {...field} 
-                          />
+                          <div className="relative">
+                            <Input 
+                              type={showCurrentPassword ? "text" : "password"} 
+                              placeholder="Enter your current password" 
+                              {...field} 
+                              className="pr-10"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                            >
+                              {showCurrentPassword ? (
+                                <EyeOff className="h-4 w-4 text-gray-400" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-gray-400" />
+                              )}
+                            </Button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -429,11 +448,27 @@ export default function SettingsPage() {
                       <FormItem>
                         <FormLabel>New Password</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="password" 
-                            placeholder="Enter your new password (min 8 characters)" 
-                            {...field} 
-                          />
+                          <div className="relative">
+                            <Input 
+                              type={showNewPassword ? "text" : "password"} 
+                              placeholder="Enter your new password (min 8 characters)" 
+                              {...field} 
+                              className="pr-10"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                              onClick={() => setShowNewPassword(!showNewPassword)}
+                            >
+                              {showNewPassword ? (
+                                <EyeOff className="h-4 w-4 text-gray-400" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-gray-400" />
+                              )}
+                            </Button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -447,11 +482,27 @@ export default function SettingsPage() {
                       <FormItem>
                         <FormLabel>Confirm New Password</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="password" 
-                            placeholder="Confirm your new password" 
-                            {...field} 
-                          />
+                          <div className="relative">
+                            <Input 
+                              type={showConfirmPassword ? "text" : "password"} 
+                              placeholder="Confirm your new password" 
+                              {...field} 
+                              className="pr-10"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                              {showConfirmPassword ? (
+                                <EyeOff className="h-4 w-4 text-gray-400" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-gray-400" />
+                              )}
+                            </Button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
