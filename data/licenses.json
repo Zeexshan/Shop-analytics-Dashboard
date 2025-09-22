@@ -1,5 +1,16 @@
 {
-  "licenses": [],
+  "licenses": [
+    {
+      "id": "7b050c61d49e02d2d803a74163cd784f",
+      "licenseKey": "3B4D1103-6DF14AF4-89FFDC06-88FACB33",
+      "deviceId": "7323111834e62c76cfc772d028643a08",
+      "activatedAt": "2025-09-22T11:21:03.431Z",
+      "lastHeartbeat": "2025-09-22T11:21:03.431Z",
+      "isActive": true,
+      "uses": 1,
+      "metadata": "gumroad:Xw8yZxGdTwarDhCzxgH2JQ=="
+    }
+  ],
   "version": "1.0.0",
   "createdAt": "2025-09-11T13:32:47.416Z"
 }
