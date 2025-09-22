@@ -74,7 +74,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: 'Invalid credentials', success: false });
       }
 
-      const isValidPassword = await bcrypt.compare(password, config.ADMIN_PASSWORD_HASH);
+      // Check password against stored file first (from previous password changes), then environment
+      const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
+      let currentHashedPassword: string;
+      
+      try {
+        if (fs.existsSync(passwordFile)) {
+          const passwordData = JSON.parse(fs.readFileSync(passwordFile, 'utf8'));
+          currentHashedPassword = passwordData.hashedPassword;
+        } else {
+          currentHashedPassword = config.ADMIN_PASSWORD_HASH;
+        }
+      } catch (error) {
+        currentHashedPassword = config.ADMIN_PASSWORD_HASH;
+      }
+
+      const isValidPassword = await bcrypt.compare(password, currentHashedPassword);
       console.log('Password validation:', { isValid: isValidPassword });
 
       if (!isValidPassword) {

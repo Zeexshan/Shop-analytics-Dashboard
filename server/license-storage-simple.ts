@@ -78,20 +78,37 @@ export class SimpleLicenseStorage {
   }
 
   public activateLicense(licenseKey: string, deviceId: string, metadata?: string): LicenseData {
-    // Check if license already exists for this device
+    // CRITICAL SECURITY: Check if license already exists for this device
     const existing = this.data.licenses.find(l => 
       l.licenseKey === licenseKey && l.deviceId === deviceId
     );
 
     if (existing) {
-      // Update existing activation
+      // Update existing activation on same device
       existing.lastHeartbeat = new Date().toISOString();
       existing.isActive = true;
       this.saveData();
       return existing;
     }
 
-    // Create new activation
+    // COMMERCIAL LICENSE PROTECTION: Check if license is already used on a different device
+    const existingOnOtherDevice = this.data.licenses.find(l => 
+      l.licenseKey === licenseKey && l.deviceId !== deviceId && l.isActive
+    );
+
+    if (existingOnOtherDevice) {
+      throw new Error('License key is already activated on another device. Each license can only be used on one device.');
+    }
+
+    // Check total device count for this license (including inactive ones for stricter control)
+    const deviceCount = this.data.licenses.filter(l => l.licenseKey === licenseKey).length;
+    const MAX_DEVICES_PER_LICENSE = 1; // Commercial license: one device only
+
+    if (deviceCount >= MAX_DEVICES_PER_LICENSE) {
+      throw new Error(`License key has reached maximum device limit (${MAX_DEVICES_PER_LICENSE} device per license). Purchase additional licenses for more devices.`);
+    }
+
+    // Create new activation - only allowed if no other active devices
     const license: LicenseData = {
       id: this.generateId(),
       licenseKey,
