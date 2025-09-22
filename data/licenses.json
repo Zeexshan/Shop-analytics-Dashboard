@@ -75,6 +75,57 @@
       "isActive": true,
       "uses": 1,
       "metadata": "Windows PC (Win32)"
+    },
+    {
+      "id": "de9c994a68f2544686c2b30abf0b7e00",
+      "licenseKey": "AC9E3BE5-7C674049-9FE900F9-201B5F7D",
+      "deviceId": {
+        "success": true,
+        "uses": 1,
+        "purchase": {
+          "seller_id": "iNJbf3_2fQOGoa1QI9nDkQ==",
+          "product_id": "9jzvbqovj9HtIE1MUCU3sQ==",
+          "product_name": "Shop Analytics Dashboard",
+          "permalink": "ihpuq",
+          "product_permalink": "https://zeeexshan.gumroad.com/l/ihpuq",
+          "short_product_id": "ihpuq",
+          "email": "zeeexshanxkhan@gmail.com",
+          "price": 566,
+          "gumroad_fee": 107,
+          "currency": "inr",
+          "quantity": 1,
+          "discover_fee_charged": false,
+          "can_contact": true,
+          "referrer": "direct",
+          "card": {
+            "visual": null,
+            "type": null,
+            "bin": null,
+            "expiry_month": null,
+            "expiry_year": null
+          },
+          "order_number": 1019263969,
+          "sale_id": "mP7aHTURnA20ZYlHI2dbXw==",
+          "sale_timestamp": "2025-09-22T12:45:08Z",
+          "purchaser_id": "5339951620699",
+          "test": true,
+          "license_key": "AC9E3BE5-7C674049-9FE900F9-201B5F7D",
+          "ip_country": "India",
+          "is_gift_receiver_purchase": false,
+          "refunded": false,
+          "disputed": false,
+          "dispute_won": false,
+          "id": "mP7aHTURnA20ZYlHI2dbXw==",
+          "created_at": "2025-09-22T12:45:08Z",
+          "variants": "",
+          "custom_fields": [],
+          "chargebacked": false
+        }
+      },
+      "activatedAt": "2025-09-22T12:45:20.669Z",
+      "lastHeartbeat": "2025-09-22T12:45:20.669Z",
+      "isActive": true,
+      "uses": 1
     }
   ],
   "version": "1.0.0",
