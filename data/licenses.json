@@ -9,6 +9,72 @@
       "isActive": true,
       "uses": 1,
       "metadata": "gumroad:Xw8yZxGdTwarDhCzxgH2JQ=="
+    },
+    {
+      "id": "d55b5987e719665920a685c45f1523d3",
+      "licenseKey": "3B4D1103-6DF14AF4-89FFDC06-88FACB33",
+      "deviceId": {
+        "success": true,
+        "uses": 2,
+        "purchase": {
+          "seller_id": "iNJbf3_2fQOGoa1QI9nDkQ==",
+          "product_id": "9jzvbqovj9HtIE1MUCU3sQ==",
+          "product_name": "Shop Analytics Dashboard",
+          "permalink": "ihpuq",
+          "product_permalink": "https://zeeexshan.gumroad.com/l/ihpuq",
+          "short_product_id": "ihpuq",
+          "email": "zixshankhan@gmail.com",
+          "price": 0,
+          "gumroad_fee": 0,
+          "currency": "inr",
+          "quantity": 1,
+          "discover_fee_charged": false,
+          "can_contact": true,
+          "referrer": "direct",
+          "card": {
+            "visual": null,
+            "type": null,
+            "bin": null,
+            "expiry_month": null,
+            "expiry_year": null
+          },
+          "order_number": 1039986145,
+          "sale_id": "Xw8yZxGdTwarDhCzxgH2JQ==",
+          "sale_timestamp": "2025-09-10T12:37:10Z",
+          "purchaser_id": "5339951620699",
+          "offer_code": {
+            "code": "ulghtdm",
+            "displayed_amount_off": "100%",
+            "name": "ulghtdm"
+          },
+          "test": true,
+          "license_key": "3B4D1103-6DF14AF4-89FFDC06-88FACB33",
+          "ip_country": "India",
+          "is_gift_receiver_purchase": false,
+          "refunded": false,
+          "disputed": false,
+          "dispute_won": false,
+          "id": "Xw8yZxGdTwarDhCzxgH2JQ==",
+          "created_at": "2025-09-10T12:37:10Z",
+          "variants": "",
+          "custom_fields": [],
+          "chargebacked": false
+        }
+      },
+      "activatedAt": "2025-09-22T12:20:33.161Z",
+      "lastHeartbeat": "2025-09-22T12:20:33.161Z",
+      "isActive": true,
+      "uses": 1
+    },
+    {
+      "id": "c91ad4b100ecd1a7d1542a59d7800084",
+      "licenseKey": "3B4D1103-6DF14AF4-89FFDC06-88FACB33",
+      "deviceId": "2888ec98eb81216895308a33f4d5eae4",
+      "activatedAt": "2025-09-22T12:20:33.162Z",
+      "lastHeartbeat": "2025-09-22T12:20:33.162Z",
+      "isActive": true,
+      "uses": 1,
+      "metadata": "Windows PC (Win32)"
     }
   ],
   "version": "1.0.0",

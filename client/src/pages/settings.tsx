@@ -50,7 +50,7 @@ function DataStats() {
   const fetchStats = async () => {
     try {
       const response = await api.get('/api/data/stats');
-      setStats(response.data.stats);
+      setStats(response.stats);
     } catch (error) {
       console.error('Error fetching stats:', error);
     } finally {
@@ -269,7 +269,7 @@ export default function SettingsPage() {
     try {
       const response = await fetch(getApiUrl('/api/license/current'), {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
         },
       });
 

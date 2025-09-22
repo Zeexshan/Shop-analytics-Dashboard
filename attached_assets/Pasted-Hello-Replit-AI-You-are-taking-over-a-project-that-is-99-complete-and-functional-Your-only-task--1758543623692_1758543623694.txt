@@ -1,0 +1,26 @@
+Hello Replit AI,
+
+You are taking over a project that is 99% complete and functional. Your only task is to fix the final, critical bugs related to the settings and password management. Please read this entire summary carefully to understand the full history and what has already been solved. Do not touch the parts of the application that are already working.
+
+Part 1: Current Project Status (What Is Already Working)
+To save your time and quota, please be aware that the following systems are fully functional and have been extensively debugged. Do not change or "fix" these features.
+
+License Activation & Login (✅ WORKING): The application's license system activates correctly, and users can successfully log in with the default credentials to see the main dashboard.
+
+Main Dashboard & Reports (✅ WORKING): The dashboard, sales data, expenses, and reports are all displaying correctly.
+
+Build System (✅ WORKING): The automated GitHub Actions workflow correctly builds the final .exe installer. The package.json configuration is correct. The number one priority is to ensure the final .exe remains functional.
+
+Part 2: The Final, Unsolved Problems
+After a user successfully logs in, the main application works, but the "Settings" page and its features are broken. The console log from the running application confirms the following errors:
+
+Error 1: Failed to load resource: the server responded with a status of 500 (Internal Server Error) for the endpoint /api/auth/change-password.
+
+Error 2: Failed to load resource: the server responded with a status of 403 (Forbidden) for the endpoint /api/license/current.
+
+Error 3: A frontend crash TypeError: Cannot read properties of undefined (reading 'stats') which is likely caused by one of the failing API calls.
+
+These errors prove that there are bugs in the specific backend API routes related to the settings page.
+
+Part 3: Your Task - Fix the Settings Page and Password Change
+Your only task is to fix the backend logic for the password change and settings page functionality. Do not modify any other part of the application.
