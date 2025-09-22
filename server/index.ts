@@ -88,6 +88,11 @@ const HOST = '0.0.0.0'; // Critical: Must bind to 0.0.0.0 for Replit
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isElectron = !!(process.env.ELECTRON === '1' || typeof process !== 'undefined' && process.versions && process.versions.electron);
 
+// Configure trust proxy for Replit environment (fixes rate limiting issues)
+if (isDevelopment || process.env.REPLIT_DEPLOYMENT) {
+  app.set('trust proxy', 1);
+}
+
 app.use(cors({
   origin: isDevelopment || isElectron ? true : process.env.FRONTEND_URL || false,
   credentials: isDevelopment || isElectron,

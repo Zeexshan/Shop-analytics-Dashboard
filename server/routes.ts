@@ -27,13 +27,17 @@ function getJwtSecret(): string {
   return config.JWT_SECRET;
 }
 
-// Rate limiting for authentication endpoints
+// Rate limiting for authentication endpoints - configured for proxy environments
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Limit each IP to 5 requests per windowMs
   message: { message: 'Too many authentication attempts, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting in development to prevent proxy header issues
+    return process.env.NODE_ENV === 'development';
+  }
 });
 
 const licenseLimiter = rateLimit({
@@ -42,6 +46,10 @@ const licenseLimiter = rateLimit({
   message: { message: 'Too many license requests, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting in development to prevent proxy header issues
+    return process.env.NODE_ENV === 'development';
+  }
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
