@@ -122,69 +122,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log('Password reset request received');
 
-      const { licenseKey, adminResetCode } = req.body;
+      const { licenseKey } = req.body;
 
       if (!licenseKey) {
         console.log('No license key provided');
-        return res.status(400).json({ message: 'License key and admin reset code are required' });
+        return res.status(400).json({ message: 'License key is required' });
       }
 
-      if (!adminResetCode) {
-        console.log('No admin reset code provided');
-        return res.status(400).json({ message: 'Admin reset code is required' });
+      console.log('Verifying license key against local storage');
+
+      try {
+        // Verify license key against locally stored activated license (offline verification)
+        const activeLicenses = await licenseStorage.getActiveLicenses();
+        const localLicense = activeLicenses.find(license => license.licenseKey === licenseKey);
+        
+        if (!localLicense) {
+          console.log('License key not found in local storage - not activated on this device');
+          return res.status(401).json({ message: 'Invalid license key. Please use the license key that was used to activate this application.' });
+        }
+
+        console.log('License key verified against local storage - password reset authorized');
+
+        // Remove any temporary password file to revert to default password
+        const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
+        if (fs.existsSync(passwordFile)) {
+          fs.unlinkSync(passwordFile);
+          console.log('Temporary password file removed, reverted to default password');
+        }
+
+        res.json({ 
+          message: 'Password has been reset to the default admin password. Please log in with your original admin credentials.',
+          resetAt: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error('Error verifying license:', error);
+        return res.status(500).json({ message: 'Error verifying license key' });
       }
-
-      // Verify admin reset code
-      const ADMIN_RESET_CODE = process.env.ADMIN_RESET_CODE;
-      if (!ADMIN_RESET_CODE) {
-        console.error('CRITICAL: ADMIN_RESET_CODE not configured');
-        return res.status(500).json({ message: 'Password reset not available' });
-      }
-
-      if (adminResetCode !== ADMIN_RESET_CODE) {
-        console.log('Invalid admin reset code');
-        return res.status(401).json({ message: 'Invalid reset code' });
-      }
-
-      console.log('License key validation initiated');
-
-      // Verify license key using Gumroad API - NO FALLBACKS for security
-      const config = getSecureConfig();
-
-      const gumroadResponse = await fetch('https://api.gumroad.com/v2/licenses/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          product_permalink: config.GUMROAD_PRODUCT_PERMALINK,
-          product_id: '9jzvbqovj9HtIE1MUCU3sQ==',
-          license_key: licenseKey,
-          increment_uses_count: 'false'
-        }).toString()
-      });
-
-      const gumroadData = await gumroadResponse.json();
-      console.log('Password reset - License verification result:', gumroadData.success ? 'Valid' : 'Invalid');
-
-      if (!gumroadData.success || gumroadData.uses < 0) {
-        console.log('Invalid license key for password reset');
-        return res.status(401).json({ message: 'Invalid license key' });
-      }
-
-      console.log('Admin credentials verified, password reset will revert to environment default');
-
-      // Remove any temporary password file to revert to ADMIN_PASSWORD_HASH
-      const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
-      if (fs.existsSync(passwordFile)) {
-        fs.unlinkSync(passwordFile);
-        console.log('Temporary password file removed, reverted to environment default');
-      }
-
-      res.json({ 
-        message: 'Password has been reset to the configured admin password. Use your original admin credentials to login.',
-        resetAt: new Date().toISOString()
-      });
 
     } catch (error) {
       console.error('Error in forgot password:', error);
