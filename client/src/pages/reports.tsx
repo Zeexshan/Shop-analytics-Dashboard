@@ -269,9 +269,9 @@ export default function ReportsPage() {
 
     <div class="section">
         <h2>Receipt</h2>
-        <p>
-            Get yours at: https://zeeexshan.gumroad.com/l/ihpuq?_gl=1*1ep5otu*_ga*MTk2MjM1ODYxNi4xNzU3NDE1MTc5*_ga_6LJN6D94N6*czE3NTg2MzIwMzkkbzI2JGcxJHQxNzU4NjMyMDQyJGo1NyRsMCRoMA.. - by zeeexshan
-        </p>
+        <p className="text-xs text-gray-500 mt-2">
+              Get yours at: https://zeeexshan.gumroad.com/l/ihpuq?_gl=1*1ep5otu*_ga*MTk2MjM1ODYxNi4xNzU3NDE1MTc5*_ga_6LJN6D94N6*MTczNTg2MzIwMzkkbzI2JGcxJHQxNzU4NjMyMDQyJGo1NyRsMCRoMA.. - by zeeexshan
+            </p>
     </div>
 </body>
 </html>`;
