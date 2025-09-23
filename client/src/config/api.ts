@@ -9,7 +9,7 @@ const isReplit = typeof window !== 'undefined' && (
 );
 
 export const API_BASE_URL = isElectron 
-  ? 'http://localhost:5000' // Desktop mode - absolute URL
+  ? 'http://localhost:5000' // Desktop mode - absolute URL (will fallback to remote if local fails)
   : isReplit
     ? window.location.origin // Replit mode - use current origin (includes protocol and port)
     : isDevelopment 
