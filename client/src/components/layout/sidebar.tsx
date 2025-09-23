@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
-import logoUrl from '@/assets/logo.png';
+
 import { 
   LayoutDashboard, 
   Package, 
@@ -34,12 +34,12 @@ export function Sidebar() {
     <aside className="w-64 lg:w-72 bg-card border-r border-border shadow-sm" data-testid="sidebar">
       <div className="p-4 lg:p-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-1">
-            <img src={logoUrl} alt="Logo" className="w-full h-full object-contain rounded" />
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-lg">SA</span>
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">ShopAnalytics</h1>
-            <p className="text-sm text-muted-foreground">Admin Dashboard</p>
+            <p className="text-sm text-muted-foreground">by zeeexshan</p>
           </div>
         </div>
       </div>

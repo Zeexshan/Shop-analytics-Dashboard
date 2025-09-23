@@ -607,7 +607,7 @@ async function createWindow() {
     height: 900,
     minWidth: 1200,
     minHeight: 800,
-    icon: path.join(__dirname, '../assets/custom-logo.png'), // Custom icon
+    icon: path.join(__dirname, '../assets/logo.png'), // Custom icon
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
