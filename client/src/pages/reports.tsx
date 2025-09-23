@@ -525,7 +525,7 @@ export default function ReportsPage() {
   const totalRevenue = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
   const totalProfit = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
   const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount.toString()), 0);
-  const netProfit = totalProfit - totalExpenses;s;s;
+  const netProfit = totalProfit - totalExpenses;
 
   const categoryStats = new Map();
   filteredSales.forEach(sale => {

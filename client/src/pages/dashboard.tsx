@@ -20,9 +20,7 @@ import {
   FileText,
   Smartphone,
   Laptop,
-  Headphones,
-  TrendingDown,
-  ShoppingCart
+  Headphones
 } from 'lucide-react';
 import { useState } from 'react';
 import html2canvas from 'html2canvas';
@@ -48,7 +46,7 @@ export default function DashboardPage() {
       // Remove 'custom-' prefix and split correctly
       const datesPart = range.substring(7); // Remove 'custom-'
       const dates = datesPart.split('-');
-
+      
       // Reconstruct the dates properly (YYYY-MM-DD format)
       if (dates.length >= 6) {
         const startDateStr = `${dates[0]}-${dates[1]}-${dates[2]}`;
@@ -58,7 +56,7 @@ export default function DashboardPage() {
           endDate: endDateStr + 'T23:59:59.999Z'
         };
       }
-
+      
       // Fallback to current month if parsing fails
       return {
         startDate: new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0],
@@ -196,7 +194,7 @@ export default function DashboardPage() {
 
       const imgWidth = 280;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+      
       pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, imgWidth, imgHeight);
       pdf.save(`${filename}-${new Date().toISOString().split('T')[0]}.pdf`);
 
@@ -261,7 +259,7 @@ export default function DashboardPage() {
 
   const generateDashboardReport = () => {
     const currentDate = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
-
+    
     return `
 <!DOCTYPE html>
 <html>
@@ -296,7 +294,7 @@ export default function DashboardPage() {
         </div>
         <div class="metric-card">
             <div>Net Profit</div>
-            <div class="metric-value">${formatCurrency(kpis?.netProfit || 0)}</div>
+            <div class="metric-value">${formatCurrency(kpis?.profit || 0)}</div>
         </div>
         <div class="metric-card">
             <div>Total Sales</div>
@@ -400,7 +398,7 @@ export default function DashboardPage() {
       setDateRange(range);
     }
   };
-
+  
   const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
   const [customStartDate, setCustomStartDate] = useState(() => {
     const date = new Date();
@@ -410,11 +408,11 @@ export default function DashboardPage() {
   const [customEndDate, setCustomEndDate] = useState(() => {
     return new Date().toISOString().split('T')[0];
   });
-
+  
   const applyCustomDateRange = () => {
     const start = new Date(customStartDate);
     const end = new Date(customEndDate);
-
+    
     if (start > end) {
       toast({
         title: "Invalid Date Range", 
@@ -423,11 +421,11 @@ export default function DashboardPage() {
       });
       return;
     }
-
+    
     setCustomDateRange({ start: customStartDate, end: customEndDate });
     setDateRange(`custom-${customStartDate}-${customEndDate}`);
     setShowCustomDatePicker(false);
-
+    
     toast({
       title: "Custom Date Range Applied",
       description: `Showing data from ${start.toLocaleDateString()} to ${end.toLocaleDateString()}`,
@@ -459,8 +457,8 @@ export default function DashboardPage() {
           onDateRangeChange={handleCustomDateChange}
         />
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-            {[...Array(6)].map((_, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[...Array(5)].map((_, i) => (
               <div key={i} className="bg-card rounded-lg border border-border p-6 animate-pulse">
                 <div className="h-20 bg-muted rounded"></div>
               </div>
@@ -524,7 +522,7 @@ export default function DashboardPage() {
         )}
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
           <KPICard
             title="Revenue"
             value={formatCurrency(kpis?.revenue || 0)}
@@ -538,8 +536,8 @@ export default function DashboardPage() {
           <KPICard
             title="Gross Profit"
             value={formatCurrency(kpis?.profit || 0)}
-            change={`${kpis?.profitGrowth >= 0 ? '+' : ''}${kpis?.profitGrowth?.toFixed(1) || 0}%`}
-            changeType={kpis?.profitGrowth >= 0 ? 'positive' : 'negative'}
+            change={formatPercentage(kpis?.profitGrowth || 0)}
+            changeType={kpis?.profitGrowth && kpis.profitGrowth >= 0 ? 'positive' : 'negative'}
             icon={TrendingUp}
             iconColor="text-blue-600 dark:text-blue-400"
             iconBg="bg-blue-100 dark:bg-blue-900/20"
@@ -547,39 +545,43 @@ export default function DashboardPage() {
 
           <KPICard
             title="Net Profit"
-            value={formatCurrency(kpis?.netProfit || 0)}
-            change={`${kpis?.profitGrowth >= 0 ? '+' : ''}${kpis?.profitGrowth?.toFixed(1) || 0}%`}
-            changeType={kpis?.netProfit >= 0 ? 'positive' : 'negative'}
-            icon={TrendingDown}
+            value={formatCurrency(kpis?.profit || 0)}
+            change={`${kpis?.profitMargin?.toFixed(1) || 0}% margin`}
+            changeType={kpis?.profit && kpis.profit >= 0 ? 'positive' : 'negative'}
+            icon={Target}
             iconColor="text-green-600 dark:text-green-400"
             iconBg="bg-green-100 dark:bg-green-900/20"
           />
 
           <KPICard
-            title="Total Expenses"
-            value={formatCurrency(kpis?.totalExpenses || 0)}
-            icon={CreditCard}
-            iconColor="text-red-600 dark:text-red-400"
-            iconBg="bg-red-100 dark:bg-red-900/20"
-          />
-
-          <KPICard
-            title="Sales Count"
+            title="Sales"
             value={kpis?.salesCount || 0}
-            change={`${kpis?.salesGrowth >= 0 ? '+' : ''}${kpis?.salesGrowth?.toFixed(1) || 0}%`}
-            changeType={kpis?.salesGrowth >= 0 ? 'positive' : 'negative'}
-            icon={ShoppingCart}
+            change={formatPercentage(kpis?.salesGrowth || 0)}
+            changeType={kpis?.salesGrowth && kpis.salesGrowth >= 0 ? 'positive' : 'negative'}
+            icon={ShoppingBag}
             iconColor="text-purple-600 dark:text-purple-400"
             iconBg="bg-purple-100 dark:bg-purple-900/20"
           />
 
           <KPICard
+            title="Low Stock"
+            value={kpis?.lowStockCount || 0}
+            change="Items"
+            changeType="negative"
+            icon={AlertTriangle}
+            iconColor="text-red-600 dark:text-red-400"
+            iconBg="bg-red-100 dark:bg-red-900/20"
+          />
+
+          <KPICard
             title="Goal Progress"
-            value={`${kpis?.goalProgress?.toFixed(1) || 0}%`}
-            progress={kpis?.goalProgress || 0}
+            value={`${(kpis?.goalProgress || 0).toFixed(0)}%`}
+            change={kpis?.goalProgress && kpis.goalProgress >= 70 ? "On Track" : "Behind"}
+            changeType={kpis?.goalProgress && kpis.goalProgress >= 70 ? 'positive' : 'negative'}
             icon={Target}
             iconColor="text-amber-600 dark:text-amber-400"
             iconBg="bg-amber-100 dark:bg-amber-900/20"
+            progress={kpis?.goalProgress}
           />
         </div>
 

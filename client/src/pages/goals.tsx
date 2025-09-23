@@ -93,11 +93,11 @@ export default function GoalsPage() {
 
   const calculateProgress = (goal: Goal) => {
     if (!kpis) return 0;
-
+    
     const revenueProgress = goal.revenue_goal ? (kpis.revenue / parseFloat(goal.revenue_goal.toString())) * 100 : 0;
-    const profitProgress = goal.profit_goal ? (kpis.netProfit / parseFloat(goal.profit_goal.toString())) * 100 : 0;
+    const profitProgress = goal.profit_goal ? (kpis.profit / parseFloat(goal.profit_goal.toString())) * 100 : 0;
     const salesProgress = goal.sales_goal ? (kpis.salesCount / goal.sales_goal) * 100 : 0;
-
+    
     return Math.min((revenueProgress + profitProgress + salesProgress) / 3, 100);
   };
 
@@ -129,7 +129,7 @@ export default function GoalsPage() {
   return (
     <div className="flex-1 overflow-auto">
       <Header title="Goals" description="Set and track your business objectives" />
-
+      
       <div className="p-6 space-y-6">
         {/* Current Goal Progress */}
         {currentMonthGoal && (
@@ -155,21 +155,21 @@ export default function GoalsPage() {
                     className="mt-2"
                   />
                 </div>
-
+                
                 <div>
                   <p className="text-sm text-muted-foreground">Profit Goal</p>
                   <div className="flex items-center justify-between mt-1">
                     <span className="text-lg font-semibold">{formatCurrency(currentMonthGoal.profit_goal)}</span>
                     <span className="text-sm text-muted-foreground">
-                      {formatCurrency(kpis?.netProfit || 0)} achieved
+                      {formatCurrency(kpis?.profit || 0)} achieved
                     </span>
                   </div>
                   <Progress 
-                    value={kpis ? (kpis.netProfit / parseFloat(currentMonthGoal.profit_goal.toString())) * 100 : 0}
+                    value={kpis ? (kpis.profit / parseFloat(currentMonthGoal.profit_goal.toString())) * 100 : 0}
                     className="mt-2"
                   />
                 </div>
-
+                
                 <div>
                   <p className="text-sm text-muted-foreground">Sales Goal</p>
                   <div className="flex items-center justify-between mt-1">
@@ -184,7 +184,7 @@ export default function GoalsPage() {
                   />
                 </div>
               </div>
-
+              
               <div className="mt-4 p-4 bg-white/50 dark:bg-black/20 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-semibold">Overall Progress</span>
@@ -352,7 +352,7 @@ export default function GoalsPage() {
           {goals.map((goal) => {
             const progress = calculateProgress(goal);
             const isOnTrack = progress >= 70;
-
+            
             return (
               <Card key={goal.id} data-testid={`goal-card-${goal.id}`}>
                 <CardHeader>
@@ -380,20 +380,20 @@ export default function GoalsPage() {
                       <p className="text-sm text-muted-foreground">Revenue Target</p>
                       <p className="text-xl font-bold">{formatCurrency(goal.revenue_goal)}</p>
                     </div>
-
+                    
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
                       <Target className="h-6 w-6 text-blue-600 mx-auto mb-2" />
                       <p className="text-sm text-muted-foreground">Profit Target</p>
                       <p className="text-xl font-bold">{formatCurrency(goal.profit_goal)}</p>
                     </div>
-
+                    
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
                       <Calendar className="h-6 w-6 text-purple-600 mx-auto mb-2" />
                       <p className="text-sm text-muted-foreground">Sales Target</p>
                       <p className="text-xl font-bold">{goal.sales_goal}</p>
                     </div>
                   </div>
-
+                  
                   {goal.status === 'Active' && (
                     <div className="mt-6">
                       <div className="flex items-center justify-between mb-2">
@@ -407,7 +407,7 @@ export default function GoalsPage() {
               </Card>
             );
           })}
-
+          
           {goals.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center">
