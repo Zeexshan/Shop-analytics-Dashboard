@@ -15,27 +15,23 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Shop Analytics Server"
+args = "Start application"
 
 [[workflows.workflow]]
-name = "Shop Analytics Server"
+name = "Start application"
 author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_ENV=development npx tsx server/index.ts"
-waitForPort = 5000
-
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 43433
-externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"
