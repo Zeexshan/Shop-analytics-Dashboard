@@ -18,7 +18,7 @@ const getAuthHeaders = (): Record<string, string> => {
 const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
 const FALLBACK_API_URL = import.meta.env.VITE_REPLIT_DEV_DOMAIN 
   ? `https://${import.meta.env.VITE_REPLIT_DEV_DOMAIN}` 
-  : 'https://ca72fa78-84e4-428c-a8d1-d1917050d0fc-00-1scrwxd0h0we9.riker.replit.dev'; // Fallback to current domain
+  : typeof window !== 'undefined' && window.location ? window.location.origin : null;
 
 const makeRequestWithFallback = async (url: string, options: RequestInit) => {
   try {
@@ -32,22 +32,34 @@ const makeRequestWithFallback = async (url: string, options: RequestInit) => {
                           (error as any)?.code === 'ECONNREFUSED' ||
                           (error as Error)?.message?.includes('fetch');
     
-    // If we're in Electron, it's a network error, and URL contains localhost, try fallback
+    // If we're in Electron and it's a network error connecting to localhost
     if (isElectron && isNetworkError && url.includes('localhost')) {
-      console.warn('🔄 Desktop app detected - Local server connection failed, trying fallback server...');
-      console.warn('📡 Note: Using remote server for API calls due to local server unavailability');
-      console.warn('🌐 User agent:', window.navigator.userAgent);
-      
-      const fallbackUrl = url.replace('http://localhost:5000', FALLBACK_API_URL);
-      
-      // For POST requests, warn about potential duplicate operations
-      if (options.method === 'POST') {
-        console.warn('Retrying POST request on fallback server - ensure operation is idempotent');
+      // For desktop apps, the local server should be running
+      // Only fallback if we have a valid fallback URL
+      if (FALLBACK_API_URL) {
+        console.warn('🔄 Desktop app detected - Local server connection failed, trying fallback server...');
+        console.warn('📡 Note: Using remote server for API calls due to local server unavailability');
+        console.warn('🌐 User agent:', window.navigator.userAgent);
+        
+        const fallbackUrl = url.replace('http://localhost:5000', FALLBACK_API_URL);
+        
+        // For POST requests, warn about potential duplicate operations
+        if (options.method === 'POST') {
+          console.warn('Retrying POST request on fallback server - ensure operation is idempotent');
+        }
+        
+        try {
+          const fallbackResponse = await fetch(fallbackUrl, options);
+          if (!fallbackResponse.ok) throw new Error(`API Error (zeeexshan): HTTP ${fallbackResponse.status}`);
+          return fallbackResponse;
+        } catch (fallbackError) {
+          // If fallback also fails, provide a helpful error message
+          throw new Error('Local server not running and fallback server unavailable. Please ensure the application server is running.');
+        }
+      } else {
+        // No valid fallback URL, provide helpful error for desktop app
+        throw new Error('Local server connection failed. Please ensure the application server is running on localhost:5000.');
       }
-      
-      const fallbackResponse = await fetch(fallbackUrl, options);
-      if (!fallbackResponse.ok) throw new Error(`API Error (zeeexshan): HTTP ${fallbackResponse.status}`);
-      return fallbackResponse;
     }
     throw error;
   }
