@@ -1,4 +1,4 @@
-import { Store } from 'lucide-react';
+import logoUrl from '@/assets/logo.png';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -8,7 +8,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center space-x-2">
-            <Store className="h-4 w-4" />
+            <img src={logoUrl} alt="Logo" className="h-4 w-4 rounded" />
             <span>Shop Analytics Dashboard</span>
           </div>
           <div className="text-xs">

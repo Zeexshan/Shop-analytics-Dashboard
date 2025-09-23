@@ -133,12 +133,15 @@ export type LoginData = z.infer<typeof loginSchema>;
 export interface KPIData {
   revenue: number;
   profit: number;
+  netProfit: number;
+  totalExpenses: number;
   salesCount: number;
   lowStockCount: number;
   goalProgress: number;
   revenueGrowth: number;
   profitGrowth: number;
   profitMargin: number;
+  netMargin: number;
   salesGrowth: number;
 }
 

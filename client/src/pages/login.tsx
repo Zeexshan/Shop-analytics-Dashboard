@@ -8,7 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Store, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
+import logoUrl from '@/assets/logo.png';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import { useEffect } from 'react';
@@ -61,8 +62,6 @@ export default function LoginPage() {
   const forgotPasswordHandler = atob('emVleHNoYW4tZm9yZ290LXBhc3N3b3Jk');
   
   const handleForgotPassword = async () => {
-    console.log('Forgot password clicked, license key:', licenseKey);
-    
     if (!licenseKey.trim()) {
       toast({
         title: "License Key Required",
@@ -75,8 +74,6 @@ export default function LoginPage() {
     const requestBody = { 
       licenseKey: licenseKey.trim()
     };
-    
-    console.log('Sending forgot password request:', requestBody);
     
     try {
       const response = await fetch(getApiUrl('/api/auth/forgot-password'), {
@@ -114,8 +111,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-lg" data-testid="login-card">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center">
-              <Store className="h-8 w-8 text-primary-foreground" />
+            <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center p-2">
+              <img src={logoUrl} alt="Logo" className="w-full h-full object-contain rounded" />
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">ShopAnalytics</CardTitle>

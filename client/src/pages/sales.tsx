@@ -176,7 +176,8 @@ export default function SalesPage() {
     return `₹${value.toLocaleString()}`;
   };
 
-  const formatDate = (date: string | Date) => {
+  const formatDate = (date: string | Date | null) => {
+    if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'short',
@@ -238,114 +239,251 @@ export default function SalesPage() {
       <html>
       <head>
         <title>Receipt</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
+          /* Reset and base styles for thermal printing */
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          
           body {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
-            margin: 0;
-            padding: 20px;
-            width: 350px;
+            font-size: 11px;
+            line-height: 1.2;
+            width: 80mm; /* Standard thermal printer width */
+            margin: 0 auto;
+            padding: 5mm;
+            color: #000;
+            background: #fff;
           }
+          
           .header {
             text-align: center;
             border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
           }
+          
           .shop-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+          }
+          
+          .shop-tagline {
+            font-size: 10px;
             margin-bottom: 5px;
           }
+          
           .receipt-title {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 8px;
+            letter-spacing: 2px;
           }
+          
           .receipt-info {
-            margin: 15px 0;
+            margin: 12px 0;
+            font-size: 10px;
           }
+          
           .receipt-info div {
-            margin: 3px 0;
-          }
-          .item-line {
+            margin: 2px 0;
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 5px;
           }
+          
+          .items-section {
+            margin: 15px 0;
+            border-top: 1px dashed #000;
+            border-bottom: 1px dashed #000;
+            padding: 8px 0;
+          }
+          
+          .item-line {
+            margin: 5px 0;
+            font-size: 10px;
+          }
+          
+          .item-name {
+            font-weight: bold;
+            margin-bottom: 2px;
+          }
+          
+          .item-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          
           .total-section {
-            border-top: 2px solid #000;
-            margin-top: 15px;
-            padding-top: 10px;
+            margin: 12px 0;
+            font-size: 11px;
           }
+          
           .total-line {
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
-            font-weight: bold;
+            margin: 3px 0;
+            padding: 1px 0;
           }
+          
+          .total-line.final {
+            font-weight: bold;
+            font-size: 12px;
+            border-top: 1px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 5px 0;
+            margin-top: 8px;
+          }
+          
+          .notes {
+            margin: 12px 0;
+            font-size: 10px;
+            border-top: 1px dashed #000;
+            padding-top: 8px;
+          }
+          
           .footer {
             text-align: center;
-            margin-top: 20px;
-            border-top: 1px solid #000;
+            margin-top: 15px;
             padding-top: 10px;
+            border-top: 2px solid #000;
+            font-size: 10px;
           }
+          
+          .thank-you {
+            margin-bottom: 8px;
+            font-weight: bold;
+          }
+          
+          .app-promotion {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed #000;
+            font-size: 9px;
+          }
+          
+          .app-name {
+            font-weight: bold;
+            margin-bottom: 2px;
+          }
+          
+          .app-link {
+            font-style: italic;
+            word-break: break-all;
+          }
+          
+          /* Critical print media queries for thermal printers */
           @media print {
-            body { margin: 0; }
+            * {
+              -webkit-print-color-adjust: exact !important;
+              color-adjust: exact !important;
+            }
+            
+            body {
+              width: 80mm;
+              margin: 0;
+              padding: 3mm;
+              font-size: 11px;
+            }
+            
+            /* Hide all other elements on page */
+            body > *:not(.receipt-container) {
+              display: none !important;
+            }
+            
+            /* Prevent page breaks */
+            .header, .receipt-info, .items-section, .total-section, .footer {
+              break-inside: avoid;
+            }
+            
+            /* Ensure proper spacing */
+            .total-line.final {
+              border-top: 2px solid #000 !important;
+              border-bottom: 2px solid #000 !important;
+            }
+          }
+          
+          /* Additional thermal printer optimizations */
+          @page {
+            size: 80mm auto;
+            margin: 0;
           }
         </style>
       </head>
       <body>
-        <div class="header">
-          <div class="shop-name">SHOP ANALYTICS</div>
-          <div>Your Trusted Store</div>
-          <div class="receipt-title">SALES RECEIPT</div>
-        </div>
-        
-        <div class="receipt-info">
-          <div><strong>Receipt #:</strong> ${sale.id.substring(0, 8).toUpperCase()}</div>
-          <div><strong>Date:</strong> ${formatDate(sale.sale_date)}</div>
-          <div><strong>Cashier:</strong> ${sale.cashier || 'Admin'}</div>
-          <div><strong>Customer:</strong> ${sale.customer_name || 'Walk-in Customer'}</div>
-        </div>
-
-        <div class="item-line">
-          <div>
-            <div><strong>${sale.product_name}</strong></div>
-            <div>${sale.quantity} x ${formatCurrency(sale.unit_price)}</div>
+        <div class="receipt-container">
+          <div class="header">
+            <div class="shop-name">SHOP ANALYTICS</div>
+            <div class="shop-tagline">Professional Business Solution</div>
+            <div class="receipt-title">SALES RECEIPT</div>
           </div>
-          <div><strong>${formatCurrency(sale.total_amount)}</strong></div>
-        </div>
-
-        <div class="total-section">
-          <div class="total-line">
-            <div>TOTAL AMOUNT:</div>
-            <div>${formatCurrency(sale.total_amount)}</div>
+          
+          <div class="receipt-info">
+            <div><span>Receipt #:</span><span>${sale.id.substring(0, 8).toUpperCase()}</span></div>
+            <div><span>Date:</span><span>${formatDate(sale.sale_date)}</span></div>
+            <div><span>Cashier:</span><span>${sale.cashier || 'Admin'}</span></div>
+            <div><span>Customer:</span><span>${sale.customer_name || 'Walk-in Customer'}</span></div>
           </div>
-          <div class="total-line">
-            <div>PAYMENT METHOD:</div>
-            <div>${sale.payment_method}</div>
+
+          <div class="items-section">
+            <div class="item-line">
+              <div class="item-name">${sale.product_name}</div>
+              <div class="item-details">
+                <span>${sale.quantity} x ${formatCurrency(sale.unit_price)}</span>
+                <span><strong>${formatCurrency(sale.total_amount)}</strong></span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        ${sale.notes ? `
-        <div style="margin-top: 15px;">
-          <div><strong>Notes:</strong></div>
-          <div>${sale.notes}</div>
-        </div>
-        ` : ''}
+          <div class="total-section">
+            <div class="total-line">
+              <span>Subtotal:</span>
+              <span>${formatCurrency(sale.total_amount)}</span>
+            </div>
+            <div class="total-line final">
+              <span>TOTAL AMOUNT:</span>
+              <span>${formatCurrency(sale.total_amount)}</span>
+            </div>
+            <div class="total-line">
+              <span>Payment Method:</span>
+              <span>${sale.payment_method}</span>
+            </div>
+          </div>
 
-        <div class="footer">
-          <div>Thank you for your business!</div>
-          <div>Visit us again soon</div>
+          ${sale.notes ? `
+          <div class="notes">
+            <div><strong>Notes:</strong></div>
+            <div>${sale.notes}</div>
+          </div>
+          ` : ''}
+
+          <div class="footer">
+            <div class="thank-you">Thank you for your business!</div>
+            <div>Visit us again soon</div>
+            
+            <div class="app-promotion">
+              <div class="app-name">Powered by Shop Analytics Dashboard</div>
+              <div>Complete Business Management Solution</div>
+              <div class="app-link">Get yours at: replit.com/@mogat55602/shop-analytics</div>
+              <div style="margin-top: 3px; font-size: 8px;">Professional Analytics • Inventory • Sales • Reports</div>
+            </div>
+          </div>
         </div>
 
         <script>
           window.onload = function() {
-            window.print();
-            setTimeout(() => window.close(), 1000);
+            // Small delay to ensure styles are loaded
+            setTimeout(() => {
+              window.print();
+              // Close window after print dialog
+              setTimeout(() => window.close(), 2000);
+            }, 500);
           }
         </script>
       </body>
@@ -493,7 +631,7 @@ export default function SalesPage() {
                       <FormItem>
                         <FormLabel>Customer Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Optional customer name" {...field} data-testid="input-customer-name" />
+                          <Input placeholder="Optional customer name" {...field} value={field.value || ''} data-testid="input-customer-name" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -536,6 +674,7 @@ export default function SalesPage() {
                             placeholder="Optional notes" 
                             className="resize-none" 
                             {...field} 
+                            value={field.value || ''}
                             data-testid="input-notes"
                           />
                         </FormControl>
@@ -670,6 +809,7 @@ export default function SalesPage() {
                           <Input 
                             placeholder="Optional customer name" 
                             {...field} 
+                            value={field.value || ''}
                             data-testid="input-edit-customer-name"
                           />
                         </FormControl>
@@ -713,6 +853,7 @@ export default function SalesPage() {
                             placeholder="Optional notes" 
                             className="resize-none" 
                             {...field} 
+                            value={field.value || ''}
                             data-testid="input-edit-notes"
                           />
                         </FormControl>

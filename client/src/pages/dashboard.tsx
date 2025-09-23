@@ -545,9 +545,9 @@ export default function DashboardPage() {
 
           <KPICard
             title="Net Profit"
-            value={formatCurrency(kpis?.profit || 0)}
-            change={`${kpis?.profitMargin?.toFixed(1) || 0}% margin`}
-            changeType={kpis?.profit && kpis.profit >= 0 ? 'positive' : 'negative'}
+            value={formatCurrency(kpis?.netProfit || 0)}
+            change={`${kpis?.netMargin?.toFixed(1) || 0}% margin`}
+            changeType={kpis?.netProfit && kpis.netProfit >= 0 ? 'positive' : 'negative'}
             icon={Target}
             iconColor="text-green-600 dark:text-green-400"
             iconBg="bg-green-100 dark:bg-green-900/20"
