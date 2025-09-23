@@ -36,6 +36,30 @@ class ApiService {
       
       return await response.json();
     } catch (error) {
+      // Desktop app fallback logic
+      const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
+      const isNetworkError = error instanceof TypeError || 
+                            (error as any)?.code === 'ECONNREFUSED' ||
+                            (error as Error)?.message?.includes('fetch');
+      
+      if (isElectron && isNetworkError && url.includes('localhost')) {
+        console.warn('ApiService: Local server connection failed, trying fallback server...');
+        const FALLBACK_API_URL = import.meta.env.VITE_REPLIT_DEV_DOMAIN 
+          ? `https://${import.meta.env.VITE_REPLIT_DEV_DOMAIN}` 
+          : 'https://ca72fa78-84e4-428c-a8d1-d1917050d0fc-00-1scrwxd0h0we9.riker.replit.dev';
+        
+        const fallbackUrl = url.replace('http://localhost:5000', FALLBACK_API_URL);
+        console.warn(`ApiService: Retrying with ${fallbackUrl}`);
+        
+        const fallbackResponse = await fetch(fallbackUrl, config);
+        
+        if (!fallbackResponse.ok) {
+          throw new Error(`HTTP error! status: ${fallbackResponse.status}`);
+        }
+        
+        return await fallbackResponse.json();
+      }
+      
       console.error('API request failed:', error);
       throw error;
     }

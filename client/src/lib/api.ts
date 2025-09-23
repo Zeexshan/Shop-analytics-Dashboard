@@ -30,12 +30,13 @@ const makeRequestWithFallback = async (url: string, options: RequestInit) => {
     // Only fallback on network/connection errors, not HTTP status errors
     const isNetworkError = error instanceof TypeError || 
                           (error as any)?.code === 'ECONNREFUSED' ||
-                          error.message.includes('fetch');
+                          (error as Error)?.message?.includes('fetch');
     
     // If we're in Electron, it's a network error, and URL contains localhost, try fallback
     if (isElectron && isNetworkError && url.includes('localhost')) {
-      console.warn('Local server connection failed, trying fallback server...');
-      console.warn('Note: Using remote server for API calls due to local server unavailability');
+      console.warn('🔄 Desktop app detected - Local server connection failed, trying fallback server...');
+      console.warn('📡 Note: Using remote server for API calls due to local server unavailability');
+      console.warn('🌐 User agent:', window.navigator.userAgent);
       
       const fallbackUrl = url.replace('http://localhost:5000', FALLBACK_API_URL);
       
