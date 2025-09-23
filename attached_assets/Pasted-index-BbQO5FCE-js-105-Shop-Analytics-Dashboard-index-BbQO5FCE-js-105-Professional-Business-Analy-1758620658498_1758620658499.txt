@@ -1,0 +1,71 @@
+index-BbQO5FCE.js:105  Shop Analytics Dashboard 
+index-BbQO5FCE.js:105  Professional Business Analytics Solution 
+index-BbQO5FCE.js:105  © 2024 All Rights Reserved 
+index-BbQO5FCE.js:105 License already activated
+index-BbQO5FCE.js:31 🔐 FRONTEND DEBUG: Password change request started
+index-BbQO5FCE.js:31 🌐 Full URL: http://localhost:5000/api/auth/change-password
+index-BbQO5FCE.js:31 📋 Request data keys: Array(2)
+index-BbQO5FCE.js:31 🔑 Auth headers: Object
+index-BbQO5FCE.js:31 🖥️ User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) rest-express/1.0.0 Chrome/140.0.7339.41 Electron/38.0.0 Safari/537.36
+index-BbQO5FCE.js:31 🏢 Is Electron: true
+index-BbQO5FCE.js:31 📡 FRONTEND DEBUG: Response received
+index-BbQO5FCE.js:31 📊 Response status: 200
+index-BbQO5FCE.js:31 📊 Response ok: true
+index-BbQO5FCE.js:31 📋 Response headers: Object
+:5000/api/auth/login:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+index-BbQO5FCE.js:31 🔐 FRONTEND DEBUG: Password change request started
+index-BbQO5FCE.js:31 🌐 Full URL: http://localhost:5000/api/auth/change-password
+index-BbQO5FCE.js:31 📋 Request data keys: Array(2)
+index-BbQO5FCE.js:31 🔑 Auth headers: Object
+index-BbQO5FCE.js:31 🖥️ User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) rest-express/1.0.0 Chrome/140.0.7339.41 Electron/38.0.0 Safari/537.36
+index-BbQO5FCE.js:31 🏢 Is Electron: true
+index-BbQO5FCE.js:31 📡 FRONTEND DEBUG: Response received
+index-BbQO5FCE.js:31 📊 Response status: 200
+index-BbQO5FCE.js:31 📊 Response ok: true
+index-BbQO5FCE.js:31 📋 Response headers: Object
+index-BbQO5FCE.js:19  POST http://localhost:5000/api/auth/login 401 (Unauthorized)
+PmaEp @ index-BbQO5FCE.js:19
+eoe @ index-BbQO5FCE.js:19
+zxqWO @ index-BbQO5FCE.js:31
+_0x2535e6 @ index-BbQO5FCE.js:31
+_0x46897d @ index-BbQO5FCE.js:31
+FkaTb @ index-BbQO5FCE.js:31
+(anonymous) @ index-BbQO5FCE.js:31
+await in (anonymous)
+qre @ index-BbQO5FCE.js:19
+Yre @ index-BbQO5FCE.js:19
+Zre @ index-BbQO5FCE.js:19
+FOzLa @ index-BbQO5FCE.js:19
+j3 @ index-BbQO5FCE.js:19
+a7 @ index-BbQO5FCE.js:19
+(anonymous) @ index-BbQO5FCE.js:19
+Jqzqt @ index-BbQO5FCE.js:19
+$N @ index-BbQO5FCE.js:19
+NQbnM @ index-BbQO5FCE.js:19
+N$ @ index-BbQO5FCE.js:19
+A5 @ index-BbQO5FCE.js:19
+mN @ index-BbQO5FCE.js:19
+hne @ index-BbQO5FCE.js:19
+index-BbQO5FCE.js:19  POST http://localhost:5000/api/auth/login 401 (Unauthorized)
+PmaEp @ index-BbQO5FCE.js:19
+eoe @ index-BbQO5FCE.js:19
+zxqWO @ index-BbQO5FCE.js:31
+_0x2535e6 @ index-BbQO5FCE.js:31
+_0x46897d @ index-BbQO5FCE.js:31
+FkaTb @ index-BbQO5FCE.js:31
+(anonymous) @ index-BbQO5FCE.js:31
+await in (anonymous)
+qre @ index-BbQO5FCE.js:19
+Yre @ index-BbQO5FCE.js:19
+Zre @ index-BbQO5FCE.js:19
+FOzLa @ index-BbQO5FCE.js:19
+j3 @ index-BbQO5FCE.js:19
+a7 @ index-BbQO5FCE.js:19
+(anonymous) @ index-BbQO5FCE.js:19
+Jqzqt @ index-BbQO5FCE.js:19
+$N @ index-BbQO5FCE.js:19
+NQbnM @ index-BbQO5FCE.js:19
+N$ @ index-BbQO5FCE.js:19
+A5 @ index-BbQO5FCE.js:19
+mN @ index-BbQO5FCE.js:19
+hne @ index-BbQO5FCE.js:19
