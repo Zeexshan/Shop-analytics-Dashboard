@@ -143,15 +143,15 @@
       "dist/**/*"
     ],
     "win": {
-      "icon": "assets/logo.png",
+      "icon": "assets/custom-logo.png",
       "target": "nsis"
     },
     "mac": {
-      "icon": "assets/logo.png",
+      "icon": "assets/custom-logo.png",
       "category": "public.app-category.business"
     },
     "linux": {
-      "icon": "assets/logo.png",
+      "icon": "assets/custom-logo.png",
       "category": "Office"
     },
     "nsis": {

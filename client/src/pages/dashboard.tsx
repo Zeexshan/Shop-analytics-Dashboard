@@ -53,14 +53,14 @@ export default function DashboardPage() {
         const endDateStr = `${dates[3]}-${dates[4]}-${dates[5]}`;
         return {
           startDate: startDateStr,
-          endDate: endDateStr
+          endDate: endDateStr + 'T23:59:59.999Z'
         };
       }
       
       // Fallback to current month if parsing fails
       return {
         startDate: new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0],
-        endDate: now.toISOString().split('T')[0]
+        endDate: now.toISOString().split('T')[0] + 'T23:59:59.999Z'
       };
     }
 
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
     return {
       startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0]
+      endDate: endDate.toISOString().split('T')[0] + 'T23:59:59.999Z'
     };
   };
 
