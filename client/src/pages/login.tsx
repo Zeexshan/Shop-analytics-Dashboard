@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import logoUrl from '@/assets/logo.png';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import { useEffect } from 'react';
@@ -111,8 +110,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-lg" data-testid="login-card">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center p-2">
-              <img src={logoUrl} alt="Logo" className="w-full h-full object-contain rounded" />
+            <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-2xl">SA</span>
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">ShopAnalytics</CardTitle>
