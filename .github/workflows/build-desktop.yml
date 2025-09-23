@@ -7,13 +7,15 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
+  
     inputs:
       create_release:
         description: 'Create a GitHub release'
         required: false
         default: false
         type: boolean
-
+permissions:
+  contents: write
 jobs:
   build-windows:
     runs-on: windows-latest
