@@ -431,62 +431,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Enhanced watermark security - Password change endpoint for admin users only
   app.post('/api/auth/change-password', authenticateAdminToken, async (req, res, next) => {
+    console.log('🔐 PASSWORD CHANGE DEBUG: Request received');
+    console.log('📋 Request body keys:', Object.keys(req.body));
+    console.log('🔍 Environment:', process.env.NODE_ENV);
+    console.log('🌍 Working directory:', process.cwd());
+    
     try {
       const { currentPassword, newPassword } = req.body;
+      console.log('🔐 DEBUG: Passwords extracted from body', {
+        hasCurrentPassword: !!currentPassword,
+        currentPasswordLength: currentPassword?.length || 0,
+        hasNewPassword: !!newPassword,
+        newPasswordLength: newPassword?.length || 0
+      });
 
       if (!currentPassword || !newPassword) {
+        console.log('❌ DEBUG: Missing passwords in request');
         return res.status(400).json({ message: 'Current and new passwords are required' });
       }
 
       if (newPassword.length < 8) {
+        console.log('❌ DEBUG: New password too short');
         return res.status(400).json({ message: 'New password must be at least 8 characters' });
       }
 
       // Get current stored password hash - NO HARDCODED FALLBACKS in production
       const passwordFile = path.join(process.cwd(), 'data', 'admin_password.json');
+      console.log('📁 DEBUG: Password file path:', passwordFile);
+      console.log('📁 DEBUG: Password file exists:', fs.existsSync(passwordFile));
+      
       let currentHashedPassword: string;
 
       // First try to load from password file (from previous password changes)
       try {
         if (fs.existsSync(passwordFile)) {
+          console.log('📖 DEBUG: Reading password from file');
           const passwordData = JSON.parse(fs.readFileSync(passwordFile, 'utf8'));
           currentHashedPassword = passwordData.hashedPassword;
+          console.log('✅ DEBUG: Password loaded from file');
         } else {
+          console.log('🔧 DEBUG: No password file, checking environment');
           // Use environment ADMIN_PASSWORD_HASH - REQUIRED in production
           const envPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+          console.log('🔧 DEBUG: Environment password hash exists:', !!envPasswordHash);
+          
           if (!envPasswordHash) {
             if (process.env.NODE_ENV === 'development') {
+              console.log('🔧 DEBUG: Development mode - creating default password hash');
               // Only in development, create from default password
               currentHashedPassword = await bcrypt.hash('ShopOwner@2024', 10);
+              console.log('✅ DEBUG: Default password hash created');
             } else {
+              console.log('❌ DEBUG: Production mode but no ADMIN_PASSWORD_HASH');
               return res.status(500).json({ 
                 message: 'Admin password not configured. ADMIN_PASSWORD_HASH environment variable required.' 
               });
             }
           } else {
             currentHashedPassword = envPasswordHash;
+            console.log('✅ DEBUG: Using environment password hash');
           }
         }
-      } catch (error) {
+      } catch (passwordConfigError: any) {
+        console.error('❌ DEBUG: Password configuration error:', passwordConfigError);
         return res.status(500).json({ 
-          message: 'Error accessing password configuration' 
+          message: 'Error accessing password configuration',
+          debug: passwordConfigError?.message || 'Unknown error' 
         });
       }
 
       // Verify current password
+      console.log('🔍 DEBUG: Verifying current password');
       const isCurrentValid = await bcrypt.compare(currentPassword, currentHashedPassword);
+      console.log('🔍 DEBUG: Current password valid:', isCurrentValid);
+      
       if (!isCurrentValid) {
+        console.log('❌ DEBUG: Current password incorrect');
         return res.status(401).json({ message: 'Current password is incorrect' });
       }
 
       // Hash new password
+      console.log('🔐 DEBUG: Hashing new password');
       const saltRounds = 12;
       const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
+      console.log('✅ DEBUG: New password hashed');
 
       // Save new password hash - use DATA_DIR environment variable if set (from Electron)
       const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+      console.log('📁 DEBUG: Data directory:', dataDir);
+      console.log('📁 DEBUG: Data directory exists:', fs.existsSync(dataDir));
+      
       if (!fs.existsSync(dataDir)) {
+        console.log('📁 DEBUG: Creating data directory');
         fs.mkdirSync(dataDir, { recursive: true });
+        console.log('✅ DEBUG: Data directory created');
       }
 
       const passwordData = {
@@ -496,11 +534,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         signature: 'zeeexshan_password_update'
       };
 
-      fs.writeFileSync(passwordFile, JSON.stringify(passwordData, null, 2));
+      console.log('💾 DEBUG: Saving password data to file');
+      const finalPasswordFile = path.join(dataDir, 'admin_password.json');
+      console.log('💾 DEBUG: Final password file path:', finalPasswordFile);
+      
+      fs.writeFileSync(finalPasswordFile, JSON.stringify(passwordData, null, 2));
+      console.log('✅ DEBUG: Password data saved successfully');
 
+      console.log('🎉 DEBUG: Password change completed successfully');
       res.json({ message: 'Password changed successfully' });
 
-    } catch (error) {
+    } catch (error: any) {
+      console.error('❌ DEBUG: Unexpected error in password change:', error);
+      console.error('❌ DEBUG: Error stack:', error?.stack);
       next(error);
     }
   });

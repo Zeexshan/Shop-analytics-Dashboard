@@ -92,6 +92,17 @@ export const api = {
 
   post: async (url: string, data: any) => {
     const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
+    
+    // Special debugging for password change endpoint
+    if (url.includes('change-password')) {
+      console.log('🔐 FRONTEND DEBUG: Password change request started');
+      console.log('🌐 Full URL:', fullUrl);
+      console.log('📋 Request data keys:', Object.keys(data || {}));
+      console.log('🔑 Auth headers:', getAuthHeaders());
+      console.log('🖥️ User agent:', window.navigator.userAgent);
+      console.log('🏢 Is Electron:', window.navigator.userAgent.includes('Electron'));
+    }
+    
     const response = await makeRequestWithFallback(fullUrl, {
       method: 'POST',
       credentials: 'include',
@@ -101,6 +112,15 @@ export const api = {
       },
       body: JSON.stringify(data)
     });
+    
+    // Special debugging for password change endpoint
+    if (url.includes('change-password')) {
+      console.log('📡 FRONTEND DEBUG: Response received');
+      console.log('📊 Response status:', response.status);
+      console.log('📊 Response ok:', response.ok);
+      console.log('📋 Response headers:', Object.fromEntries(response.headers.entries()));
+    }
+    
     return response.json();
   },
 
