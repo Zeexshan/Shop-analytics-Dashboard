@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "rX-5aiXHhKgKgpW92xl9T"
+uri = "file://README.md"
+type = "text"
+title = "Shop Analytics Dashboard — README"
