@@ -36,8 +36,8 @@ This software is **100% free** for Indian shopkeepers. Getting your license take
 
 | Action | How |
 |---|---|
-| ⭐ **Star this repository** | Star the GitHub repo and [message me](https://www.zeexshan.me/) with your GitHub username |
-| 🔗 **Connect on LinkedIn** | Follow & connect with me on LinkedIn and send a message |
+| ⭐ **Star this repository** | Star the GitHub repo and [message me](https://www.linkedin.com/in/zeeexshan/) with your GitHub username |
+| 🔗 **Connect on LinkedIn** | Follow & connect with me on LinkedIn and send a [message](https://www.linkedin.com/in/zeeexshan/) |
 | 💬 **Say hello** | Visit my portfolio at **[zeexshan.me](https://www.zeexshan.me/)** and reach out |
 
 Once verified, I'll generate and send you a lifetime license key. No subscriptions, no fees — ever.
