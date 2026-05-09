@@ -255,7 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Current and new password are required' });
       }
 
-      const user = await storage.getUser(req.user!.id);
+      const user = await storage.getUserByUsername(req.user!.username);
       if (!user) return res.status(404).json({ message: 'User not found' });
 
       const isValid = await bcrypt.compare(currentPassword, user.password);

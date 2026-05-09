@@ -3,7 +3,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Header } from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -54,9 +53,10 @@ export default function SettingsPage() {
       toast({ title: 'Success', description: 'Password changed successfully.' });
     },
     onError: (err: any) => {
+      const msg = err?.message || '';
       toast({
         title: 'Error',
-        description: err?.message?.includes('401') ? 'Current password is incorrect.' : 'Failed to change password.',
+        description: msg.includes('401') ? 'Current password is incorrect.' : 'Failed to change password.',
         variant: 'destructive',
       });
     },
@@ -84,15 +84,19 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex-1 overflow-auto">
-      <Header title="Settings" description="Manage your account and application settings" />
+    <main className="flex-1 overflow-auto bg-background">
+      {/* Page Header */}
+      <div className="bg-card border-b border-border px-6 py-4">
+        <h2 className="text-2xl font-bold text-foreground">Settings</h2>
+        <p className="text-muted-foreground text-sm">Manage your account and application settings</p>
+      </div>
 
-      <div className="p-6 space-y-6 max-w-3xl">
+      <div className="p-6 space-y-6">
 
         {/* Change Password */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <KeyRound className="h-5 w-5" />
               Change Password
             </CardTitle>
@@ -112,11 +116,13 @@ export default function SettingsPage() {
                           <Input
                             type={showCurrent ? 'text' : 'password'}
                             placeholder="Enter your current password"
+                            autoComplete="current-password"
                             {...field}
                           />
                           <button
                             type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                            tabIndex={-1}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             onClick={() => setShowCurrent(v => !v)}
                           >
                             {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -138,11 +144,13 @@ export default function SettingsPage() {
                           <Input
                             type={showNew ? 'text' : 'password'}
                             placeholder="Enter your new password (min 8 characters)"
+                            autoComplete="new-password"
                             {...field}
                           />
                           <button
                             type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                            tabIndex={-1}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             onClick={() => setShowNew(v => !v)}
                           >
                             {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -164,11 +172,13 @@ export default function SettingsPage() {
                           <Input
                             type={showConfirm ? 'text' : 'password'}
                             placeholder="Confirm your new password"
+                            autoComplete="new-password"
                             {...field}
                           />
                           <button
                             type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                            tabIndex={-1}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             onClick={() => setShowConfirm(v => !v)}
                           >
                             {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -193,8 +203,8 @@ export default function SettingsPage() {
 
         {/* Data Management */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Database className="h-5 w-5" />
               Data Management
             </CardTitle>
@@ -205,32 +215,27 @@ export default function SettingsPage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <BarChart2 className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Storage Statistics</span>
+                <span className="text-sm font-semibold">Storage Statistics</span>
               </div>
               {statsLoading ? (
                 <div className="grid grid-cols-4 gap-4">
                   {[...Array(4)].map((_, i) => (
-                    <div key={i} className="animate-pulse h-16 bg-muted rounded" />
+                    <div key={i} className="animate-pulse h-20 bg-muted rounded-lg" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold">{stats?.products ?? 0}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Products</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold">{stats?.sales ?? 0}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Sales</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold">{stats?.expenses ?? 0}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Expenses</p>
-                  </div>
-                  <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-2xl font-bold">{stats?.fileSizeKB ?? '0'} KB</p>
-                    <p className="text-xs text-muted-foreground mt-1">File Size</p>
-                  </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { label: 'Products', value: stats?.products ?? 0 },
+                    { label: 'Sales', value: stats?.sales ?? 0 },
+                    { label: 'Expenses', value: stats?.expenses ?? 0 },
+                    { label: 'File Size', value: `${stats?.fileSizeKB ?? '0'} KB` },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="text-center p-4 bg-muted/50 rounded-lg">
+                      <p className="text-2xl font-bold">{value}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{label}</p>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -282,15 +287,15 @@ export default function SettingsPage() {
 
         {/* Account Information */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5" />
               Account Information
             </CardTitle>
             <p className="text-sm text-muted-foreground">Your account details and application info</p>
           </CardHeader>
           <CardContent>
-            <div className="space-y-0 divide-y divide-border">
+            <div className="divide-y divide-border">
               {[
                 { label: 'Username', value: user?.username || 'admin' },
                 { label: 'Application', value: 'Shop Analytics Dashboard' },
@@ -309,11 +314,13 @@ export default function SettingsPage() {
       </div>
 
       {/* Footer */}
-      <div className="px-6 pb-6 max-w-3xl">
-        <p className="text-center text-xs text-muted-foreground border-t border-border pt-4">
-          Shop Analytics Dashboard &copy; {new Date().getFullYear()} &bull; Professional Business Analytics
-        </p>
+      <div className="px-6 pb-6">
+        <div className="border-t border-border pt-4 text-center">
+          <p className="text-xs text-muted-foreground">
+            Shop Analytics Dashboard &copy; {new Date().getFullYear()} &bull; Professional Business Analytics
+          </p>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
