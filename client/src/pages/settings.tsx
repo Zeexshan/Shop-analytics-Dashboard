@@ -11,7 +11,8 @@ import { api } from '@/lib/api';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
-import { KeyRound, Database, User, AlertTriangle, BarChart2, Eye, EyeOff, Copy, Check, Github, Linkedin } from 'lucide-react';
+import { KeyRound, Database, User, AlertTriangle, BarChart2, Eye, EyeOff, Copy, Check, Globe } from 'lucide-react';
+import { SiGithub, SiLinkedin, SiInstagram } from 'react-icons/si';
 
 const LICENSE_KEY = 'SHOP-2024-ANLYT-ZXSH';
 
@@ -352,23 +353,21 @@ export default function SettingsPage() {
                 <span className="text-sm text-muted-foreground">Developer:</span>
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium">Zeexshan</span>
-                  <a
-                    href="https://github.com/Zeexshan"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                    title="GitHub"
-                  >
-                    <Github className="h-4 w-4" />
+                  <a href="https://github.com/Zeexshan" target="_blank" rel="noopener noreferrer"
+                    title="GitHub" className="text-muted-foreground hover:text-foreground transition-colors">
+                    <SiGithub className="h-4 w-4" />
                   </a>
-                  <a
-                    href="https://www.linkedin.com/in/zeeexshan/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-[#0A66C2] transition-colors"
-                    title="LinkedIn"
-                  >
-                    <Linkedin className="h-4 w-4" />
+                  <a href="https://www.linkedin.com/in/zeeexshan/" target="_blank" rel="noopener noreferrer"
+                    title="LinkedIn" className="text-muted-foreground hover:text-[#0A66C2] transition-colors">
+                    <SiLinkedin className="h-4 w-4" />
+                  </a>
+                  <a href="https://www.instagram.com/zeeexshan" target="_blank" rel="noopener noreferrer"
+                    title="Instagram" className="text-muted-foreground hover:text-[#E1306C] transition-colors">
+                    <SiInstagram className="h-4 w-4" />
+                  </a>
+                  <a href="https://www.zeexshan.me/" target="_blank" rel="noopener noreferrer"
+                    title="Website" className="text-muted-foreground hover:text-primary transition-colors">
+                    <Globe className="h-4 w-4" />
                   </a>
                 </div>
               </div>

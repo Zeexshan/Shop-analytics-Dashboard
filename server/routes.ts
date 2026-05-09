@@ -101,6 +101,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/products/low-stock', authenticateToken, async (req, res, next) => {
+    try {
+      const products = await storage.excel.getLowStockProducts();
+      res.json(products);
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.get('/api/products/:id', authenticateToken, async (req, res, next) => {
     try {
       const product = await storage.excel.getProductById(req.params.id);
@@ -143,15 +152,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Product not found' });
       }
       res.status(204).send();
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  app.get('/api/products/low-stock', authenticateToken, async (req, res, next) => {
-    try {
-      const products = await storage.excel.getLowStockProducts();
-      res.json(products);
     } catch (error) {
       next(error);
     }
@@ -209,6 +209,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete('/api/expenses/:id', authenticateToken, async (req, res, next) => {
+    try {
+      const deleted = await storage.excel.deleteExpense(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: 'Expense not found' });
+      }
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  });
+
   // Goal routes
   app.get('/api/goals', authenticateToken, async (req, res, next) => {
     try {
@@ -224,6 +236,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const goalData = insertGoalSchema.parse(req.body);
       const goal = await storage.excel.addGoal(goalData);
       res.status(201).json(goal);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.delete('/api/goals/:id', authenticateToken, async (req, res, next) => {
+    try {
+      const deleted = await storage.excel.deleteGoal(req.params.id);
+      if (!deleted) {
+        return res.status(404).json({ message: 'Goal not found' });
+      }
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch('/api/goals/:id/status', authenticateToken, async (req, res, next) => {
+    try {
+      const { status } = req.body;
+      if (!status) return res.status(400).json({ message: 'Status is required' });
+      const goal = await storage.excel.updateGoalStatus(req.params.id, status);
+      if (!goal) return res.status(404).json({ message: 'Goal not found' });
+      res.json(goal);
     } catch (error) {
       next(error);
     }

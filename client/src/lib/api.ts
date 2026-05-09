@@ -40,6 +40,19 @@ export const api = {
     return response.json();
   },
 
+  patch: async (url: string, data: any) => {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  },
+
   delete: async (url: string) => {
     const response = await fetch(url, {
       method: 'DELETE',

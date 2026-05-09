@@ -15,7 +15,7 @@ import { api } from '@/lib/api';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { insertGoalSchema, type InsertGoal, type Goal, type KPIData } from '@shared/schema';
-import { Plus, Target, TrendingUp, Calendar, Award } from 'lucide-react';
+import { Plus, Target, TrendingUp, Calendar, Award, Trash2, CheckCircle, XCircle } from 'lucide-react';
 
 const periodTypes = ['Monthly', 'Quarterly', 'Yearly'];
 
@@ -31,6 +31,29 @@ export default function GoalsPage() {
   const { data: kpis } = useQuery<KPIData>({
     queryKey: ['/api/dashboard/kpis'],
     queryFn: () => api.get('/api/dashboard/kpis'),
+  });
+
+  const deleteGoalMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/api/goals/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/goals'] });
+      toast({ title: "Success", description: "Goal deleted" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to delete goal", variant: "destructive" });
+    },
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      api.patch(`/api/goals/${id}/status`, { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/goals'] });
+      toast({ title: "Success", description: "Goal status updated" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to update goal status", variant: "destructive" });
+    },
   });
 
   const createGoalMutation = useMutation({
@@ -370,6 +393,40 @@ export default function GoalsPage() {
                           {isOnTrack ? 'On Track' : 'Behind'}
                         </Badge>
                       )}
+                      {goal.status === 'Active' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => updateStatusMutation.mutate({ id: goal.id, status: 'Completed' })}
+                          className="text-green-600 hover:text-green-800 hover:bg-green-50 dark:hover:bg-green-900/20 h-7 px-2"
+                          title="Mark as Completed"
+                          disabled={updateStatusMutation.isPending}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {goal.status === 'Active' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => updateStatusMutation.mutate({ id: goal.id, status: 'Cancelled' })}
+                          className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 h-7 px-2"
+                          title="Cancel Goal"
+                          disabled={updateStatusMutation.isPending}
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => { if (confirm('Delete this goal?')) deleteGoalMutation.mutate(goal.id); }}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 h-7 px-2"
+                        title="Delete Goal"
+                        disabled={deleteGoalMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>

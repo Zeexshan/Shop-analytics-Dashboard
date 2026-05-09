@@ -189,6 +189,14 @@ export class ExcelStorage {
     return expense;
   }
 
+  async deleteExpense(id: string): Promise<boolean> {
+    const expenses = await this.getAllExpenses();
+    const filtered = expenses.filter(e => e.id !== id);
+    if (filtered.length === expenses.length) return false;
+    this.updateSheet('Expenses', filtered);
+    return true;
+  }
+
   async getExpensesByDateRange(startDate: Date, endDate: Date): Promise<Expense[]> {
     const expenses = await this.getAllExpenses();
     return expenses.filter(expense => {
@@ -215,6 +223,23 @@ export class ExcelStorage {
     goals.push(goal);
     this.updateSheet('Goals', goals);
     return goal;
+  }
+
+  async deleteGoal(id: string): Promise<boolean> {
+    const goals = await this.getAllGoals();
+    const filtered = goals.filter(g => g.id !== id);
+    if (filtered.length === goals.length) return false;
+    this.updateSheet('Goals', filtered);
+    return true;
+  }
+
+  async updateGoalStatus(id: string, status: string): Promise<Goal | undefined> {
+    const goals = await this.getAllGoals();
+    const index = goals.findIndex(g => g.id === id);
+    if (index === -1) return undefined;
+    goals[index] = { ...goals[index], status };
+    this.updateSheet('Goals', goals);
+    return goals[index];
   }
 
   async getActiveGoals(): Promise<Goal[]> {
