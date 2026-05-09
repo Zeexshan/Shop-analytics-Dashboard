@@ -11,7 +11,49 @@ import { api } from '@/lib/api';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
-import { KeyRound, Database, User, AlertTriangle, BarChart2, Eye, EyeOff } from 'lucide-react';
+import { KeyRound, Database, User, AlertTriangle, BarChart2, Eye, EyeOff, Copy, Check } from 'lucide-react';
+
+const LICENSE_KEY = 'SHOP-2024-ANLYT-ZXSH';
+
+function LicenseKeyDisplay() {
+  const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const masked = LICENSE_KEY.replace(/[A-Z0-9]/g, (c, i) =>
+    i < LICENSE_KEY.length - 4 ? '*' : c
+  );
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(LICENSE_KEY).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <code className="text-sm font-mono font-medium tracking-wider">
+        {visible ? LICENSE_KEY : masked}
+      </code>
+      <button
+        type="button"
+        onClick={() => setVisible(v => !v)}
+        className="text-muted-foreground hover:text-foreground"
+        title={visible ? 'Hide' : 'Show'}
+      >
+        {visible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+      </button>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="text-muted-foreground hover:text-foreground"
+        title="Copy license key"
+      >
+        {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+      </button>
+    </div>
+  );
+}
 
 const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, 'Current password is required'),
@@ -307,6 +349,11 @@ export default function SettingsPage() {
                   <span className="text-sm font-medium">{value}</span>
                 </div>
               ))}
+              {/* License Key row */}
+              <div className="flex items-center justify-between py-3">
+                <span className="text-sm text-muted-foreground">License Key:</span>
+                <LicenseKeyDisplay />
+              </div>
             </div>
           </CardContent>
         </Card>
