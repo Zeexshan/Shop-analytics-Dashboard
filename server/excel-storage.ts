@@ -309,6 +309,30 @@ export class ExcelStorage {
     }));
   }
 
+  async resetAllData() {
+    const workbook = XLSX.utils.book_new();
+
+    const productsSheet = XLSX.utils.aoa_to_sheet([
+      ['id', 'name', 'description', 'price', 'cost_price', 'category', 'stock', 'min_stock', 'supplier', 'sku', 'created_date', 'last_updated']
+    ]);
+    const salesSheet = XLSX.utils.aoa_to_sheet([
+      ['id', 'product_id', 'product_name', 'quantity', 'unit_price', 'total_amount', 'profit', 'customer_name', 'payment_method', 'sale_date', 'cashier', 'notes']
+    ]);
+    const expensesSheet = XLSX.utils.aoa_to_sheet([
+      ['id', 'category', 'description', 'amount', 'payment_method', 'vendor', 'expense_date', 'receipt_number', 'notes']
+    ]);
+    const goalsSheet = XLSX.utils.aoa_to_sheet([
+      ['id', 'period_type', 'target_period', 'revenue_goal', 'profit_goal', 'sales_goal', 'created_date', 'status']
+    ]);
+
+    XLSX.utils.book_append_sheet(workbook, productsSheet, 'Products');
+    XLSX.utils.book_append_sheet(workbook, salesSheet, 'Sales');
+    XLSX.utils.book_append_sheet(workbook, expensesSheet, 'Expenses');
+    XLSX.utils.book_append_sheet(workbook, goalsSheet, 'Goals');
+
+    XLSX.writeFile(workbook, EXCEL_FILE);
+  }
+
   async getRevenueChartData(days = 30) {
     const endDate = new Date();
     const startDate = new Date();
