@@ -56,7 +56,6 @@ Preferred communication style: Simple, everyday language.
 ### Development and Build Tools
 - **vite**: Fast build tool with React plugin and development server
 - **typescript**: Type checking and compilation
-- **@replit/vite-plugin-***: Replit-specific development plugins for error handling and cartography
 
 ### Data Processing
 - **xlsx**: Excel file reading and writing capabilities

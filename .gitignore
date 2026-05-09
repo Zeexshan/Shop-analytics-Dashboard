@@ -13,3 +13,11 @@ Thumbs.db
 .vscode/
 .idea/
 *.tsbuildinfo
+
+# Replit-specific files (not needed in git)
+.replit
+replit.nix
+replit.md
+.config/
+.local/
+generated-icon.png

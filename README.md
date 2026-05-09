@@ -1,68 +1,94 @@
-# Shop Analytics Dashboard
+# ShopAnalytics Dashboard
 
-A free, open-source business analytics dashboard for shopkeepers. Built with React, Express, TypeScript, and Excel-based storage.
+A free, open-source business analytics dashboard for shop owners. Built with React, Express, TypeScript, and Excel-based storage — no database setup required.
 
 ## Features
 
-- **Dashboard** — Real-time KPIs: Revenue, Profit, Sales Count, Goal Progress, Low Stock Alerts
-- **Products** — Full inventory management with stock tracking, SKU, categories, and edit/delete
-- **Sales** — Record sales with automatic stock deduction, profit calculation, and receipt printing
-- **Expenses** — Track business expenses by category with date filtering
-- **Goals** — Set monthly, quarterly, and yearly revenue/profit/sales targets with live progress
-- **Reports** — Export business data as CSV or HTML reports
+- **Dashboard** — KPI cards, revenue chart, category breakdown, top products, recent sales
+- **Products** — Add, edit, delete products with stock tracking and low-stock alerts
+- **Sales** — Record sales, auto-update inventory, print receipts
+- **Expenses** — Track business expenses by category
+- **Goals** — Set monthly/quarterly/yearly revenue, profit, and sales targets
+- **Reports** — Generate and download CSV / HTML business reports with custom date ranges
+- **Settings** — Change password, view storage stats, reset data
 
 ## Getting Started
 
-### Requirements
-- Node.js 20+
+### Prerequisites
+
+- Node.js 18+
+- npm
 
 ### Installation
 
 ```bash
+git clone https://github.com/your-username/shop-analytics-dashboard.git
+cd shop-analytics-dashboard
 npm install
+```
+
+### Running the app
+
+```bash
 npm run dev
 ```
 
-Open `http://localhost:5000` in your browser.
+Open [http://localhost:5000](http://localhost:5000) in your browser.
 
-### Default Login
+**Default login credentials:**
+- Username: `admin`
+- Password: `ShopOwner@2024`
 
-| Field    | Value          |
-|----------|----------------|
-| Username | `admin`        |
-| Password | `ShopOwner@2024` |
+> Change your password immediately after first login via the Settings page.
+
+### Building for production
+
+```bash
+npm run build
+npm run start
+```
 
 ## Tech Stack
 
-| Layer    | Technology                          |
-|----------|-------------------------------------|
-| Frontend | React 18, TypeScript, Vite          |
-| UI       | Shadcn/UI, Tailwind CSS, Radix UI   |
-| Charts   | Recharts                            |
-| State    | TanStack Query v5                   |
-| Routing  | Wouter                              |
-| Forms    | React Hook Form + Zod               |
-| Backend  | Express.js (Node.js)                |
-| Storage  | Excel (.xlsx) via SheetJS           |
-| Auth     | JWT + Bcrypt                        |
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript, Vite |
+| UI | shadcn/ui, Tailwind CSS, Radix UI |
+| Charts | Recharts |
+| State | TanStack Query v5 |
+| Routing | Wouter |
+| Forms | React Hook Form + Zod |
+| Backend | Express.js, TypeScript |
+| Storage | XLSX (Excel files) |
+| Auth | JWT + bcrypt |
+
+## Data Storage
+
+All data is stored locally in `data/shop_data.xlsx`. This file is excluded from git (via `.gitignore`) so your business data stays private.
 
 ## Project Structure
 
 ```
-├── client/src/
-│   ├── components/    # Reusable UI components
-│   ├── contexts/      # Auth context
-│   ├── pages/         # Dashboard, Products, Sales, Expenses, Goals, Reports
-│   └── lib/           # API client, query client
-├── server/
-│   ├── routes.ts      # API endpoints
-│   ├── storage.ts     # Storage interface
-│   ├── excel-storage.ts  # Excel persistence layer
-│   └── middleware.ts  # JWT auth middleware
-└── shared/
-    └── schema.ts      # Shared TypeScript types + Zod schemas
+├── client/          # React frontend
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── contexts/
+│       ├── hooks/
+│       └── lib/
+├── server/          # Express backend
+│   ├── routes.ts
+│   ├── storage.ts
+│   ├── excel-storage.ts
+│   └── middleware.ts
+├── shared/          # Shared TypeScript types + Zod schemas
+└── data/            # Excel data files (gitignored)
 ```
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE) for details.
+
+## Developer
+
+Built by **zeexshan**
