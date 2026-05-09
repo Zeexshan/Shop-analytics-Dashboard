@@ -1,7 +1,8 @@
 {
-  "name": "rest-express",
+  "name": "shop-analytics-dashboard",
   "version": "1.0.0",
   "type": "module",
+  "description": "A free, open-source business analytics dashboard for shopkeepers. Built with React, Express, TypeScript, and Excel-based storage.",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",

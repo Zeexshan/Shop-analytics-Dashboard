@@ -23,19 +23,15 @@ export class ExcelStorage {
     if (!fs.existsSync(EXCEL_FILE)) {
       const workbook = XLSX.utils.book_new();
 
-      // Initialize empty sheets
       const productsSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'name', 'description', 'price', 'cost_price', 'category', 'stock', 'min_stock', 'supplier', 'sku', 'created_date', 'last_updated']
       ]);
-
       const salesSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'product_id', 'product_name', 'quantity', 'unit_price', 'total_amount', 'profit', 'customer_name', 'payment_method', 'sale_date', 'cashier', 'notes']
       ]);
-
       const expensesSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'category', 'description', 'amount', 'payment_method', 'vendor', 'expense_date', 'receipt_number', 'notes']
       ]);
-
       const goalsSheet = XLSX.utils.aoa_to_sheet([
         ['id', 'period_type', 'target_period', 'revenue_goal', 'profit_goal', 'sales_goal', 'created_date', 'status']
       ]);
@@ -49,11 +45,11 @@ export class ExcelStorage {
     }
   }
 
-  private readWorkbook(): XLSX.WorkBook {
+  private readWorkbook() {
     return XLSX.readFile(EXCEL_FILE);
   }
 
-  private writeWorkbook(workbook: XLSX.WorkBook) {
+  private writeWorkbook(workbook: any) {
     XLSX.writeFile(workbook, EXCEL_FILE);
   }
 
@@ -61,9 +57,7 @@ export class ExcelStorage {
     const workbook = this.readWorkbook();
     const sheet = workbook.Sheets[sheetName];
     if (!sheet) return [];
-
-    const data = XLSX.utils.sheet_to_json(sheet);
-    return data as T[];
+    return XLSX.utils.sheet_to_json(sheet) as T[];
   }
 
   private updateSheet<T>(sheetName: string, data: T[]) {
@@ -102,7 +96,6 @@ export class ExcelStorage {
   async updateProduct(id: string, updates: Partial<InsertProduct>): Promise<Product | undefined> {
     const products = await this.getAllProducts();
     const index = products.findIndex(p => p.id === id);
-
     if (index === -1) return undefined;
 
     products[index] = {
@@ -117,17 +110,15 @@ export class ExcelStorage {
 
   async deleteProduct(id: string): Promise<boolean> {
     const products = await this.getAllProducts();
-    const filteredProducts = products.filter(p => p.id !== id);
-
-    if (filteredProducts.length === products.length) return false;
-
-    this.updateSheet('Products', filteredProducts);
+    const filtered = products.filter(p => p.id !== id);
+    if (filtered.length === products.length) return false;
+    this.updateSheet('Products', filtered);
     return true;
   }
 
   async getLowStockProducts(): Promise<Product[]> {
     const products = await this.getAllProducts();
-    return products.filter(p => p.stock <= p.min_stock);
+    return products.filter(p => Number(p.stock) <= Number(p.min_stock));
   }
 
   // Sales methods
@@ -141,19 +132,15 @@ export class ExcelStorage {
   }
 
   async addSale(saleData: InsertSale): Promise<Sale | null> {
-    // Get product to calculate total and profit
     const product = await this.getProductById(saleData.product_id);
     if (!product) throw new Error('Product not found');
 
-    // Check stock availability
-    if (product.stock < saleData.quantity) {
-      throw new Error('Insufficient stock');
-    }
+    if (Number(product.stock) < saleData.quantity) throw new Error('Insufficient stock');
 
     const sales = await this.getAllSales();
     const totalAmount = saleData.quantity * saleData.unit_price;
     const costPrice = parseFloat(product.cost_price.toString());
-    const profit = totalAmount - (costPrice * saleData.quantity);
+    const profit = totalAmount - costPrice * saleData.quantity;
 
     const sale: Sale = {
       ...saleData,
@@ -168,9 +155,8 @@ export class ExcelStorage {
     sales.push(sale);
     this.updateSheet('Sales', sales);
 
-    // Update product stock
     await this.updateProduct(saleData.product_id, {
-      stock: product.stock - saleData.quantity
+      stock: Number(product.stock) - saleData.quantity,
     });
 
     return sale;
@@ -179,8 +165,8 @@ export class ExcelStorage {
   async getSalesByDateRange(startDate: Date, endDate: Date): Promise<Sale[]> {
     const sales = await this.getAllSales();
     return sales.filter(sale => {
-      const saleDate = new Date(sale.sale_date);
-      return saleDate >= startDate && saleDate <= endDate;
+      const d = new Date(sale.sale_date);
+      return d >= startDate && d <= endDate;
     });
   }
 
@@ -206,8 +192,8 @@ export class ExcelStorage {
   async getExpensesByDateRange(startDate: Date, endDate: Date): Promise<Expense[]> {
     const expenses = await this.getAllExpenses();
     return expenses.filter(expense => {
-      const expenseDate = new Date(expense.expense_date);
-      return expenseDate >= startDate && expenseDate <= endDate;
+      const d = new Date(expense.expense_date);
+      return d >= startDate && d <= endDate;
     });
   }
 
@@ -236,12 +222,11 @@ export class ExcelStorage {
     return goals.filter(g => g.status === 'Active');
   }
 
-  // Analytics methods
+  // Analytics
   async getRevenueAnalytics(startDate: Date, endDate: Date) {
     const sales = await this.getSalesByDateRange(startDate, endDate);
-    const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
-    const totalProfit = sales.reduce((sum, sale) => sum + parseFloat(sale.profit.toString()), 0);
-
+    const totalRevenue = sales.reduce((sum, s) => sum + parseFloat(s.total_amount.toString()), 0);
+    const totalProfit = sales.reduce((sum, s) => sum + parseFloat(s.profit.toString()), 0);
     return {
       revenue: totalRevenue,
       profit: totalProfit,
@@ -256,115 +241,91 @@ export class ExcelStorage {
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
 
-    const thisMonthAnalytics = await this.getRevenueAnalytics(thisMonth, now);
-    const lastMonthAnalytics = await this.getRevenueAnalytics(lastMonth, lastMonthEnd);
-    const lowStockProducts = await this.getLowStockProducts();
-    const activeGoals = await this.getActiveGoals();
+    const [thisMonthData, lastMonthData, lowStock, activeGoals] = await Promise.all([
+      this.getRevenueAnalytics(thisMonth, now),
+      this.getRevenueAnalytics(lastMonth, lastMonthEnd),
+      this.getLowStockProducts(),
+      this.getActiveGoals(),
+    ]);
 
-    // Calculate growth rates
-    const revenueGrowth = lastMonthAnalytics.revenue > 0
-      ? ((thisMonthAnalytics.revenue - lastMonthAnalytics.revenue) / lastMonthAnalytics.revenue) * 100
-      : 0;
+    const revenueGrowth = lastMonthData.revenue > 0
+      ? ((thisMonthData.revenue - lastMonthData.revenue) / lastMonthData.revenue) * 100 : 0;
+    const profitGrowth = lastMonthData.profit > 0
+      ? ((thisMonthData.profit - lastMonthData.profit) / lastMonthData.profit) * 100 : 0;
+    const salesGrowth = lastMonthData.salesCount > 0
+      ? ((thisMonthData.salesCount - lastMonthData.salesCount) / lastMonthData.salesCount) * 100 : 0;
 
-    const profitGrowth = lastMonthAnalytics.profit > 0
-      ? ((thisMonthAnalytics.profit - lastMonthAnalytics.profit) / lastMonthAnalytics.profit) * 100
-      : 0;
-
-    const salesGrowth = lastMonthAnalytics.salesCount > 0
-      ? ((thisMonthAnalytics.salesCount - lastMonthAnalytics.salesCount) / lastMonthAnalytics.salesCount) * 100
-      : 0;
-
-    // Calculate goal progress (assuming monthly goals)
     let goalProgress = 0;
-    if (activeGoals.length > 0) {
-      const currentGoal = activeGoals.find(g => g.period_type === 'Monthly');
-      if (currentGoal) {
-        const targetRevenue = parseFloat(currentGoal.revenue_goal.toString());
-        goalProgress = targetRevenue > 0 ? (thisMonthAnalytics.revenue / targetRevenue) * 100 : 0;
-      }
+    const currentGoal = activeGoals.find(g => g.period_type === 'Monthly');
+    if (currentGoal) {
+      const target = parseFloat(currentGoal.revenue_goal.toString());
+      goalProgress = target > 0 ? (thisMonthData.revenue / target) * 100 : 0;
     }
 
     return {
-      revenue: thisMonthAnalytics.revenue,
-      profit: thisMonthAnalytics.profit,
-      salesCount: thisMonthAnalytics.salesCount,
-      lowStockCount: lowStockProducts.length,
+      revenue: thisMonthData.revenue,
+      profit: thisMonthData.profit,
+      salesCount: thisMonthData.salesCount,
+      lowStockCount: lowStock.length,
       goalProgress,
       revenueGrowth,
       profitGrowth,
-      profitMargin: thisMonthAnalytics.revenue > 0 ? Number(((thisMonthAnalytics.profit / thisMonthAnalytics.revenue) * 100).toFixed(1)) : 0,
+      profitMargin: thisMonthData.revenue > 0
+        ? Number(((thisMonthData.profit / thisMonthData.revenue) * 100).toFixed(1)) : 0,
       salesGrowth,
     };
   }
 
-  async getTopProducts(limit: number = 5) {
+  async getTopProducts(limit = 5) {
     const sales = await this.getAllSales();
-    const productStats = new Map();
+    const stats = new Map<string, { name: string; sales: number; revenue: number }>();
 
     sales.forEach(sale => {
-      const existing = productStats.get(sale.product_id) || {
-        name: sale.product_name,
-        sales: 0,
-        revenue: 0,
-      };
-
-      existing.sales += sale.quantity;
+      const existing = stats.get(sale.product_id) || { name: sale.product_name, sales: 0, revenue: 0 };
+      existing.sales += Number(sale.quantity);
       existing.revenue += parseFloat(sale.total_amount.toString());
-      productStats.set(sale.product_id, existing);
+      stats.set(sale.product_id, existing);
     });
 
-    return Array.from(productStats.values())
+    return Array.from(stats.values())
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, limit);
   }
 
   async getCategoryPerformance() {
-    const products = await this.getAllProducts();
-    const sales = await this.getAllSales();
-
-    const categoryStats = new Map();
+    const [products, sales] = await Promise.all([this.getAllProducts(), this.getAllSales()]);
+    const categoryStats = new Map<string, number>();
 
     sales.forEach(sale => {
       const product = products.find(p => p.id === sale.product_id);
       if (product) {
-        const existing = categoryStats.get(product.category) || 0;
-        categoryStats.set(product.category, existing + parseFloat(sale.total_amount.toString()));
+        categoryStats.set(product.category, (categoryStats.get(product.category) || 0) + parseFloat(sale.total_amount.toString()));
       }
     });
 
     const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-
     return Array.from(categoryStats.entries()).map(([name, value], index) => ({
-      name,
-      value,
-      color: colors[index % colors.length],
+      name, value, color: colors[index % colors.length],
     }));
   }
 
-  async getRevenueChartData(days: number = 30) {
+  async getRevenueChartData(days = 30) {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
     const sales = await this.getSalesByDateRange(startDate, endDate);
-    const dailyRevenue = new Map();
+    const dailyRevenue = new Map<string, number>();
 
-    // Initialize all days with 0
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().split('T')[0];
-      dailyRevenue.set(dateStr, 0);
+      dailyRevenue.set(d.toISOString().split('T')[0], 0);
     }
 
-    // Add sales data
     sales.forEach(sale => {
-      const dateStr = new Date(sale.sale_date).toISOString().split('T')[0];
-      const existing = dailyRevenue.get(dateStr) || 0;
-      dailyRevenue.set(dateStr, existing + parseFloat(sale.total_amount.toString()));
+      const key = new Date(sale.sale_date).toISOString().split('T')[0];
+      dailyRevenue.set(key, (dailyRevenue.get(key) || 0) + parseFloat(sale.total_amount.toString()));
     });
 
-    return Array.from(dailyRevenue.entries()).map(([date, revenue]) => ({
-      date,
-      revenue,
-    }));
+    return Array.from(dailyRevenue.entries()).map(([date, revenue]) => ({ date, revenue }));
   }
 }

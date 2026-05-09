@@ -1,0 +1,634 @@
+
+
+```
+Please perform a complete professional cleanup of this repository so it looks like a polished, open-source GitHub portfolio project. Follow every step carefully without breaking the app.
+
+---
+
+## STEP 1: DELETE THESE FILES ENTIRELY
+
+- `.replit`
+- `replit.md`
+- `rm` (empty file in root)
+- `Microsoft` (empty file in root)
+- `server/index.ts.backup`
+- `test-license-device-restriction.js`
+- `README-DESKTOP-BUILD.md`
+- `GITHUB-ACTIONS-BUILD-GUIDE.md`
+
+---
+
+## STEP 2: REMOVE REPLIT REFERENCES FROM client/index.html
+
+In `client/index.html`, remove this entire script tag:
+```html
+<!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+<script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+```
+
+---
+
+## STEP 3: CLEAN package.json
+
+In `package.json`:
+- Remove `@replit/vite-plugin-cartographer` from devDependencies
+- Remove `@replit/vite-plugin-runtime-error-modal` from devDependencies
+- Update `"description"` to: `"A free, open-source business analytics dashboard for Indian shopkeepers. Built with React, Express, TypeScript, and Excel-based storage."`
+
+---
+
+## STEP 4: CLEAN vite.config.ts
+
+The current vite.config.ts imports nothing from Replit plugins. Make sure it is clean and contains NO Replit plugin imports. Replace the entire file with:
+
+```ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from "path";
+
+export default defineConfig({
+  base: './',
+  root: 'client',
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(process.cwd(), "client/src"),
+      "@shared": path.resolve(process.cwd(), "shared"),
+    },
+  },
+  define: {
+    'process.env': 'import.meta.env',
+  },
+  server: {
+    host: "0.0.0.0",
+    port: 5000,
+    allowedHosts: true,
+  },
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true,
+  }
+});
+```
+
+---
+
+## STEP 5: CLEAN client/src/config/api.ts
+
+Replace the entire file with a clean version that has NO Replit-specific detection logic:
+
+```ts
+// API Configuration for Desktop and Web compatibility
+const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
+
+export const API_BASE_URL = isElectron
+  ? 'http://localhost:5000'
+  : '';
+
+export const API_ENDPOINTS = {
+  login: `${API_BASE_URL}/api/auth/login`,
+  logout: `${API_BASE_URL}/api/auth/logout`,
+  verify: `${API_BASE_URL}/api/auth/verify`,
+  dashboardKpis: `${API_BASE_URL}/api/dashboard/kpis`,
+  dashboardCharts: `${API_BASE_URL}/api/dashboard/charts`,
+  products: `${API_BASE_URL}/api/products`,
+  sales: `${API_BASE_URL}/api/sales`,
+  recentSales: `${API_BASE_URL}/api/sales/recent`,
+  expenses: `${API_BASE_URL}/api/expenses`,
+  goals: `${API_BASE_URL}/api/goals`,
+  reports: `${API_BASE_URL}/api/reports`
+};
+
+export const getApiUrl = (endpoint: string): string => {
+  return `${API_BASE_URL}${endpoint}`;
+};
+```
+
+---
+
+## STEP 6: CLEAN client/src/lib/api.ts
+
+Remove Replit-specific fallback logic. Replace the entire file with:
+
+```ts
+import { queryClient } from './queryClient';
+import { getApiUrl } from '@/config/api';
+
+const getAuthHeaders = (): Record<string, string> => {
+  const token = localStorage.getItem('auth_token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
+const makeRequest = async (url: string, options: RequestInit): Promise<Response> => {
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response;
+};
+
+export const api = {
+  get: async (url: string, options?: { params?: Record<string, any> }) => {
+    const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
+    let finalUrl = fullUrl;
+
+    if (options?.params) {
+      const searchParams = new URLSearchParams();
+      Object.entries(options.params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      });
+      const queryString = searchParams.toString();
+      if (queryString) {
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + queryString;
+      }
+    }
+
+    const response = await makeRequest(finalUrl, {
+      credentials: 'include',
+      headers: getAuthHeaders()
+    });
+    return response.json();
+  },
+
+  post: async (url: string, data: any) => {
+    const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
+    const response = await makeRequest(fullUrl, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  put: async (url: string, data: any) => {
+    const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
+    const response = await makeRequest(fullUrl, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  delete: async (url: string) => {
+    const fullUrl = url.startsWith('http') ? url : getApiUrl(url);
+    const response = await makeRequest(fullUrl, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: getAuthHeaders()
+    });
+    return response.ok;
+  }
+};
+```
+
+---
+
+## STEP 7: CLEAN client/src/services/ApiService.ts
+
+Remove the hardcoded Replit fallback URL. Replace the fallback URL line in `startServerWithSpawn` and `request` method:
+Find and remove ANY line containing `riker.replit.dev` or hardcoded Replit URLs.
+
+Replace the entire `ApiService.ts` file with a clean version:
+
+```ts
+import { API_BASE_URL } from '@/config/api';
+
+class ApiService {
+  private getAuthHeaders(): Record<string, string> {
+    const token = localStorage.getItem('auth_token');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }
+
+  async request(endpoint: string, options: RequestInit = {}): Promise<any> {
+    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+
+    const config: RequestInit = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
+        ...options.headers,
+      },
+      credentials: 'include',
+      ...options,
+    };
+
+    const response = await fetch(url, config);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return response.json();
+  }
+
+  async login(username: string, password: string) {
+    return this.request('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+  }
+  async logout() { return this.request('/api/auth/logout', { method: 'POST' }); }
+  async verifyAuth() { return this.request('/api/auth/verify'); }
+  async getDashboardKpis() { return this.request('/api/dashboard/kpis'); }
+  async getDashboardCharts() { return this.request('/api/dashboard/charts'); }
+  async getProducts() { return this.request('/api/products'); }
+  async addProduct(data: any) { return this.request('/api/products', { method: 'POST', body: JSON.stringify(data) }); }
+  async updateProduct(id: string, data: any) { return this.request(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  async deleteProduct(id: string) { return this.request(`/api/products/${id}`, { method: 'DELETE' }); }
+  async getSales() { return this.request('/api/sales'); }
+  async getRecentSales() { return this.request('/api/sales/recent'); }
+  async addSale(data: any) { return this.request('/api/sales', { method: 'POST', body: JSON.stringify(data) }); }
+  async updateSale(id: string, data: any) { return this.request(`/api/sales/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  async getExpenses() { return this.request('/api/expenses'); }
+  async addExpense(data: any) { return this.request('/api/expenses', { method: 'POST', body: JSON.stringify(data) }); }
+  async getGoals() { return this.request('/api/goals'); }
+  async addGoal(data: any) { return this.request('/api/goals', { method: 'POST', body: JSON.stringify(data) }); }
+}
+
+export default new ApiService();
+```
+
+---
+
+## STEP 8: CLEAN server/index.ts
+
+Find and remove these lines (or the blocks that use them):
+- `process.env.REPLIT_DEPLOYMENT`
+- `process.env.REPLIT_DEV_DOMAIN`
+- `process.env.VITE_REPLIT_DEV_DOMAIN`
+- Any `import.meta.env.VITE_REPLIT_DEV_DOMAIN` references
+
+In the CORS section, change it so it doesn't reference Replit. Replace:
+```ts
+if (isDevelopment || process.env.REPLIT_DEPLOYMENT) {
+  app.set('trust proxy', 1);
+}
+```
+With:
+```ts
+app.set('trust proxy', 1);
+```
+
+Also update the FRONTEND_URL default in validateEnvironment:
+Replace:
+```ts
+'FRONTEND_URL': process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000'
+```
+With:
+```ts
+'FRONTEND_URL': 'http://localhost:5000'
+```
+
+---
+
+## STEP 9: CLEAN server/config.ts
+
+In the DEV_DEFAULTS block, replace the FRONTEND_URL line:
+```ts
+// Remove this:
+'FRONTEND_URL': process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://localhost:5000'
+// Replace with:
+'FRONTEND_URL': 'http://localhost:5000'
+```
+
+---
+
+## STEP 10: CLEAN electron/main.cjs
+
+Find and remove the hardcoded Replit fallback URL in the server startup functions. Remove any line containing `riker.replit.dev` or `VITE_REPLIT_DEV_DOMAIN`.
+
+In `startServerWithSpawn`, find:
+```js
+const FALLBACK_API_URL = import.meta.env.VITE_REPLIT_DEV_DOMAIN 
+  ? `https://${import.meta.env.VITE_REPLIT_DEV_DOMAIN}` 
+  : 'https://ca72fa78-84e4-428c-a8d1-d1917050d0fc-00-1scrwxd0h0we9.riker.replit.dev';
+```
+Delete it entirely (it's Electron-only, remove fallback to remote server since desktop should run locally).
+
+Also find in `main.cjs` any references to `VITE_REPLIT_DEV_DOMAIN` and remove them.
+
+---
+
+## STEP 11: CLEAN client/src/main.tsx
+
+Replace the noisy console.log branding block with something clean. Replace the current main.tsx with:
+
+```tsx
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+createRoot(document.getElementById("root")!).render(<App />);
+```
+
+---
+
+## STEP 12: CLEAN .env.example
+
+Make sure `.env.example` is present and clean (it already looks fine — verify it has no Replit references and is properly documented).
+
+---
+
+## STEP 13: CLEAN .gitignore
+
+Replace the contents of `.gitignore` with a comprehensive version:
+
+```
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-electron/
+
+# Environment variables (never commit)
+.env
+.env.local
+.env.production
+
+# Data files (user data, not for repo)
+data/
+**/*.db
+**/*.xlsx
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+```
+
+---
+
+## STEP 14: WRITE A PROFESSIONAL README.md
+
+Replace the existing `README.md` completely with this professional version:
+
+```md
+<div align="center">
+
+# Shop Analytics Dashboard
+
+### Free, Open-Source Business Intelligence for Indian Shopkeepers 🇮🇳
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Express](https://img.shields.io/badge/Express-4-000000?style=for-the-badge&logo=express)](https://expressjs.com)
+
+A professional-grade analytics and inventory management system built for small retailers and shopkeepers. No subscriptions, no cloud lock-in — runs entirely on your own machine.
+
+**[Features](#features) · [Tech Stack](#tech-stack) · [Getting Started](#getting-started) · [Screenshots](#screenshots) · [Contributing](#contributing)**
+
+</div>
+
+---
+
+## Why This Exists
+
+Most analytics tools are built for large enterprises. Shop Analytics Dashboard gives every shopkeeper — from a kirana store in a village to a multi-category retailer in a city — the same data-driven insights that big businesses pay thousands for, completely free.
+
+---
+
+## Features
+
+**📊 Live Dashboard**
+- Real-time KPIs: Revenue, Gross Profit, Net Profit, Expenses, Sales Count
+- Revenue trend charts (7 / 30 / 90 day view)
+- Category sales breakdown
+- Top products ranking
+- Goal progress tracking
+- Low stock alerts
+- Custom date range filtering
+- PDF & Excel export
+
+**📦 Inventory Management**
+- Full product CRUD with SKU, category, supplier tracking
+- Real-time stock levels with minimum threshold alerts
+- Cost price vs. selling price margin tracking
+- Instant search across your entire catalog
+
+**🧾 Sales Tracking**
+- Quick sale entry with automatic profit calculation
+- Multiple payment methods (Cash, Card, UPI, Bank Transfer)
+- Receipt printing
+- Edit past sales
+- Customer name tracking
+
+**💸 Expense Management**
+- Categorized expenses (Rent, Utilities, Inventory, Marketing, Staff, Other)
+- Vendor and receipt number tracking
+- Date-based filtering
+
+**🎯 Goal Setting**
+- Monthly, Quarterly, and Yearly goals
+- Revenue, Profit, and Sales volume targets
+- Live progress tracking
+
+**📈 Reports**
+- Business overview, sales analysis, inventory, financial summary
+- PDF and CSV export for all report types
+
+**🔒 Security**
+- JWT authentication with bcrypt password hashing
+- Rate limiting on login endpoints
+- License key system with device binding
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, TypeScript, Vite |
+| UI | Shadcn/UI, Tailwind CSS, Radix UI |
+| Charts | Recharts |
+| Animations | Framer Motion |
+| State | TanStack Query v5 |
+| Routing | Wouter |
+| Forms | React Hook Form + Zod |
+| Backend | Express.js (Node.js) |
+| Storage | Excel (.xlsx) via SheetJS |
+| Auth | JWT + Bcrypt |
+| Desktop | Electron |
+| PDF Export | jsPDF + html2canvas |
+| Excel Export | SheetJS |
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 20+
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/zeexshan/shop-analytics-dashboard.git
+cd shop-analytics-dashboard
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+Open `http://localhost:5000` in your browser.
+
+### Default Login
+
+| Field | Value |
+|---|---|
+| Username | `admin` |
+| Password | `ShopOwner@2024` |
+
+> Change your password in Settings after first login.
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+For development, the app uses secure defaults automatically. Only `DATABASE_URL` is needed if you want PostgreSQL instead of the default Excel storage.
+
+### Production Build
+
+```bash
+npm run build
+npm start
+```
+
+### Desktop Build (Electron)
+
+```bash
+npm run build:production
+```
+
+The installer will be output to `dist-electron/`.
+
+---
+
+## Project Structure
+
+```
+shop-analytics-dashboard/
+├── client/                  # React frontend
+│   └── src/
+│       ├── components/      # Reusable UI components
+│       ├── contexts/        # Auth context
+│       ├── hooks/           # Custom React hooks
+│       ├── lib/             # API client, utilities
+│       └── pages/           # Dashboard, Products, Sales, Expenses, Goals, Reports, Settings
+├── server/                  # Express backend
+│   ├── routes.ts            # API endpoints
+│   ├── storage.ts           # Storage interface
+│   ├── excel-storage.ts     # Excel persistence layer
+│   ├── license-storage-simple.ts  # License management
+│   ├── middleware.ts        # JWT auth middleware
+│   └── config.ts            # Centralized config
+├── shared/                  # Shared TypeScript types
+│   └── schema.ts            # Drizzle schema + Zod validators
+├── electron/                # Desktop app entry points
+└── assets/                  # App icons and branding
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Whether it's a bug fix, a new feature, or a Hindi language option — all pull requests are appreciated.
+
+```bash
+# Create a feature branch
+git checkout -b feature/amazing-feature
+
+# Commit your changes
+git commit -m 'Add amazing feature'
+
+# Push and open a PR
+git push origin feature/amazing-feature
+```
+
+### Ideas for Contribution
+- 🇮🇳 Hindi / regional language support
+- 📱 Mobile-first responsive improvements
+- 🖨️ GST invoice generation
+- 📦 Barcode scanning integration
+- 🔔 Low stock notifications
+- 📊 Additional chart types
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+<div align="center">
+
+Made with ❤️ for Indian shopkeepers everywhere
+
+**[zeexshan.me](https://www.zeexshan.me/)**
+
+</div>
+```
+
+---
+
+## STEP 15: ADD A LICENSE FILE
+
+Create a file called `LICENSE` in the root with:
+
+```
+MIT License
+
+Copyright (c) 2024 zeeexshan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## STEP 16: FINAL VERIFICATION
+
+After all changes, verify the app still works:
+1. Run `npm run dev` — confirm the server starts on port 5000 with no errors
+2. Open the browser — confirm the login page loads
+3. Log in with `admin` / `ShopOwner@2024` — confirm the dashboard loads
+4. Confirm NO errors in the browser console related to missing scripts or failed fetches
+
+Do NOT run `npm install` again unless a package was actually removed. Only remove the two Replit packages from package.json `devDependencies` and do `npm uninstall @replit/vite-plugin-cartographer @replit/vite-plugin-runtime-error-modal` to clean them up.
+
+Report back when all 16 steps are complete with a summary of what was changed.
+```
+
+---
+
