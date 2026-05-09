@@ -33,6 +33,7 @@ Preferred communication style: Simple, everyday language.
 - **Authentication Method**: JWT tokens with 24-hour expiration
 - **Password Security**: bcrypt hashing for secure password storage
 - **Default Credentials**: Admin user (username: 'admin', password: 'ShopOwner@2024')
+- **Developer**: Zeexshan — [GitHub](https://github.com/Zeexshan) | [LinkedIn](https://www.linkedin.com/in/zeeexshan/)
 - **Route Protection**: Middleware-based authentication for API endpoints
 - **Session Management**: Token-based authentication with automatic verification
 

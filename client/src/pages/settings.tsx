@@ -11,7 +11,7 @@ import { api } from '@/lib/api';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
-import { KeyRound, Database, User, AlertTriangle, BarChart2, Eye, EyeOff, Copy, Check } from 'lucide-react';
+import { KeyRound, Database, User, AlertTriangle, BarChart2, Eye, EyeOff, Copy, Check, Github, Linkedin } from 'lucide-react';
 
 const LICENSE_KEY = 'SHOP-2024-ANLYT-ZXSH';
 
@@ -341,7 +341,6 @@ export default function SettingsPage() {
               {[
                 { label: 'Username', value: user?.username || 'admin' },
                 { label: 'Application', value: 'Shop Analytics Dashboard' },
-                { label: 'Developer', value: 'zeexshan' },
                 { label: 'Version', value: '1.0.0' },
               ].map(({ label, value }) => (
                 <div key={label} className="flex items-center justify-between py-3">
@@ -349,6 +348,30 @@ export default function SettingsPage() {
                   <span className="text-sm font-medium">{value}</span>
                 </div>
               ))}
+              <div className="flex items-center justify-between py-3">
+                <span className="text-sm text-muted-foreground">Developer:</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium">Zeexshan</span>
+                  <a
+                    href="https://github.com/Zeexshan"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    title="GitHub"
+                  >
+                    <Github className="h-4 w-4" />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/zeeexshan/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-[#0A66C2] transition-colors"
+                    title="LinkedIn"
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
               {/* License Key row */}
               <div className="flex items-center justify-between py-3">
                 <span className="text-sm text-muted-foreground">License Key:</span>
@@ -362,9 +385,19 @@ export default function SettingsPage() {
 
       {/* Footer */}
       <div className="px-6 pb-6">
-        <div className="border-t border-border pt-4 text-center">
+        <div className="border-t border-border pt-4 text-center space-y-1">
           <p className="text-xs text-muted-foreground">
             Shop Analytics Dashboard &copy; {new Date().getFullYear()} &bull; Professional Business Analytics
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Built by{' '}
+            <a href="https://github.com/Zeexshan" target="_blank" rel="noopener noreferrer" className="hover:underline text-foreground/70">
+              Zeexshan
+            </a>
+            {' '}&bull;{' '}
+            <a href="https://www.linkedin.com/in/zeeexshan/" target="_blank" rel="noopener noreferrer" className="hover:underline text-foreground/70">
+              LinkedIn
+            </a>
           </p>
         </div>
       </div>

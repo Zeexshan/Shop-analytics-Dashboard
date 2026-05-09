@@ -91,4 +91,7 @@ MIT — see [LICENSE](LICENSE) for details.
 
 ## Developer
 
-Built by **zeexshan**
+Built by **Zeexshan**
+
+- GitHub: [github.com/Zeexshan](https://github.com/Zeexshan)
+- LinkedIn: [linkedin.com/in/zeeexshan](https://www.linkedin.com/in/zeeexshan/)
