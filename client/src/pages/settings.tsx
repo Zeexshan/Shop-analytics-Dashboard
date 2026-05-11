@@ -15,7 +15,8 @@ import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { getApiUrl } from '@/config/api';
 import { Label } from '@/components/ui/label';
-import { Lock, Shield, User, Key, Database, BarChart3, AlertTriangle, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Lock, Shield, User, Key, Database, BarChart3, AlertTriangle, Trash2, Eye, EyeOff, Globe } from 'lucide-react';
+import { SiGithub, SiLinkedin, SiInstagram } from 'react-icons/si';
 
 // Developer: zeeexshan - Professional Settings Management
 const SETTINGS_SIGNATURE_zeeexshan = 'shop_analytics_settings_page';
@@ -31,14 +32,12 @@ const passwordChangeSchema = z.object({
 
 type PasswordChangeData = z.infer<typeof passwordChangeSchema>;
 
-// Enhanced data reset schema for production readiness
 const dataResetSchema = z.object({
   password: z.string().min(1, 'Password is required to reset data'),
 });
 
 type DataResetData = z.infer<typeof dataResetSchema>;
 
-// Storage statistics component for real-time data monitoring
 function DataStats() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -96,7 +95,6 @@ function DataStats() {
   );
 }
 
-// Enhanced data reset dialog with security and backup features
 function DataResetDialog() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -113,7 +111,7 @@ function DataResetDialog() {
   const [enteredPassword, setEnteredPassword] = useState('');
 
   const handleResetSubmit = async (data: DataResetData) => {
-    setEnteredPassword(data.password); // Store password before clearing form
+    setEnteredPassword(data.password);
     setOpen(false);
     setConfirmOpen(true);
     resetForm.reset();
@@ -130,8 +128,7 @@ function DataResetDialog() {
       });
 
       setConfirmOpen(false);
-      setEnteredPassword(''); // Clear stored password
-      // Refresh the page to show fresh state
+      setEnteredPassword('');
       window.location.reload();
     } catch (error: any) {
       toast({
@@ -139,7 +136,7 @@ function DataResetDialog() {
         description: error.message || "Failed to reset data",
         variant: "destructive",
       });
-      setEnteredPassword(''); // Clear stored password on error too
+      setEnteredPassword('');
     } finally {
       setIsResetting(false);
     }
@@ -235,7 +232,6 @@ export default function SettingsPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-
   const form = useForm<PasswordChangeData>({
     resolver: zodResolver(passwordChangeSchema),
     defaultValues: {
@@ -245,20 +241,17 @@ export default function SettingsPage() {
     },
   });
 
-  // zeeexshan: Check license activation status
   useEffect(() => {
     checkActivationStatus();
   }, []);
 
   const checkActivationStatus = async () => {
     try {
-      // Check if running in Electron with activation API
       if ((window as any).electronAPI?.checkActivation) {
         const result = await (window as any).electronAPI.checkActivation();
         setIsActivated(result.isActivated);
         setActivationData(result.data);
       } else {
-        // For web version, always allow password change
         setIsActivated(true);
       }
     } catch (error) {
@@ -292,7 +285,6 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchLicenseInfo();
   }, []);
-
 
   const onSubmit = async (data: PasswordChangeData) => {
     if (!isActivated) {
@@ -534,7 +526,6 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Storage Statistics */}
             <div className="space-y-4">
               <h4 className="font-medium flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
@@ -543,7 +534,6 @@ export default function SettingsPage() {
               <DataStats />
             </div>
 
-            {/* Data Reset Section */}
             <div className="border-t pt-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-destructive">
@@ -590,6 +580,60 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Developer / Contact Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              About the Developer
+            </CardTitle>
+            <CardDescription>
+              Built by zeeexshan — reach out or follow along
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://github.com/Zeexshan"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="GitHub"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <SiGithub className="h-6 w-6" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/zeeexshan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="LinkedIn"
+                className="text-muted-foreground hover:text-[#0A66C2] transition-colors"
+              >
+                <SiLinkedin className="h-6 w-6" />
+              </a>
+              <a
+                href="https://www.instagram.com/zeeexshan"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram"
+                className="text-muted-foreground hover:text-[#E1306C] transition-colors"
+              >
+                <SiInstagram className="h-6 w-6" />
+              </a>
+              <a
+                href="https://www.zeexshan.me/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Website"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Globe className="h-6 w-6" />
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   );
