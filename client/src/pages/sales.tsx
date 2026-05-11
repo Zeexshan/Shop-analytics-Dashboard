@@ -187,48 +187,18 @@ export default function SalesPage() {
     });
   };
 
-  const printReceipt = async (sale: Sale) => {
-    try {
-      // Check if running in Electron
-      if ((window as any).electronAPI?.print) {
-        // For Electron, create a print-friendly version in the current window
-        const originalContent = document.body.innerHTML;
-        const receiptHTML = generateReceiptHTML(sale);
-        
-        // Replace body content with receipt
-        document.body.innerHTML = receiptHTML;
-        
-        const result = await (window as any).electronAPI.print();
-        
-        // Restore original content
-        document.body.innerHTML = originalContent;
-        
-        if (result.success) {
-          toast({
-            title: "Print Initiated",
-            description: "Receipt print dialog opened",
-          });
-          return;
-        } else {
-          throw new Error(result.error || 'Electron print failed');
-        }
-      }
-    } catch (error) {
-      console.error('Electron print failed, falling back to window print:', error);
-    }
-    
-    // Fallback to original window.open method for browsers
-    const receiptWindow = window.open('', '_blank', 'width=400,height=600');
+  const printReceipt = (sale: Sale) => {
+    const receiptWindow = window.open('', '_blank', 'width=420,height=700,toolbar=0,menubar=0,location=0,scrollbars=1');
     if (!receiptWindow) {
       toast({
         title: "Print Failed",
-        description: "Unable to open print window. Please check popup blockers.",
+        description: "Unable to open print window. Please allow popups for this app.",
         variant: "destructive",
       });
       return;
     }
-
     const receiptHTML = generateReceiptHTML(sale);
+    receiptWindow.document.open();
     receiptWindow.document.write(receiptHTML);
     receiptWindow.document.close();
   };
@@ -470,7 +440,7 @@ export default function SalesPage() {
             <div class="app-promotion">
               <div class="app-name">Powered by Shop Analytics Dashboard</div>
               <div>Complete Business Management Solution</div>
-              <div class="app-link">Get yours at: replit.com/@mogat55602/shop-analytics</div>
+              <div class="app-link">github.com/Zeexshan &mdash; by Zeeexshan</div>
               <div style="margin-top: 3px; font-size: 8px;">Professional Analytics • Inventory • Sales • Reports</div>
             </div>
           </div>

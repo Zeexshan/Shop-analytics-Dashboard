@@ -82,13 +82,13 @@ function validateEnvironment() {
 }
 
 const app = express();
-const HOST = '0.0.0.0'; // Critical: Must bind to 0.0.0.0 for Replit
+const HOST = '0.0.0.0'; // Must bind to 0.0.0.0 for proxy environments
 
 // CORS configuration - secure for production, permissive for development and desktop
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isElectron = !!(process.env.ELECTRON === '1' || typeof process !== 'undefined' && process.versions && process.versions.electron);
 
-// Configure trust proxy for Replit environment (fixes rate limiting issues)
+// Configure trust proxy for proxy environments (fixes rate limiting issues)
 if (isDevelopment || process.env.REPLIT_DEPLOYMENT) {
   app.set('trust proxy', 1);
 }
@@ -211,7 +211,7 @@ app.use((req, res, next) => {
 
   const port = parseInt(process.env.PORT || '5000', 10);
   
-  // Start server with proper host binding for Replit
+  // Start server with proper host binding
   server.listen(port, HOST, () => {
     console.log(`🚀 Express server running on http://${HOST}:${port}`);
     console.log(`📊 Shop Analytics API ready - by zeeexshan`);

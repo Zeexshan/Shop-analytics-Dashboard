@@ -11,9 +11,7 @@ console.log('%c © 2024 All Rights Reserved ', 'color: #6B7280;');
 // License validation
 const validateEnvironment = () => {
   const signature = 'ShopAnalytics_Pro_2024';
-  if (!window.location.href.includes('localhost') && !window.location.href.includes('replit')) {
-    console.warn('Professional Shop Analytics Dashboard - Licensed Software');
-  }
+  console.warn('Professional Shop Analytics Dashboard - Licensed Software');
 };
 
 // Runtime protection

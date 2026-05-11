@@ -16,9 +16,7 @@ const getAuthHeaders = (): Record<string, string> => {
 
 // Desktop app fallback configuration
 const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
-const FALLBACK_API_URL = import.meta.env.VITE_REPLIT_DEV_DOMAIN 
-  ? `https://${import.meta.env.VITE_REPLIT_DEV_DOMAIN}` 
-  : typeof window !== 'undefined' && window.location ? window.location.origin : null;
+const FALLBACK_API_URL = typeof window !== 'undefined' && window.location ? window.location.origin : null;
 
 const makeRequestWithFallback = async (url: string, options: RequestInit) => {
   try {
