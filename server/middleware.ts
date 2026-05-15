@@ -5,7 +5,9 @@ export interface AuthRequest extends Request {
   user?: { 
     id: string; 
     username: string;
-    type?: 'admin' | 'device';
+    email?: string;
+    role?: string;
+    type?: 'admin' | 'device' | 'web';
     license_key?: string;
     device_id?: string;
     activation_id?: string;
@@ -96,6 +98,38 @@ export const authenticateDeviceToken = (req: AuthRequest, res: Response, next: N
       
       // Mark as device type for clarity
       req.user = { ...user, type: 'device' };
+      next();
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Authentication system not properly configured' });
+  }
+};
+
+// Accepts both admin tokens and web user tokens (for shared endpoints like change-password)
+export const authenticateUserToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Access token required' });
+  }
+
+  try {
+    const jwtSecret = getJwtSecret();
+    jwt.verify(token, jwtSecret, (err: any, user: any) => {
+      if (err) {
+        return res.status(403).json({ message: 'Invalid or expired token' });
+      }
+
+      // Accept admin tokens (have username, no license_key) or web tokens (type: 'web')
+      const isAdmin = user.username && !user.license_key;
+      const isWebUser = user.type === 'web' && user.email;
+
+      if (!isAdmin && !isWebUser) {
+        return res.status(403).json({ message: 'User access required' });
+      }
+
+      req.user = { ...user, type: isWebUser ? 'web' : 'admin' };
       next();
     });
   } catch (error) {

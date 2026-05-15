@@ -67,6 +67,19 @@ export const goals = pgTable("goals", {
   status: text("status").notNull().default("Active"),
 });
 
+// Web users table for multi-user license-based authentication (web deployment only)
+export const webUsers = pgTable("web_users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  licenseKeyHash: text("license_key_hash").notNull().unique(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  activatedAt: timestamp("activated_at").defaultNow(),
+  isActive: boolean("is_active").default(true),
+});
+
+export type WebUser = typeof webUsers.$inferSelect;
+export type InsertWebUser = typeof webUsers.$inferInsert;
+
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,

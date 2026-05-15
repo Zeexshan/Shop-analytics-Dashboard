@@ -1,0 +1,222 @@
+
+I need to add a multi-user license-based authentication system for the web deployment. When DATABASE_URL is set, the app should support multiple users (one per license key) instead of the single hardcoded admin account.
+
+## New Drizzle table to add in shared/schema.ts
+
+Add this table:
+
+```typescript
+export const webUsers = pgTable("web_users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  licenseKeyHash: text("license_key_hash").notNull().unique(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  activatedAt: timestamp("activated_at").defaultNow(),
+  isActive: boolean("is_active").default(true),
+});
+
+export type WebUser = typeof webUsers.$inferSelect;
+export type InsertWebUser = typeof webUsers.$inferInsert;
+```
+
+## New file: server/web-auth.ts
+
+Create this file to handle all web user operations:
+
+```typescript
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { eq } from 'drizzle-orm';
+import { webUsers } from '@shared/schema';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+
+function getDb() {
+  const sql = neon(process.env.DATABASE_URL!);
+  return drizzle(sql);
+}
+
+function hashLicenseKey(licenseKey: string): string {
+  const salt = process.env.LICENSE_HASH_SALT || 'default_salt';
+  return crypto.createHash('sha256').update(licenseKey + salt).digest('hex');
+}
+
+export async function findWebUserByLicenseKey(licenseKey: string) {
+  const db = getDb();
+  const hash = hashLicenseKey(licenseKey);
+  const results = await db.select().from(webUsers).where(eq(webUsers.licenseKeyHash, hash));
+  return results[0] || null;
+}
+
+export async function findWebUserByEmail(email: string) {
+  const db = getDb();
+  const results = await db.select().from(webUsers).where(eq(webUsers.email, email));
+  return results[0] || null;
+}
+
+export async function createWebUser(licenseKey: string, email: string, password: string) {
+  const db = getDb();
+  const hash = hashLicenseKey(licenseKey);
+  const passwordHash = await bcrypt.hash(password, 12);
+  
+  const results = await db.insert(webUsers).values({
+    licenseKeyHash: hash,
+    email: email.toLowerCase(),
+    passwordHash,
+  }).returning();
+  
+  return results[0];
+}
+
+export async function updateWebUserPassword(email: string, newPassword: string) {
+  const db = getDb();
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+  await db.update(webUsers)
+    .set({ passwordHash })
+    .where(eq(webUsers.email, email.toLowerCase()));
+}
+
+export async function verifyWebUserPassword(email: string, password: string): Promise<boolean> {
+  const user = await findWebUserByEmail(email);
+  if (!user) return false;
+  return bcrypt.compare(password, user.passwordHash);
+}
+```
+
+## Modify server/routes.ts
+
+### 1. Modify POST /api/license/activate
+
+When DATABASE_URL is set, after Gumroad verification succeeds, add this logic:
+
+```typescript
+const isWebDeployment = !!process.env.DATABASE_URL;
+
+if (isWebDeployment) {
+  const { findWebUserByLicenseKey, createWebUser } = await import('./web-auth');
+  
+  // Check if license already activated
+  const existingUser = await findWebUserByLicenseKey(license_key);
+  if (existingUser) {
+    return res.status(409).json({
+      success: false,
+      alreadyActivated: true,
+      message: 'This license is already activated. Please log in with your email and password.',
+      email: existingUser.email
+    });
+  }
+  
+  // Create new web user account
+  // Default password = first 8 chars of license key (user must change it)
+  const defaultPassword = license_key.replace(/-/g, '').substring(0, 8);
+  const email = gumroadData.purchase?.email || '';
+  
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Could not retrieve email from license' });
+  }
+  
+  await createWebUser(license_key, email, defaultPassword);
+  
+  const token = jwt.sign(
+    { email, role: 'user', type: 'web' },
+    getJwtSecret(),
+    { expiresIn: '7d' }
+  );
+  
+  return res.json({
+    success: true,
+    token,
+    email,
+    defaultPassword, // send this once so user knows their initial password
+    message: 'License activated successfully. Please change your password.',
+    purchase: {
+      email,
+      created_at: gumroadData.purchase?.created_at || new Date().toISOString(),
+    }
+  });
+}
+```
+
+### 2. Modify POST /api/auth/login
+
+When DATABASE_URL is set, support login by email:
+
+```typescript
+const isWebDeployment = !!process.env.DATABASE_URL;
+
+if (isWebDeployment) {
+  const { verifyWebUserPassword, findWebUserByEmail } = await import('./web-auth');
+  const { username: emailInput, password } = req.body;
+  
+  const isValid = await verifyWebUserPassword(emailInput, password);
+  if (!isValid) {
+    return res.status(401).json({ message: 'Invalid email or password', success: false });
+  }
+  
+  const user = await findWebUserByEmail(emailInput);
+  const token = jwt.sign(
+    { email: user!.email, role: 'user', type: 'web' },
+    getJwtSecret(),
+    { expiresIn: '24h' }
+  );
+  
+  return res.json({ 
+    success: true, 
+    token, 
+    user: { username: user!.email, role: 'user' } 
+  });
+}
+// existing admin login continues below for desktop...
+```
+
+### 3. Modify POST /api/auth/change-password
+
+When DATABASE_URL is set, update password in PostgreSQL:
+
+```typescript
+const isWebDeployment = !!process.env.DATABASE_URL;
+
+if (isWebDeployment && (req as AuthRequest).user?.email) {
+  const { updateWebUserPassword, verifyWebUserPassword } = await import('./web-auth');
+  const email = (req as AuthRequest).user!.email!;
+  
+  const isCurrentValid = await verifyWebUserPassword(email, currentPassword);
+  if (!isCurrentValid) {
+    return res.status(401).json({ message: 'Current password is incorrect' });
+  }
+  
+  await updateWebUserPassword(email, newPassword);
+  return res.json({ message: 'Password changed successfully' });
+}
+// existing desktop password change continues below...
+```
+
+## Run database migration
+
+After making all these changes, run:
+```
+npm run db:push
+```
+
+This will create the web_users table in the Neon PostgreSQL database.
+
+## Commit and push
+
+```
+git add server/web-auth.ts server/routes.ts shared/schema.ts
+git commit -m "add web multi-user auth system tied to license keys"
+git push origin master
+```
+
+## Important notes
+- Do NOT break the existing desktop flow. All web-specific logic must be inside `if (isWebDeployment)` blocks
+- The desktop app (no DATABASE_URL) continues to use the existing single admin account
+- The web app (DATABASE_URL set) uses email + password per license key
+- Default password on first activation = first 8 chars of license key with dashes removed
+
+Tell me when done and if db:push succeeded.
+```
+
+---
+
+Once this is done, the web version will have proper per-user accounts. On the frontend side, the license activation page will need to show the user their default password after activation so they know what to use for first login — but we can handle that after the backend is working.

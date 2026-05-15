@@ -5,7 +5,7 @@ const routesAuthor = reversed.split('').reverse().join('');
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { authenticateToken, authenticateAdminToken, authenticateDeviceToken, errorHandler, type AuthRequest } from "./middleware";
+import { authenticateToken, authenticateAdminToken, authenticateDeviceToken, authenticateUserToken, errorHandler, type AuthRequest } from "./middleware";
 import { insertProductSchema, insertSaleSchema, insertExpenseSchema, insertGoalSchema, loginSchema } from "@shared/schema";
 import { licenseStorage } from "./license-storage-simple";
 import { DeviceManager } from "./device-utils";
@@ -76,6 +76,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!username || !password) {
         console.log('Login failed: Missing credentials');
         return res.status(400).json({ message: 'Username and password required', success: false });
+      }
+
+      // Web deployment: support login by email for web users
+      const isWebDeployment = !!process.env.DATABASE_URL;
+      if (isWebDeployment) {
+        const { verifyWebUserPassword, findWebUserByEmail } = await import('./web-auth');
+        const isValid = await verifyWebUserPassword(username, password);
+        if (isValid) {
+          const user = await findWebUserByEmail(username);
+          const token = jwt.sign(
+            { email: user!.email, role: 'user', type: 'web' },
+            getJwtSecret(),
+            { expiresIn: '24h' }
+          );
+          console.log('Web user login successful:', user!.email);
+          return res.json({ success: true, token, user: { username: user!.email, role: 'user' } });
+        }
+        // Fall through to admin login check below
       }
 
       if (username !== config.ADMIN_USERNAME) {
@@ -238,6 +256,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({
           success: false,
           message: 'Invalid license key'
+        });
+      }
+
+      // Web deployment: create a per-user account tied to the license key
+      const isWebDeployment = !!process.env.DATABASE_URL;
+      if (isWebDeployment) {
+        const { findWebUserByLicenseKey, createWebUser } = await import('./web-auth');
+
+        const existingUser = await findWebUserByLicenseKey(license_key);
+        if (existingUser) {
+          return res.status(409).json({
+            success: false,
+            alreadyActivated: true,
+            message: 'This license is already activated. Please log in with your email and password.',
+            email: existingUser.email
+          });
+        }
+
+        const email = gumroadData.purchase?.email || '';
+        if (!email) {
+          return res.status(400).json({ success: false, message: 'Could not retrieve email from license' });
+        }
+
+        const defaultPassword = license_key.replace(/-/g, '').substring(0, 8);
+        await createWebUser(license_key, email, defaultPassword);
+
+        const token = jwt.sign(
+          { email, role: 'user', type: 'web' },
+          getJwtSecret(),
+          { expiresIn: '7d' }
+        );
+
+        return res.json({
+          success: true,
+          token,
+          email,
+          defaultPassword,
+          message: 'License activated successfully. Please change your password.',
+          purchase: {
+            email,
+            created_at: gumroadData.purchase?.created_at || new Date().toISOString(),
+          }
         });
       }
 
@@ -436,8 +496,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Enhanced watermark security - Password change endpoint for admin users only
-  app.post('/api/auth/change-password', authenticateAdminToken, async (req, res, next) => {
+  // Password change endpoint for admin and web users
+  app.post('/api/auth/change-password', authenticateUserToken, async (req, res, next) => {
     try {
       const { currentPassword, newPassword } = req.body;
 
@@ -447,6 +507,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (newPassword.length < 8) {
         return res.status(400).json({ message: 'New password must be at least 8 characters' });
+      }
+
+      // Web deployment: update password in PostgreSQL for web users
+      const isWebDeployment = !!process.env.DATABASE_URL;
+      if (isWebDeployment && (req as AuthRequest).user?.type === 'web') {
+        const { updateWebUserPassword, verifyWebUserPassword } = await import('./web-auth');
+        const email = (req as AuthRequest).user!.email!;
+
+        const isCurrentValid = await verifyWebUserPassword(email, currentPassword);
+        if (!isCurrentValid) {
+          return res.status(401).json({ message: 'Current password is incorrect' });
+        }
+
+        await updateWebUserPassword(email, newPassword);
+        return res.json({ message: 'Password changed successfully' });
       }
 
       // Get current stored password hash - use centralized helper for consistency
